@@ -9,7 +9,6 @@
 
 import Image from 'next/image'
 import { useState, useContext, useEffect } from 'react'
-import { usePathname } from 'next/navigation'
 import { getTextStyle } from '@/lib/design-system'
 import { ModuleConfig } from '@/lib/module-config'
 import { HamburgerDropdown } from './HamburgerDropdown'
@@ -27,6 +26,7 @@ interface SimpleModuleHeaderDarkProps {
   subtitle: string
   backgroundImage?: string
   className?: string
+  isWatermarked?: boolean
 }
 
 // Complex header props (used by main module pages with navigation)
@@ -39,6 +39,7 @@ interface ComplexModuleHeaderDarkProps {
   userClient?: any
   onSignOut?: () => void
   backgroundImage?: string
+  isWatermarked?: boolean
 }
 
 // Union type for overloaded component
@@ -62,12 +63,6 @@ const BACKGROUND_IMAGES = {
   // Special pages
   'LANDING': 'https://rggdywqnvpuwssluzfud.supabase.co/storage/v1/object/public/module-assets/backgrounds/landingBG.webp',
   'ONBOARDING': 'https://rggdywqnvpuwssluzfud.supabase.co/storage/v1/object/public/module-assets/backgrounds/onboardingBG.webp',
-}
-
-// Helper function to determine if current page has watermarked background
-function isWatermarkedPage(pathname: string): boolean {
-  // Based on BackgroundManager.ts logic
-  return pathname.startsWith('/admin') || pathname.startsWith('/upload')
 }
 
 // Helper function to determine background image
@@ -115,11 +110,9 @@ function isSimpleHeader(props: ModuleHeaderDarkProps): props is SimpleModuleHead
 }
 
 // Simple header component
-function SimpleModuleHeaderDark({ title, subtitle, backgroundImage, className = '' }: SimpleModuleHeaderDarkProps) {
-  const pathname = usePathname()
+function SimpleModuleHeaderDark({ title, subtitle, backgroundImage, className = '', isWatermarked = false }: SimpleModuleHeaderDarkProps) {
   const bgImage = backgroundImage || getBackgroundImage(title, subtitle)
   const hasBackground = bgImage && bgImage.length > 0
-  const isWatermarked = isWatermarkedPage(pathname)
   
   // Determine text styling based on watermark status
   const textColorClass = isWatermarked || !hasBackground ? 'text-gray-800' : 'text-white drop-shadow-lg'
@@ -162,16 +155,15 @@ function ComplexModuleHeaderDark({
   user,
   userClient,
   onSignOut,
-  backgroundImage
+  backgroundImage,
+  isWatermarked = false
 }: ComplexModuleHeaderDarkProps) {
   const [showHamburgerDropdown, setShowHamburgerDropdown] = useState(false)
   const [showUserDropdown, setShowUserDropdown] = useState(false)
   const [userAvatar, setUserAvatar] = useState<string | null>(null)
-  const pathname = usePathname()
   
   const bgImage = backgroundImage || getBackgroundImage(module.title)
   const hasBackground = bgImage && bgImage.length > 0
-  const isWatermarked = isWatermarkedPage(pathname)
 
   // Copy exact avatar loading logic from AppleSidebar
   useEffect(() => {
