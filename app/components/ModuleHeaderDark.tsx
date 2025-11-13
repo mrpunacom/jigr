@@ -65,6 +65,11 @@ const BACKGROUND_IMAGES = {
 
 // Helper function to determine background image
 function getBackgroundImage(title: string, subtitle?: string): string {
+  // ADMIN pages should NOT have background images for better readability
+  if (title.includes('Admin') || title === 'ADMIN' || title === 'Admin') {
+    return '' // Return empty string for no background
+  }
+  
   // Direct mapping for specific titles
   if (title === 'Vendors' || title === 'Vendor Management') {
     return BACKGROUND_IMAGES.VENDORS
@@ -89,9 +94,6 @@ function getBackgroundImage(title: string, subtitle?: string): string {
   if (title.includes('Count') || title === 'Count') {
     return BACKGROUND_IMAGES.COUNT
   }
-  if (title.includes('Admin') || title === 'Admin') {
-    return BACKGROUND_IMAGES.ADMIN
-  }
   if (title.includes('Upload') || title === 'Upload') {
     return BACKGROUND_IMAGES.UPLOAD
   }
@@ -108,19 +110,24 @@ function isSimpleHeader(props: ModuleHeaderDarkProps): props is SimpleModuleHead
 // Simple header component
 function SimpleModuleHeaderDark({ title, subtitle, backgroundImage, className = '' }: SimpleModuleHeaderDarkProps) {
   const bgImage = backgroundImage || getBackgroundImage(title, subtitle)
+  const hasBackground = bgImage && bgImage.length > 0
   
   return (
-    <div className={`relative min-h-[200px] flex items-center justify-center ${className}`}>
-      {/* Background Image */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage: `url(${bgImage})`,
-        }}
-      />
+    <div className={`relative min-h-[200px] flex items-center justify-center ${className} ${
+      hasBackground ? '' : 'bg-gradient-to-br from-gray-800 to-gray-900'
+    }`}>
+      {/* Background Image (only if we have one) */}
+      {hasBackground && (
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: `url(${bgImage})`,
+          }}
+        />
+      )}
       
-      {/* Overlay for better text readability */}
-      <div className="absolute inset-0 bg-black/20" />
+      {/* Overlay for better text readability (only with background image) */}
+      {hasBackground && <div className="absolute inset-0 bg-black/20" />}
       
       {/* Content */}
       <div className="relative z-10 text-center px-4">
@@ -151,6 +158,7 @@ function ComplexModuleHeaderDark({
   const [userAvatar, setUserAvatar] = useState<string | null>(null)
   
   const bgImage = backgroundImage || getBackgroundImage(module.title)
+  const hasBackground = bgImage && bgImage.length > 0
 
   // Copy exact avatar loading logic from AppleSidebar
   useEffect(() => {
@@ -202,17 +210,21 @@ function ComplexModuleHeaderDark({
   return (
     <>
       {/* Background Container */}
-      <div className={`relative min-h-[300px] ${className}`}>
-        {/* Background Image */}
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: `url(${bgImage})`,
-          }}
-        />
+      <div className={`relative min-h-[300px] ${className} ${
+        hasBackground ? '' : 'bg-gradient-to-br from-gray-800 to-gray-900'
+      }`}>
+        {/* Background Image (only if we have one) */}
+        {hasBackground && (
+          <div 
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+            style={{
+              backgroundImage: `url(${bgImage})`,
+            }}
+          />
+        )}
         
-        {/* Overlay for better content readability */}
-        <div className="absolute inset-0 bg-black/20" />
+        {/* Overlay for better content readability (only with background image) */}
+        {hasBackground && <div className="absolute inset-0 bg-black/20" />}
         
         {/* Content Container */}
         <div className="relative z-10 px-4 py-8">
