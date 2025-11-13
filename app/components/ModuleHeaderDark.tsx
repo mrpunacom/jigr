@@ -110,13 +110,13 @@ function isSimpleHeader(props: ModuleHeaderDarkProps): props is SimpleModuleHead
 }
 
 // Simple header component
-function SimpleModuleHeaderDark({ title, subtitle, backgroundImage, className = '', isWatermarked = false }: SimpleModuleHeaderDarkProps) {
+function SimpleModuleHeaderDark({ title, subtitle, backgroundImage, className = '', isWatermarked = true }: SimpleModuleHeaderDarkProps) {
   const bgImage = backgroundImage || getBackgroundImage(title, subtitle)
   const hasBackground = bgImage && bgImage.length > 0
   
-  // Determine text styling based on watermark status
-  const textColorClass = isWatermarked || !hasBackground ? 'text-gray-800' : 'text-white drop-shadow-lg'
-  const subtitleColorClass = isWatermarked || !hasBackground ? 'text-gray-600' : 'text-white/90 drop-shadow-md'
+  // Universal dark text for all watermarked backgrounds
+  const textColorClass = 'text-gray-800'
+  const subtitleColorClass = 'text-gray-600'
   
   return (
     <div className={`relative min-h-[200px] flex items-center justify-center ${className}`}>
@@ -130,8 +130,7 @@ function SimpleModuleHeaderDark({ title, subtitle, backgroundImage, className = 
         />
       )}
       
-      {/* Overlay for better text readability (only with background image and non-watermarked) */}
-      {hasBackground && !isWatermarked && <div className="absolute inset-0 bg-black/20" />}
+      {/* No overlay needed - watermarked backgrounds provide sufficient contrast */}
       
       {/* Content */}
       <div className="relative z-10 text-center px-4">
@@ -156,7 +155,7 @@ function ComplexModuleHeaderDark({
   userClient,
   onSignOut,
   backgroundImage,
-  isWatermarked = false
+  isWatermarked = true
 }: ComplexModuleHeaderDarkProps) {
   const [showHamburgerDropdown, setShowHamburgerDropdown] = useState(false)
   const [showUserDropdown, setShowUserDropdown] = useState(false)
@@ -204,13 +203,13 @@ function ComplexModuleHeaderDark({
     }
   }, [user?.id])
 
-  // Determine text styling based on watermark status
-  const textColorClass = isWatermarked || !hasBackground ? 'text-gray-800' : 'text-white drop-shadow-lg'
-  const subtitleColorClass = isWatermarked || !hasBackground ? 'text-gray-600' : 'text-white/90 drop-shadow-md'
-  const buttonHoverClass = isWatermarked || !hasBackground ? 'hover:bg-gray-100 border border-gray-300' : 'hover:bg-white/20 border border-white/30'
-  const iconFilterClass = isWatermarked || !hasBackground ? '' : 'filter invert'
-  const avatarBgClass = isWatermarked || !hasBackground ? 'bg-gray-100 border border-gray-300 hover:bg-gray-200' : 'bg-white/20 border border-white/30 hover:bg-white/30'
-  const avatarTextClass = isWatermarked || !hasBackground ? 'text-gray-700' : 'text-white'
+  // Universal dark styling for all watermarked backgrounds
+  const textColorClass = 'text-gray-800'
+  const subtitleColorClass = 'text-gray-600'
+  const buttonHoverClass = 'hover:bg-gray-100 border border-gray-300'
+  const iconFilterClass = '' // No inversion needed for dark icons on light backgrounds
+  const avatarBgClass = 'bg-gray-100 border border-gray-300 hover:bg-gray-200'
+  const avatarTextClass = 'text-gray-700'
 
   console.log('🔍 ModuleHeaderDark rendering:', {
     moduleKey: module.key,
@@ -236,8 +235,7 @@ function ComplexModuleHeaderDark({
           />
         )}
         
-        {/* Overlay for better content readability (only with background image and non-watermarked) */}
-        {hasBackground && !isWatermarked && <div className="absolute inset-0 bg-black/20" />}
+        {/* No overlay needed - watermarked backgrounds provide sufficient contrast */}
         
         {/* Content Container */}
         <div className="relative z-10 px-4 py-8">
@@ -319,7 +317,7 @@ function ComplexModuleHeaderDark({
             
             {/* Navigation Pills - Below Title, Left Aligned */}
             <div className="flex justify-start mb-8">
-              <div className="flex space-x-0.5 bg-white/30 p-0.5 rounded-full backdrop-blur-md border border-white/30 w-full max-w-md">
+              <div className="flex space-x-0.5 bg-white/90 p-0.5 rounded-full backdrop-blur-md border border-gray-200 w-full max-w-md shadow-lg">
                 {module.pages.map((page) => {
                   const isActive = page.key === currentPage
                   
@@ -331,7 +329,7 @@ function ComplexModuleHeaderDark({
                         flex-1 text-center px-3 py-2 font-semibold rounded-full transition-all duration-300 text-sm TouchTarget
                         ${isActive 
                           ? 'text-white bg-gray-900 shadow-lg' 
-                          : 'text-white/90 hover:text-white hover:bg-white/20 font-medium'
+                          : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100 font-medium'
                         }
                       `}
                     >

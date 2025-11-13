@@ -65,18 +65,18 @@ export function useModuleBackground() {
       existingDiv.remove()
     }
     
-    // Determine if this is an Admin or Upload module for watermark effect
-    const isWatermarkModule = pathname.startsWith('/admin') || pathname.startsWith('/upload')
+    // Apply universal watermark effect to ALL pages
+    const isWatermarkModule = true // Now ALL pages use watermark effect
     
     // Create background div with POSITIVE z-index to work with all layouts
     const bgDiv = document.createElement('div')
     bgDiv.id = 'dynamic-background'
     
-    // Apply watermark effect for Admin & Upload modules
-    const watermarkStyles = isWatermarkModule ? `
+    // Apply watermark effect for ALL modules
+    const watermarkStyles = `
       opacity: 0.4;
       filter: brightness(1.1) contrast(0.8);
-    ` : ''
+    `
     
     bgDiv.style.cssText = `
       position: fixed;

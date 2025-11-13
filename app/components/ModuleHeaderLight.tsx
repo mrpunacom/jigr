@@ -100,10 +100,10 @@ export function ModuleHeaderLight({
             />
           </div>
           <div>
-            <h1 className={`${getTextStyle('pageTitle')} text-[#2d2e4a] drop-shadow-lg text-4xl font-bold`}>
+            <h1 className={`${getTextStyle('pageTitle')} text-gray-800 text-4xl font-bold`}>
               {module.title}
             </h1>
-            <p className="text-[#2d2e4a]/80 drop-shadow-md italic text-xs">
+            <p className="text-gray-600 italic text-lg">
               {module.description}
             </p>
           </div>
@@ -114,7 +114,7 @@ export function ModuleHeaderLight({
           {/* Hamburger Menu Button */}
           <button
             onClick={() => setShowHamburgerDropdown(!showHamburgerDropdown)}
-            className="p-3 hover:bg-white/10 rounded-lg transition-all duration-200 TouchTarget border border-white/20"
+            className="p-3 hover:bg-gray-100 rounded-lg transition-all duration-200 TouchTarget border border-gray-300"
             title="Navigation Menu"
           >
             <img 
@@ -130,7 +130,7 @@ export function ModuleHeaderLight({
             className="relative"
             title={`User Profile - Edit your profile information${userClient?.champion_enrolled ? ' | Hero User' : ''}`}
           >
-            <div className="bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm border border-white/30 overflow-hidden flex-shrink-0 w-12 h-12 cursor-pointer hover:bg-white/30 transition-all duration-200">
+            <div className="bg-gray-100 rounded-full flex items-center justify-center backdrop-blur-sm border border-gray-300 overflow-hidden flex-shrink-0 w-12 h-12 cursor-pointer hover:bg-gray-200 transition-all duration-200">
               {userAvatar ? (
                 <img 
                   src={userAvatar} 
@@ -140,7 +140,7 @@ export function ModuleHeaderLight({
                   onError={() => logger.debug('MODULE HEADER LIGHT: User avatar failed to load, showing initials')}
                 />
               ) : (
-                <span className="text-white font-bold text-lg">
+                <span className="text-gray-700 font-bold text-lg">
                   {user?.user_metadata?.full_name?.charAt(0) || user?.email?.charAt(0) || 'U'}
                 </span>
               )}
@@ -162,7 +162,7 @@ export function ModuleHeaderLight({
       
       {/* Navigation Pills - Below Title, Left Aligned */}
       <div className="flex justify-start mb-8">
-        <div className="flex space-x-0.5 bg-black/20 p-0.5 rounded-full backdrop-blur-md border border-white/20 w-full max-w-md">
+        <div className="flex space-x-0.5 bg-white/90 p-0.5 rounded-full backdrop-blur-md border border-gray-200 w-full max-w-md shadow-lg">
           {module.pages.map((page) => {
             const isActive = page.key === currentPage
             
@@ -173,8 +173,8 @@ export function ModuleHeaderLight({
                 className={`
                   flex-1 text-center px-3 py-2 font-semibold rounded-full transition-all duration-300 text-sm TouchTarget
                   ${isActive 
-                    ? 'text-black bg-white shadow-lg' 
-                    : 'text-white/90 hover:text-white hover:bg-white/20 font-medium'
+                    ? 'text-white bg-gray-900 shadow-lg' 
+                    : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100 font-medium'
                   }
                 `}
               >
