@@ -9,6 +9,7 @@
 
 import Image from 'next/image'
 import { useState, useContext, useEffect } from 'react'
+import { usePathname } from 'next/navigation'
 import { getTextStyle } from '@/lib/design-system'
 import { ModuleConfig } from '@/lib/module-config'
 import { HamburgerDropdown } from './HamburgerDropdown'
@@ -63,6 +64,12 @@ const BACKGROUND_IMAGES = {
   'ONBOARDING': 'https://rggdywqnvpuwssluzfud.supabase.co/storage/v1/object/public/module-assets/backgrounds/onboardingBG.webp',
 }
 
+// Helper function to determine if current page has watermarked background
+function isWatermarkedPage(pathname: string): boolean {
+  // Based on BackgroundManager.ts logic
+  return pathname.startsWith('/admin') || pathname.startsWith('/upload')
+}
+
 // Helper function to determine background image
 function getBackgroundImage(title: string, subtitle?: string): string {
   // ADMIN pages should NOT have background images for better readability
@@ -109,8 +116,14 @@ function isSimpleHeader(props: ModuleHeaderDarkProps): props is SimpleModuleHead
 
 // Simple header component
 function SimpleModuleHeaderDark({ title, subtitle, backgroundImage, className = '' }: SimpleModuleHeaderDarkProps) {
+  const pathname = usePathname()
   const bgImage = backgroundImage || getBackgroundImage(title, subtitle)
   const hasBackground = bgImage && bgImage.length > 0
+  const isWatermarked = isWatermarkedPage(pathname)
+  
+  // Determine text styling based on watermark status
+  const textColorClass = isWatermarked || !hasBackground ? 'text-gray-800' : 'text-white drop-shadow-lg'
+  const subtitleColorClass = isWatermarked || !hasBackground ? 'text-gray-600' : 'text-white/90 drop-shadow-md'
   
   return (
     <div className={`relative min-h-[200px] flex items-center justify-center ${className}`}>
@@ -124,15 +137,15 @@ function SimpleModuleHeaderDark({ title, subtitle, backgroundImage, className = 
         />
       )}
       
-      {/* Overlay for better text readability (only with background image) */}
-      {hasBackground && <div className="absolute inset-0 bg-black/20" />}
+      {/* Overlay for better text readability (only with background image and non-watermarked) */}
+      {hasBackground && !isWatermarked && <div className="absolute inset-0 bg-black/20" />}
       
       {/* Content */}
       <div className="relative z-10 text-center px-4">
-        <h1 className={`text-4xl font-bold mb-2 ${hasBackground ? 'text-white drop-shadow-lg' : 'text-gray-800'}`}>
+        <h1 className={`text-4xl font-bold mb-2 ${textColorClass}`}>
           {title}
         </h1>
-        <p className={`text-lg ${hasBackground ? 'text-white/90 drop-shadow-md' : 'text-gray-600'}`}>
+        <p className={`text-lg ${subtitleColorClass}`}>
           {subtitle}
         </p>
       </div>
@@ -154,9 +167,11 @@ function ComplexModuleHeaderDark({
   const [showHamburgerDropdown, setShowHamburgerDropdown] = useState(false)
   const [showUserDropdown, setShowUserDropdown] = useState(false)
   const [userAvatar, setUserAvatar] = useState<string | null>(null)
+  const pathname = usePathname()
   
   const bgImage = backgroundImage || getBackgroundImage(module.title)
   const hasBackground = bgImage && bgImage.length > 0
+  const isWatermarked = isWatermarkedPage(pathname)
 
   // Copy exact avatar loading logic from AppleSidebar
   useEffect(() => {
@@ -197,12 +212,22 @@ function ComplexModuleHeaderDark({
     }
   }, [user?.id])
 
+  // Determine text styling based on watermark status
+  const textColorClass = isWatermarked || !hasBackground ? 'text-gray-800' : 'text-white drop-shadow-lg'
+  const subtitleColorClass = isWatermarked || !hasBackground ? 'text-gray-600' : 'text-white/90 drop-shadow-md'
+  const buttonHoverClass = isWatermarked || !hasBackground ? 'hover:bg-gray-100 border border-gray-300' : 'hover:bg-white/20 border border-white/30'
+  const iconFilterClass = isWatermarked || !hasBackground ? '' : 'filter invert'
+  const avatarBgClass = isWatermarked || !hasBackground ? 'bg-gray-100 border border-gray-300 hover:bg-gray-200' : 'bg-white/20 border border-white/30 hover:bg-white/30'
+  const avatarTextClass = isWatermarked || !hasBackground ? 'text-gray-700' : 'text-white'
+
   console.log('🔍 ModuleHeaderDark rendering:', {
     moduleKey: module.key,
     moduleTitle: module.title,
     currentPage,
     pagesCount: module.pages?.length,
-    pages: module.pages
+    pages: module.pages,
+    isWatermarked,
+    hasBackground
   })
   
   return (
@@ -219,8 +244,8 @@ function ComplexModuleHeaderDark({
           />
         )}
         
-        {/* Overlay for better content readability (only with background image) */}
-        {hasBackground && <div className="absolute inset-0 bg-black/20" />}
+        {/* Overlay for better content readability (only with background image and non-watermarked) */}
+        {hasBackground && !isWatermarked && <div className="absolute inset-0 bg-black/20" />}
         
         {/* Content Container */}
         <div className="relative z-10 px-4 py-8">
@@ -240,10 +265,10 @@ function ComplexModuleHeaderDark({
                   />
                 </div>
                 <div>
-                  <h1 className={`text-4xl font-bold ${hasBackground ? 'text-white drop-shadow-lg' : 'text-gray-800'}`}>
+                  <h1 className={`text-4xl font-bold ${textColorClass}`}>
                     {module.title}
                   </h1>
-                  <p className={`italic text-lg ${hasBackground ? 'text-white/90 drop-shadow-md' : 'text-gray-600'}`}>
+                  <p className={`italic text-lg ${subtitleColorClass}`}>
                     {module.description}
                   </p>
                 </div>
@@ -254,17 +279,13 @@ function ComplexModuleHeaderDark({
                 {/* Hamburger Menu Button */}
                 <button
                   onClick={() => setShowHamburgerDropdown(!showHamburgerDropdown)}
-                  className={`p-3 rounded-lg transition-all duration-200 TouchTarget ${
-                    hasBackground 
-                      ? 'hover:bg-white/20 border border-white/30' 
-                      : 'hover:bg-gray-100 border border-gray-300'
-                  }`}
+                  className={`p-3 rounded-lg transition-all duration-200 TouchTarget ${buttonHoverClass}`}
                   title="Navigation Menu"
                 >
                   <img 
                     src="https://rggdywqnvpuwssluzfud.supabase.co/storage/v1/object/public/module-assets/icons/hamburger.png"
                     alt="Menu" 
-                    className={`w-6 h-6 object-contain ${hasBackground ? 'filter invert' : ''}`}
+                    className={`w-6 h-6 object-contain ${iconFilterClass}`}
                   />
                 </button>
 
@@ -274,11 +295,7 @@ function ComplexModuleHeaderDark({
                   className="relative"
                   title={`User Profile - Edit your profile information${userClient?.champion_enrolled ? ' | Hero User' : ''}`}
                 >
-                  <div className={`rounded-full flex items-center justify-center backdrop-blur-sm overflow-hidden flex-shrink-0 w-12 h-12 cursor-pointer transition-all duration-200 ${
-                    hasBackground 
-                      ? 'bg-white/20 border border-white/30 hover:bg-white/30' 
-                      : 'bg-gray-100 border border-gray-300 hover:bg-gray-200'
-                  }`}>
+                  <div className={`rounded-full flex items-center justify-center backdrop-blur-sm overflow-hidden flex-shrink-0 w-12 h-12 cursor-pointer transition-all duration-200 ${avatarBgClass}`}>
                     {userAvatar ? (
                       <img 
                         src={userAvatar} 
@@ -288,7 +305,7 @@ function ComplexModuleHeaderDark({
                         onError={() => logger.debug('MODULE HEADER: User avatar failed to load, showing initials')}
                       />
                     ) : (
-                      <span className={`font-bold text-lg ${hasBackground ? 'text-white' : 'text-gray-700'}`}>
+                      <span className={`font-bold text-lg ${avatarTextClass}`}>
                         {user?.user_metadata?.full_name?.charAt(0) || user?.email?.charAt(0) || 'U'}
                       </span>
                     )}
