@@ -113,9 +113,7 @@ function SimpleModuleHeaderDark({ title, subtitle, backgroundImage, className = 
   const hasBackground = bgImage && bgImage.length > 0
   
   return (
-    <div className={`relative min-h-[200px] flex items-center justify-center ${className} ${
-      hasBackground ? '' : 'bg-gradient-to-br from-gray-800 to-gray-900'
-    }`}>
+    <div className={`relative min-h-[200px] flex items-center justify-center ${className}`}>
       {/* Background Image (only if we have one) */}
       {hasBackground && (
         <div 
@@ -131,10 +129,10 @@ function SimpleModuleHeaderDark({ title, subtitle, backgroundImage, className = 
       
       {/* Content */}
       <div className="relative z-10 text-center px-4">
-        <h1 className="text-white drop-shadow-lg text-4xl font-bold mb-2">
+        <h1 className={`text-4xl font-bold mb-2 ${hasBackground ? 'text-white drop-shadow-lg' : 'text-gray-800'}`}>
           {title}
         </h1>
-        <p className="text-white/90 drop-shadow-md text-lg">
+        <p className={`text-lg ${hasBackground ? 'text-white/90 drop-shadow-md' : 'text-gray-600'}`}>
           {subtitle}
         </p>
       </div>
@@ -210,9 +208,7 @@ function ComplexModuleHeaderDark({
   return (
     <>
       {/* Background Container */}
-      <div className={`relative min-h-[300px] ${className} ${
-        hasBackground ? '' : 'bg-gradient-to-br from-gray-800 to-gray-900'
-      }`}>
+      <div className={`relative min-h-[300px] ${className}`}>
         {/* Background Image (only if we have one) */}
         {hasBackground && (
           <div 
@@ -244,10 +240,10 @@ function ComplexModuleHeaderDark({
                   />
                 </div>
                 <div>
-                  <h1 className="text-white drop-shadow-lg text-4xl font-bold">
+                  <h1 className={`text-4xl font-bold ${hasBackground ? 'text-white drop-shadow-lg' : 'text-gray-800'}`}>
                     {module.title}
                   </h1>
-                  <p className="text-white/90 drop-shadow-md italic text-lg">
+                  <p className={`italic text-lg ${hasBackground ? 'text-white/90 drop-shadow-md' : 'text-gray-600'}`}>
                     {module.description}
                   </p>
                 </div>
@@ -258,13 +254,17 @@ function ComplexModuleHeaderDark({
                 {/* Hamburger Menu Button */}
                 <button
                   onClick={() => setShowHamburgerDropdown(!showHamburgerDropdown)}
-                  className="p-3 hover:bg-white/20 rounded-lg transition-all duration-200 TouchTarget border border-white/30"
+                  className={`p-3 rounded-lg transition-all duration-200 TouchTarget ${
+                    hasBackground 
+                      ? 'hover:bg-white/20 border border-white/30' 
+                      : 'hover:bg-gray-100 border border-gray-300'
+                  }`}
                   title="Navigation Menu"
                 >
                   <img 
                     src="https://rggdywqnvpuwssluzfud.supabase.co/storage/v1/object/public/module-assets/icons/hamburger.png"
                     alt="Menu" 
-                    className="w-6 h-6 object-contain filter invert"
+                    className={`w-6 h-6 object-contain ${hasBackground ? 'filter invert' : ''}`}
                   />
                 </button>
 
@@ -274,7 +274,11 @@ function ComplexModuleHeaderDark({
                   className="relative"
                   title={`User Profile - Edit your profile information${userClient?.champion_enrolled ? ' | Hero User' : ''}`}
                 >
-                  <div className="bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm border border-white/30 overflow-hidden flex-shrink-0 w-12 h-12 cursor-pointer hover:bg-white/30 transition-all duration-200">
+                  <div className={`rounded-full flex items-center justify-center backdrop-blur-sm overflow-hidden flex-shrink-0 w-12 h-12 cursor-pointer transition-all duration-200 ${
+                    hasBackground 
+                      ? 'bg-white/20 border border-white/30 hover:bg-white/30' 
+                      : 'bg-gray-100 border border-gray-300 hover:bg-gray-200'
+                  }`}>
                     {userAvatar ? (
                       <img 
                         src={userAvatar} 
@@ -284,7 +288,7 @@ function ComplexModuleHeaderDark({
                         onError={() => logger.debug('MODULE HEADER: User avatar failed to load, showing initials')}
                       />
                     ) : (
-                      <span className="text-white font-bold text-lg">
+                      <span className={`font-bold text-lg ${hasBackground ? 'text-white' : 'text-gray-700'}`}>
                         {user?.user_metadata?.full_name?.charAt(0) || user?.email?.charAt(0) || 'U'}
                       </span>
                     )}
