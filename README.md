@@ -1,6 +1,6 @@
-# 🏨 Hospitality Compliance SaaS Platform
+# 🍽️ JiGR App - Modular Hospitality Platform
 
-A comprehensive multi-tenant SaaS platform for New Zealand hospitality businesses that automates delivery docket temperature tracking using AI document processing, ensuring compliance with food safety regulations.
+A comprehensive multi-tenant SaaS platform for New Zealand hospitality businesses that provides complete restaurant management including inventory tracking, recipe management, menu engineering, and compliance automation using AI document processing.
 
 ## ✨ Key Features
 
