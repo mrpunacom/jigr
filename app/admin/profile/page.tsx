@@ -8,12 +8,10 @@ import ImageUploader from '@/app/components/ImageUploader'
 import { getUserClient, UserClient } from '@/lib/auth-utils'
 import { getVersionDisplay } from '@/lib/version'
 import { DesignTokens, getCardStyle, getTextStyle, getFormFieldStyle } from '@/lib/design-system'
-import { ModuleHeader } from '@/app/components/ModuleHeader'
-import { getModuleConfig } from '@/lib/module-config'
+import { StandardPageWrapper } from '@/app/components/UniversalPageWrapper'
 import { StatCard } from '@/app/components/ModuleCard'
 
 function ProfilePageContent() {
-  const moduleConfig = getModuleConfig('admin')
   const [user, setUser] = useState<any>(null)
   const [userClient, setUserClient] = useState<UserClient | null>(null)
   const [loading, setLoading] = useState(true)
@@ -23,6 +21,7 @@ function ProfilePageContent() {
   const [emailVerified, setEmailVerified] = useState<boolean>(false)
   const [verificationToken, setVerificationToken] = useState<string | null>(null)
   const [onboardingData, setOnboardingData] = useState({
+    userFirstName: '',
     jobTitle: '',
     preferredName: '',
     notificationPreferences: {
@@ -522,16 +521,7 @@ function ProfilePageContent() {
   }
 
   return (
-    <div className="px-2 sm:px-4 lg:px-6 pt-16 pb-8">
-      
-      {/* Module Header */}
-      {moduleConfig && (
-        <ModuleHeader 
-          module={moduleConfig}
-          currentPage="profile"
-        />
-      )}
-
+    <StandardPageWrapper moduleName="admin" currentPage="profile" onboardingData={onboardingData}>
       {/* Profile Cards - 3 Column Layout */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8 AdaptiveLayout">
         
@@ -895,7 +885,7 @@ function ProfilePageContent() {
         </div>
       )}
       
-    </div>
+    </StandardPageWrapper>
   )
 }
 

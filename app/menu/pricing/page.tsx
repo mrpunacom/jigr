@@ -1,13 +1,13 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { ModuleHeaderDark } from '../../components/ModuleHeaderDark'
 import { SearchInput } from '../../components/SearchInput'
 import { FoodCostBadge } from '../../components/FoodCostBadge'
 import { EmptyState } from '../../components/EmptyState'
 import { LoadingSpinner } from '../../components/LoadingSpinner'
-import { ModuleCard } from '../../components/ModuleCard'
+import { ModuleCard, StatCard } from '../../components/ModuleCard'
 import { useAuth } from '../../hooks/useAuth'
+import { StandardPageWrapper } from '@/app/components/UniversalPageWrapper'
 import { 
   DollarSign, TrendingUp, AlertTriangle, Target,
   RefreshCw, Download, Edit2, Check, X, Calculator
@@ -208,24 +208,22 @@ export default function MenuPricingPage() {
 
   if (authLoading || loading) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <ModuleHeaderDark title="Menu Pricing" subtitle="Manage Menu Prices & Food Costs" />
+      <StandardPageWrapper moduleName="menu" currentPage="pricing">
         <div className="container mx-auto px-4 py-6">
           <LoadingSpinner />
         </div>
-      </div>
+      </StandardPageWrapper>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <ModuleHeaderDark title="Menu Pricing" subtitle="Manage Menu Prices & Food Costs" />
+    <StandardPageWrapper moduleName="menu" currentPage="pricing">
       
       <div className="container mx-auto px-4 py-6 space-y-6">
         {/* Summary Cards */}
         {summary && (
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+            <StatCard accentColor="blue">
               <div className="flex items-center">
                 <div className="p-2 bg-blue-100 rounded-lg">
                   <DollarSign className="h-5 w-5 text-blue-600" />
@@ -235,9 +233,9 @@ export default function MenuPricingPage() {
                   <p className="text-2xl font-bold text-gray-900">{summary.total_items}</p>
                 </div>
               </div>
-            </div>
+            </StatCard>
             
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+            <StatCard accentColor="green">
               <div className="flex items-center">
                 <div className="p-2 bg-green-100 rounded-lg">
                   <Target className="h-5 w-5 text-green-600" />
@@ -249,9 +247,9 @@ export default function MenuPricingPage() {
                   </p>
                 </div>
               </div>
-            </div>
+            </StatCard>
             
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+            <StatCard accentColor="orange">
               <div className="flex items-center">
                 <div className="p-2 bg-orange-100 rounded-lg">
                   <TrendingUp className="h-5 w-5 text-orange-600" />
@@ -266,9 +264,9 @@ export default function MenuPricingPage() {
                   </p>
                 </div>
               </div>
-            </div>
+            </StatCard>
             
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+            <StatCard accentColor="orange">
               <div className="flex items-center">
                 <div className="p-2 bg-red-100 rounded-lg">
                   <AlertTriangle className="h-5 w-5 text-red-600" />
@@ -280,12 +278,12 @@ export default function MenuPricingPage() {
                   </p>
                 </div>
               </div>
-            </div>
+            </StatCard>
           </div>
         )}
 
         {/* Controls */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <ModuleCard className="p-6">
           <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 flex-1">
               <div>
@@ -376,7 +374,7 @@ export default function MenuPricingPage() {
               </button>
             </div>
           </div>
-        </div>
+        </ModuleCard>
 
         {/* Pricing Table */}
         {filteredItems.length === 0 ? (
@@ -388,7 +386,7 @@ export default function MenuPricingPage() {
             }
           />
         ) : (
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+          <ModuleCard className="overflow-hidden">
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
@@ -504,9 +502,9 @@ export default function MenuPricingPage() {
                 </tbody>
               </table>
             </div>
-          </div>
+          </ModuleCard>
         )}
       </div>
-    </div>
+    </StandardPageWrapper>
   )
 }

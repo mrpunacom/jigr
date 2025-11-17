@@ -7,8 +7,7 @@ import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
 import { getUserClient, UserClient } from '@/lib/auth-utils'
 import { DesignTokens, getCardStyle, getTextStyle, getFormFieldStyle } from '@/lib/design-system'
-import { getModuleConfig } from '@/lib/module-config'
-import { ModuleHeader } from '@/app/components/ModuleHeader'
+import { StandardPageWrapper } from '@/app/components/UniversalPageWrapper'
 import ImageUploader from '@/app/components/ImageUploader'
 
 export default function CompanyPage() {
@@ -131,11 +130,6 @@ export default function CompanyPage() {
     return () => subscription.unsubscribe()
   }, [])
 
-  const moduleConfig = getModuleConfig('admin')
-  
-  if (!moduleConfig) {
-    return <div>Module configuration not found</div>
-  }
 
   if (loading) {
     return (
@@ -181,16 +175,7 @@ export default function CompanyPage() {
   }
 
   return (
-    <div className="h-screen overflow-y-auto">
-      <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 pt-16 pb-8">
-      
-      {/* Standardized Module Header */}
-      <ModuleHeader 
-        module={moduleConfig}
-        currentPage="company"
-      />
-      
-
+    <StandardPageWrapper moduleName="admin" currentPage="company">
       {/* Main Content */}
       <div className="flex gap-6">
         
@@ -334,7 +319,6 @@ export default function CompanyPage() {
         </div>
 
       </div>
-    </div>
-    </div>
+    </StandardPageWrapper>
   )
 }

@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Re-enable Strict Mode - now properly handled with useRef pattern
+  reactStrictMode: true,
   // Image optimization
   images: {
     unoptimized: false,

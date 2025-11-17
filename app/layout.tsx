@@ -1,7 +1,7 @@
 import { Inter, Playfair_Display } from 'next/font/google'
 import { FeedbackWidget } from './components/testing/FeedbackWidget'
 import ConsoleManager from './components/ConsoleManager'
-import BackgroundManager from './components/BackgroundManager'
+// import BackgroundManager from './components/BackgroundManager' // DISABLED: Now using UniversalModuleHeader for backgrounds
 import './globals.css'
 import '../styles/ipad-responsive.css'
 
@@ -21,8 +21,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} min-h-screen relative`}>
-        {/* Dynamic Background Manager - Body-based approach for iOS 12 compatibility */}
-        <BackgroundManager />
+        {/* Dynamic Background Manager - DISABLED: Now using UniversalModuleHeader for backgrounds */}
+        {/* <BackgroundManager /> */}
         
         <main className="min-h-screen">
           {children}

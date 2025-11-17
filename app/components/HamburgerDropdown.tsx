@@ -62,9 +62,9 @@ export function HamburgerDropdown({ isOpen, onClose, currentModule }: HamburgerD
     { 
       key: 'stock', 
       name: 'Stock', 
-      href: '#',
+      href: '/stock/items',
       icon: 'JiGRstockWhite',
-      active: false,
+      active: true,
       description: 'Inventory management and tracking'
     },
     { 
@@ -84,12 +84,12 @@ export function HamburgerDropdown({ isOpen, onClose, currentModule }: HamburgerD
       description: 'Equipment maintenance and repair tracking'
     },
     { 
-      key: 'menus', 
-      name: 'Menus', 
-      href: '#',
+      key: 'menu', 
+      name: 'Menu', 
+      href: '/menu/console',
       icon: 'JiGRmenus',
-      active: false,
-      description: 'Menu management and recipe planning'
+      active: true,
+      description: 'Menu engineering and profitability analysis'
     },
     { 
       key: 'diary', 
@@ -102,18 +102,18 @@ export function HamburgerDropdown({ isOpen, onClose, currentModule }: HamburgerD
     { 
       key: 'recipes', 
       name: 'Recipes', 
-      href: '#',
+      href: '/recipes/console',
       icon: 'JiGRrecipes',
-      active: false,
-      description: 'Recipe management and costing'
+      active: true,
+      description: 'Recipe management and production planning'
     },
     { 
-      key: 'stocktake', 
-      name: 'Stocktake', 
-      href: '#',
-      icon: 'JiGRstocktake',
-      active: false,
-      description: 'Periodic inventory audits'
+      key: 'count', 
+      name: 'Count', 
+      href: '/count/console',
+      icon: 'JiGRcount',
+      active: true,
+      description: 'Stocktake and inventory counting'
     }
   ]
 

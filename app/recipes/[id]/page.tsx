@@ -1,12 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import { ModuleHeaderDark } from '../../components/ModuleHeaderDark'
 import { FoodCostBadge } from '../../components/FoodCostBadge'
 import { LoadingSpinner } from '../../components/LoadingSpinner'
-import { ModuleCard } from '../../components/ModuleCard'
+import { ModuleCard, StatCard } from '../../components/ModuleCard'
 import { useAuth } from '../../hooks/useAuth'
+import { StandardPageWrapper } from '@/app/components/UniversalPageWrapper'
 import { 
   ArrowLeft, ChefHat, Clock, Users, DollarSign, 
   Calculator, Package, FileText, Printer, Edit,
@@ -20,61 +20,159 @@ import {
 } from '../../../types/RecipeTypes'
 
 export default function RecipeDetailPage() {
+  console.log('🔍 COMPONENT RENDER: RecipeDetailPage started')
+  
   const params = useParams()
   const router = useRouter()
   const { session, loading: authLoading } = useAuth()
+  
+  // 🔍 DEBUG: Log auth state immediately
+  console.log('🔍 Auth Debug:', { session: !!session, authLoading, hasAccessToken: !!session?.access_token })
   const [recipe, setRecipe] = useState<RecipeWithDetails | null>(null)
   const [ingredients, setIngredients] = useState<RecipeIngredientWithDetails[]>([])
   const [costBreakdown, setCostBreakdown] = useState<CostBreakdown | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true) // RESTORE NORMAL LOADING STATE
   const [error, setError] = useState<string | null>(null)
+  const [fetchInProgress, setFetchInProgress] = useState(false)
+
+  // 🎯 KEY FIX: Track component lifecycle
+  const componentId = useRef(Math.random().toString(36).substr(2, 9))
+  
+  // 🎯 KEY FIX: Prevent double-fetching in Strict Mode
+  const hasFetchedRef = useRef(false)
+  
+  // 🎯 NEW FIX: Track if component is still mounted for safe state updates
+  const isMountedRef = useRef(true)
 
   const recipeId = params.id as string
 
+  // 🎯 SAFE STATE SETTER: Only update state if component is still mounted
+  const safeSetState = (setter: () => void) => {
+    if (isMountedRef.current) {
+      console.log('✅ Safe state update (mounted)')
+      setter()
+    } else {
+      console.log('🚫 Blocked state update (unmounted)')
+    }
+  }
+
+  // Track mounts/unmounts for debugging
   useEffect(() => {
+    console.log(`🔵 MOUNT - Component ${componentId.current}`)
+    isMountedRef.current = true
+    
+    return () => {
+      console.log(`🔴 UNMOUNT - Component ${componentId.current}`)
+      isMountedRef.current = false
+      if (process.env.NODE_ENV === 'development') {
+        hasFetchedRef.current = false
+      }
+    }
+  }, [])
+
+  useEffect(() => {
+    const effectId = componentId.current
+    console.log('🍳 Effect running with ID:', effectId)
+    
     async function fetchRecipeDetail() {
-      if (!session?.access_token || !recipeId) return
+      console.log('🍳 Fetch recipe called:', effectId, { session: !!session, access_token: !!session?.access_token, recipeId, authLoading, fetchInProgress })
+      
+      // 🎯 CRITICAL: Prevent double-fetch in Strict Mode
+      if (hasFetchedRef.current) {
+        console.log('🍳 Already fetched, skipping:', effectId)
+        return
+      }
+      
+      if (!session || !recipeId) {
+        console.log('🍳 Missing session or recipeId:', { session: !!session, recipeId })
+        console.log('🍳 Session structure:', session ? Object.keys(session) : 'no session')
+        return
+      }
+
+      if (fetchInProgress) {
+        console.log('🍳 Fetch already in progress, skipping')
+        return
+      }
+
+      // Check session structure to find the correct token field
+      const accessToken = session.access_token || session.token || session.accessToken
+      console.log('🍳 Access token found:', !!accessToken)
 
       try {
+        console.log('🍳 Starting fetch:', effectId)
+        
+        // 🎯 CRITICAL: Set the flag BEFORE the async operation
+        hasFetchedRef.current = true
+        
+        setFetchInProgress(true)
         setLoading(true)
         setError(null)
 
         const response = await fetch(`/api/recipes/${recipeId}`, {
           headers: {
-            'Authorization': `Bearer ${session.access_token}`
+            'Authorization': `Bearer ${accessToken || 'no-token'}`
           }
         })
 
+        console.log('🍳 Response status:', response.status, response.ok)
+
         if (!response.ok) {
+          const errorData = await response.text()
+          console.error('🍳 API Error:', response.status, errorData)
+          
+          try {
+            const errorJson = JSON.parse(errorData)
+            console.error('🍳 API Error Details:', errorJson)
+          } catch (e) {
+            console.log('🍳 Error response not JSON:', errorData)
+          }
+          
           if (response.status === 404) {
-            setError('Recipe not found')
+            safeSetState(() => setError('Recipe not found'))
+          } else if (response.status === 401) {
+            safeSetState(() => setError('Authentication failed - please try refreshing the page'))
           } else {
-            throw new Error('Failed to fetch recipe details')
+            safeSetState(() => setError(`API Error: ${response.status}`))
           }
           return
         }
 
         const data: RecipeDetailResponse = await response.json()
+        console.log('🍳 API Response:', data)
 
         if (data.success) {
-          setRecipe(data.recipe)
-          setIngredients(data.ingredients)
-          setCostBreakdown(data.costBreakdown)
+          console.log('🍳 Setting recipe data with safe state updates...')
+          
+          safeSetState(() => {
+            setRecipe(data.recipe)
+            setIngredients(data.ingredients) 
+            setCostBreakdown(data.costBreakdown)
+            console.log('🍳 Recipe data set successfully')
+          })
+          
+          // Critical: Set loading to false with mount check
+          safeSetState(() => {
+            setLoading(false)
+            console.log('🍳 Loading set to false safely')
+          })
+          
         } else {
-          setError('Failed to load recipe details')
+          console.log('🍳 API returned success=false')
+          safeSetState(() => setError('Failed to load recipe details'))
         }
       } catch (error) {
-        console.error('Error fetching recipe detail:', error)
-        setError('Failed to load recipe details')
+        console.error('🍳 Error fetching recipe detail:', error)
+        safeSetState(() => setError('Failed to load recipe details'))
       } finally {
-        setLoading(false)
+        console.log('🍳 Cleaning up (effect:', effectId, ')')
+        safeSetState(() => setFetchInProgress(false))
       }
     }
 
-    if (!authLoading) {
+    if (!authLoading && session?.access_token) {
       fetchRecipeDetail()
     }
-  }, [session, recipeId, authLoading])
+  }, [recipeId]) // 🎯 SIMPLIFIED: Only watch recipeId, only run when we have auth
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-NZ', {
@@ -104,23 +202,33 @@ export default function RecipeDetailPage() {
     window.print()
   }
 
+  console.log('🍳 FINAL Render state:', { authLoading, loading, recipe: !!recipe, error })
+  console.log('🍳 Should show loading?', authLoading || loading)
+  console.log('🍳 Should show error?', error || !recipe)
+
   if (authLoading || loading) {
+    console.log('🍳 Showing loading spinner because:', { authLoading, loading })
     return (
-      <div className="min-h-screen bg-gray-50">
-        <ModuleHeaderDark title="Recipe Detail" subtitle="Loading..." />
-        <div className="container mx-auto px-4 py-6">
-          <LoadingSpinner />
+      <div className="min-h-screen flex flex-col items-center justify-center p-4">
+        <LoadingSpinner />
+        <div className="mt-4 text-center">
+          <p className="text-lg">Loading Recipe...</p>
+          <div className="text-sm text-gray-600 mt-2">
+            <p>Auth Loading: {String(authLoading)}</p>
+            <p>Data Loading: {String(loading)}</p>
+            <p>Component: {componentId.current}</p>
+          </div>
         </div>
       </div>
     )
   }
 
   if (error || !recipe) {
+    console.log('🍳 Showing error page because:', { error, recipe: !!recipe })
     return (
-      <div className="min-h-screen bg-gray-50">
-        <ModuleHeaderDark title="Recipe Detail" subtitle="Error" />
+      <StandardPageWrapper moduleName="recipes" currentPage="detail">
         <div className="container mx-auto px-4 py-6">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 text-center">
+          <ModuleCard className="p-6 text-center">
             <h2 className="text-xl font-bold text-gray-900 mb-2">
               {error || 'Recipe not found'}
             </h2>
@@ -134,15 +242,16 @@ export default function RecipeDetailPage() {
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back to Recipes
             </button>
-          </div>
+          </ModuleCard>
         </div>
-      </div>
+      </StandardPageWrapper>
     )
   }
 
+  console.log('🍳 Rendering main recipe content!')
+  
   return (
-    <div className="min-h-screen bg-gray-50 print:bg-white">
-      <ModuleHeaderDark title={recipe.recipe_name} subtitle="Recipe Detail" />
+    <StandardPageWrapper moduleName="recipes" currentPage="detail">
       
       <div className="container mx-auto px-4 py-6 space-y-6">
         {/* Header Actions */}
@@ -181,7 +290,7 @@ export default function RecipeDetailPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Recipe Image & Basic Info */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+            <ModuleCard className="overflow-hidden">
               {/* Recipe Photo */}
               <div className="w-full h-64 bg-gray-200 flex items-center justify-center">
                 {recipe.photo_url ? (
@@ -232,7 +341,7 @@ export default function RecipeDetailPage() {
                   </div>
                 </div>
               </div>
-            </div>
+            </ModuleCard>
           </div>
 
           {/* Costing Summary */}
@@ -288,7 +397,7 @@ export default function RecipeDetailPage() {
         </div>
 
         {/* Ingredients Section */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+        <ModuleCard className="overflow-hidden">
           <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
             <div className="flex items-center justify-between">
               <div className="flex items-center">
@@ -404,11 +513,11 @@ export default function RecipeDetailPage() {
               </tbody>
             </table>
           </div>
-        </div>
+        </ModuleCard>
 
         {/* Instructions Section */}
         {(recipe.instructions || recipe.cooking_notes || recipe.plating_notes) && (
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+          <ModuleCard>
             <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
               <div className="flex items-center">
                 <FileText className="h-5 w-5 text-gray-400 mr-2" />
@@ -444,9 +553,9 @@ export default function RecipeDetailPage() {
                 </div>
               )}
             </div>
-          </div>
+          </ModuleCard>
         )}
       </div>
-    </div>
+    </StandardPageWrapper>
   )
 }

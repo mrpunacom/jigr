@@ -8,8 +8,7 @@ import ImageUploader from '@/app/components/ImageUploader'
 import { getUserClient, UserClient } from '@/lib/auth-utils'
 import { getVersionDisplay } from '@/lib/version'
 import { DesignTokens, getCardStyle, getTextStyle, getFormFieldStyle } from '@/lib/design-system'
-import { getModuleConfig } from '@/lib/module-config'
-import { ModuleHeader } from '@/app/components/ModuleHeader'
+import { StandardPageWrapper } from '@/app/components/UniversalPageWrapper'
 import { StatCard } from '@/app/components/ModuleCard'
 // Removed RoleBasedSidebar - using AppleSidebar from layout instead
 import UserInvitationModal from '@/app/components/team/UserInvitationModal'
@@ -428,11 +427,6 @@ export default function AdminTeamPage() {
     return () => subscription.unsubscribe()
   }, [])
 
-  const moduleConfig = getModuleConfig('admin')
-  
-  if (!moduleConfig) {
-    return <div>Module configuration not found</div>
-  }
 
   if (loading) {
     return (
@@ -478,15 +472,7 @@ export default function AdminTeamPage() {
   }
 
   return (
-    <div className="px-2 sm:px-4 lg:px-6 pt-16 pb-8">
-      
-      
-      {/* Standardized Module Header */}
-      <ModuleHeader 
-        module={moduleConfig}
-        currentPage="team"
-      />
-      
+    <StandardPageWrapper moduleName="admin" currentPage="team">
       {/* Team Overview Cards - 3 Column Layout */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8 AdaptiveLayout">
         
@@ -854,6 +840,6 @@ export default function AdminTeamPage() {
           </div>
         </div>
       )}
-    </div>
+    </StandardPageWrapper>
   )
 }

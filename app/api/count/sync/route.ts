@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { extractUserAndClientId, ApiErrors } from '@/lib/utils/api-auth'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -19,20 +20,11 @@ interface OfflineCount {
 
 export async function POST(request: NextRequest) {
   try {
-    // Get user from auth header
-    const authorization = request.headers.get('authorization')
-    if (!authorization) {
-      return NextResponse.json({ error: 'No authorization header' }, { status: 401 })
+    // Extract client_id and user_id using standardized utility
+    const { clientId, userId } = await extractUserAndClientId(request)
+    if (!clientId || !userId) {
+      return NextResponse.json({ error: ApiErrors.UNAUTHORIZED }, { status: 401 })
     }
-
-    const token = authorization.replace('Bearer ', '')
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token)
-    
-    if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const userId = user.id
     const body = await request.json()
     const { counts }: { counts: OfflineCount[] } = body
 
@@ -65,7 +57,7 @@ export async function POST(request: NextRequest) {
           .from('inventory_items')
           .select('id, item_name, count_unit')
           .eq('id', count.itemId)
-          .eq('client_id', userId)
+          .eq('client_id', clientId)
           .single()
 
         if (itemError || !item) {
@@ -82,7 +74,7 @@ export async function POST(request: NextRequest) {
             .from('inventory_locations')
             .select('id')
             .eq('id', count.locationId)
-            .eq('client_id', userId)
+            .eq('client_id', clientId)
             .single()
 
           if (locationError || !location) {
@@ -98,7 +90,7 @@ export async function POST(request: NextRequest) {
         const { error: countError } = await supabase
           .from('inventory_count')
           .insert({
-            client_id: userId,
+            client_id: clientId,
             item_id: count.itemId,
             quantity_on_hand: count.quantity,
             count_unit: count.unit || item.count_unit,

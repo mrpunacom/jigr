@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { extractClientId, ApiErrors } from '@/lib/utils/api-auth'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -8,25 +9,16 @@ const supabase = createClient(
 
 export async function GET(request: NextRequest) {
   try {
-    // Get user from auth header
-    const authorization = request.headers.get('authorization')
-    if (!authorization) {
-      return NextResponse.json({ error: 'No authorization header' }, { status: 401 })
+    // Extract client_id using standardized utility
+    const clientId = await extractClientId(request)
+    if (!clientId) {
+      return NextResponse.json({ error: ApiErrors.UNAUTHORIZED }, { status: 401 })
     }
-
-    const token = authorization.replace('Bearer ', '')
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token)
-    
-    if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const userId = user.id
 
     // Fetch total inventory value
     const { data: totalValueData, error: totalValueError } = await supabase.rpc(
       'calculate_total_inventory_value', 
-      { client_uuid: userId }
+      { client_uuid: clientId }
     )
 
     let totalValue = 0
@@ -40,7 +32,7 @@ export async function GET(request: NextRequest) {
           unit_cost,
           inventory_count!left(quantity_on_hand)
         `)
-        .eq('client_id', userId)
+        .eq('client_id', clientId)
 
       if (!fallbackError && fallbackData) {
         totalValue = fallbackData.reduce((sum, item) => {
@@ -64,7 +56,7 @@ export async function GET(request: NextRequest) {
           count_date
         )
       `)
-      .eq('client_id', userId)
+      .eq('client_id', clientId)
       .not('par_level_low', 'is', null)
 
     let itemsBelowPar: any[] = []
@@ -94,7 +86,7 @@ export async function GET(request: NextRequest) {
         item_id,
         inventory_items!inner(item_name)
       `)
-      .eq('client_id', userId)
+      .eq('client_id', clientId)
       .eq('status', 'active')
       .not('expiration_date', 'is', null)
       .lte('expiration_date', threeDaysFromNow.toISOString().split('T')[0])

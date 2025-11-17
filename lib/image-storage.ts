@@ -232,17 +232,38 @@ export const ICON_MAPPING = {
   'JiGRstocktake': 'modules/JiGRstocktake',
   'JiGRadmin2': 'modules/JiGRadmin2',
   'JiGRcompliance': 'modules/JiGRcompliance',
-  'JiGRmenu': 'modules/JiGRmenu'
+  'JiGRmenu': 'modules/JiGRmenu',
+  'JiGRcount': 'modules/JiGRcount'
 } as const
 
 /**
  * Get mapped icon with organized path structure
  */
 export function getMappedIcon(iconKey: keyof typeof ICON_MAPPING, size: number = 24): string {
+  // Special case for JiGRcount - use direct URL
+  if (iconKey === 'JiGRcount') {
+    return 'https://rggdywqnvpuwssluzfud.supabase.co/storage/v1/object/public/ui-icons/modules/JiGRcount.png'
+  }
+  
   const mappedPath = ICON_MAPPING[iconKey]
   if (!mappedPath) {
     console.warn(`Icon mapping not found for: ${iconKey}`)
     return getUIIcon(iconKey, size)
+  }
+  
+  // Special handling for branding bucket icons
+  if (mappedPath.startsWith('../branding/')) {
+    const cleanPath = mappedPath.replace('../branding/', '')
+    return getStorageImageUrl(
+      STORAGE_BUCKETS.BRANDING,
+      cleanPath,
+      {
+        width: size,
+        height: size,
+        format: 'webp',
+        quality: 90
+      }
+    )
   }
   
   return getStorageImageUrl(

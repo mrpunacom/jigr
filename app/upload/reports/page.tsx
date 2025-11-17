@@ -6,9 +6,8 @@ import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import { getUserClient, UserClient } from '@/lib/auth-utils'
 import { DesignTokens, getCardStyle, getTextStyle } from '@/lib/design-system'
-import { getModuleConfig } from '@/lib/module-config'
-import { ModuleHeader } from '@/app/components/ModuleHeader'
-import { StatCard } from '@/app/components/ModuleCard'
+import { StandardPageWrapper } from '@/app/components/UniversalPageWrapper'
+import { StatCard, ModuleCard } from '@/app/components/ModuleCard'
 
 export default function UploadReportsPage() {
   const [user, setUser] = useState<any>(null)
@@ -76,20 +75,9 @@ export default function UploadReportsPage() {
     )
   }
 
-  const moduleConfig = getModuleConfig('upload')
-  
-  if (!moduleConfig) {
-    return <div>Module configuration not found</div>
-  }
 
   return (
-    <div className="px-2 sm:px-4 lg:px-6 pt-16 pb-8">
-      
-      {/* Standardized Module Header */}
-      <ModuleHeader 
-        module={moduleConfig}
-        currentPage="reports"
-      />
+    <StandardPageWrapper moduleName="upload" currentPage="reports">
       
 
       <div>
@@ -237,11 +225,11 @@ export default function UploadReportsPage() {
 
             {/* Report Table - Recent Generated Reports - 3 Columns Wide */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-              <div className="lg:col-span-3 bg-white/20  border border-white/20 rounded-xl p-6">
+              <ModuleCard className="lg:col-span-3 p-6">
                 <h3 className="text-gray-900 text-lg font-bold mb-4">Recent Reports</h3>
               
               <div className="space-y-4">
-                <div className="flex items-center justify-between p-4 bg-white/20 rounded-xl hover:bg-white/20 transition-all duration-200">
+                <div className="flex items-center justify-between p-4 bg-white/10 rounded-xl hover:bg-white/20 transition-all duration-200">
                   <div>
                     <h4 className="font-medium text-[#2d2e4a]">Weekly Summary - Aug 13-19, 2025</h4>
                     <p className="text-sm text-[#2d2e4a]/80">Generated on Aug 19, 2025 • 47 deliveries processed</p>
@@ -256,7 +244,7 @@ export default function UploadReportsPage() {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between p-4 bg-white/20 rounded-xl hover:bg-white/20 transition-all duration-200">
+                <div className="flex items-center justify-between p-4 bg-white/10 rounded-xl hover:bg-white/20 transition-all duration-200">
                   <div>
                     <h4 className="font-medium text-[#2d2e4a]">Delivery Violations - August 2025</h4>
                     <p className="text-sm text-[#2d2e4a]/80">Generated on Aug 15, 2025 • 3 violations detected</p>
@@ -271,7 +259,7 @@ export default function UploadReportsPage() {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between p-4 bg-white/20 rounded-xl hover:bg-white/20 transition-all duration-200">
+                <div className="flex items-center justify-between p-4 bg-white/10 rounded-xl hover:bg-white/20 transition-all duration-200">
                   <div>
                     <h4 className="font-medium text-[#2d2e4a]">Monthly Compliance - July 2025</h4>
                     <p className="text-sm text-[#2d2e4a]/80">Generated on Aug 1, 2025 • 98.2% compliance rate</p>
@@ -285,8 +273,8 @@ export default function UploadReportsPage() {
                     </button>
                   </div>
                 </div>
-              </div>
-              </div>
+                </div>
+              </ModuleCard>
               
               {/* Empty 4th Column */}
               <div></div>
@@ -294,6 +282,6 @@ export default function UploadReportsPage() {
 
       </div>
       
-    </div>
+    </StandardPageWrapper>
   )
 }

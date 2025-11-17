@@ -2,10 +2,10 @@
 
 import { useState, useEffect, useCallback, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { ModuleHeaderDark } from '../../components/ModuleHeaderDark'
 import { LoadingSpinner } from '../../components/LoadingSpinner'
-import { ModuleCard } from '../../components/ModuleCard'
+import { ModuleCard, StatCard } from '../../components/ModuleCard'
 import { useAuth } from '../../hooks/useAuth'
+import { StandardPageWrapper } from '@/app/components/UniversalPageWrapper'
 import { 
   ArrowLeft, Factory, Clock, AlertTriangle, 
   CheckCircle, Package, Calendar, Beaker,
@@ -190,18 +190,16 @@ function ProductionPageContent() {
 
   if (authLoading || loading) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <ModuleHeaderDark title="Production Recording" subtitle="Convert Sub-Recipes to Inventory" />
+      <StandardPageWrapper moduleName="recipes" currentPage="production">
         <div className="container mx-auto px-4 py-6">
           <LoadingSpinner />
         </div>
-      </div>
+      </StandardPageWrapper>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <ModuleHeaderDark title="Production Recording" subtitle="Convert Sub-Recipes to Inventory" />
+    <StandardPageWrapper moduleName="recipes" currentPage="production">
       
       <div className="container mx-auto px-4 py-6 space-y-6">
         {/* Header Actions */}
@@ -239,7 +237,7 @@ function ProductionPageContent() {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Sub-Recipe Selection */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <ModuleCard className="p-6">
             <div className="flex items-center mb-4">
               <Beaker className="h-5 w-5 text-gray-400 mr-2" />
               <h2 className="text-lg font-semibold text-gray-900">Select Sub-Recipe</h2>
@@ -296,11 +294,11 @@ function ProductionPageContent() {
                 </div>
               )}
             </div>
-          </div>
+          </ModuleCard>
 
           {/* Production Details */}
           {selectedSubRecipe && (
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <ModuleCard className="p-6">
               <div className="flex items-center mb-4">
                 <Factory className="h-5 w-5 text-gray-400 mr-2" />
                 <h2 className="text-lg font-semibold text-gray-900">Production Details</h2>
@@ -395,7 +393,7 @@ function ProductionPageContent() {
                   />
                 </div>
               </div>
-            </div>
+            </ModuleCard>
           )}
 
           {/* Cost Analysis */}
@@ -441,7 +439,7 @@ function ProductionPageContent() {
 
           {/* What Will Be Created */}
           {selectedSubRecipe && (
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <ModuleCard className="p-6">
               <div className="flex items-center mb-4">
                 <Package className="h-5 w-5 text-gray-400 mr-2" />
                 <h2 className="text-lg font-semibold text-gray-900">This Will Create</h2>
@@ -462,7 +460,7 @@ function ProductionPageContent() {
                   </div>
                 </div>
               </div>
-            </div>
+            </ModuleCard>
           )}
 
           {/* Submit Button */}
@@ -495,7 +493,7 @@ function ProductionPageContent() {
           </div>
         </form>
       </div>
-    </div>
+    </StandardPageWrapper>
   )
 }
 

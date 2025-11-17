@@ -11,6 +11,13 @@ export interface ModulePage {
   href: string
 }
 
+export interface ModuleLayoutConfig {
+  variant: 'default' | 'fullwidth' | 'centered' | 'dashboard'
+  padding: 'standard' | 'compact' | 'none'
+  maxWidth: 'container' | 'full' | 'narrow'
+  backgroundBehavior: 'universal' | 'none' | 'custom'
+}
+
 export interface ModuleConfig {
   key: string
   title: string
@@ -18,7 +25,7 @@ export interface ModuleConfig {
   iconUrl: string
   pages: ModulePage[]
   isActive: boolean
-  theme?: 'light' | 'dark' // light = light text for dark backgrounds, dark = dark text for light backgrounds
+  layoutConfig?: ModuleLayoutConfig
 }
 
 // Standard 3-page structure for each module
@@ -48,8 +55,7 @@ export const MODULE_CONFIGS: Record<string, ModuleConfig> = {
     description: 'Document upload, processing, and compliance management',
     iconUrl: 'https://rggdywqnvpuwssluzfud.supabase.co/storage/v1/object/public/branding/icons/JiGRModuleUpload.webp',
     pages: createModulePages('upload'),
-    isActive: true,
-    theme: 'light' // Light text for dark background
+    isActive: true
   },
   
   stock: {
@@ -74,8 +80,7 @@ export const MODULE_CONFIGS: Record<string, ModuleConfig> = {
         href: '/stock/reports'
       }
     ],
-    isActive: true,
-    theme: 'light' // Light text for dark backgrounds
+    isActive: true
   },
   
   temperature: {
@@ -98,7 +103,12 @@ export const MODULE_CONFIGS: Record<string, ModuleConfig> = {
       { key: 'team', label: 'Team', href: '/admin/team' }
     ],
     isActive: true,
-    theme: 'dark' // Dark text for light background
+    layoutConfig: {
+      variant: 'default',
+      padding: 'standard',
+      maxWidth: 'container',
+      backgroundBehavior: 'universal'
+    }
   },
   
   diary: {
@@ -132,17 +142,7 @@ export const MODULE_CONFIGS: Record<string, ModuleConfig> = {
         href: '/recipes/production'
       }
     ], 
-    isActive: true,
-    theme: 'light' // Light text for dark backgrounds
-  },
-  
-  stocktake: {
-    key: 'stocktake',
-    title: 'STOCKTAKE',
-    description: 'Inventory audits and reconciliation',
-    iconUrl: 'https://rggdywqnvpuwssluzfud.supabase.co/storage/v1/object/public/module-assets/icons/JiGRstocktake.png',
-    pages: createModulePages('stocktake'),
-    isActive: false
+    isActive: true
   },
   
   count: {
@@ -152,9 +152,9 @@ export const MODULE_CONFIGS: Record<string, ModuleConfig> = {
     iconUrl: 'https://rggdywqnvpuwssluzfud.supabase.co/storage/v1/object/public/branding/icons/JiGRModuleCount.webp',
     pages: [
       {
-        key: 'new',
-        label: 'New Count',
-        href: '/count/new'
+        key: 'console',
+        label: 'Console',
+        href: '/count/console'
       },
       {
         key: 'history',
@@ -167,15 +167,14 @@ export const MODULE_CONFIGS: Record<string, ModuleConfig> = {
         href: '/count/variance'
       }
     ],
-    isActive: true,
-    theme: 'light' // Light text for dark backgrounds
+    isActive: true
   },
 
   menu: {
     key: 'menu',
     title: 'MENU',
     description: 'Menu pricing and engineering analytics',
-    iconUrl: 'https://rggdywqnvpuwssluzfud.supabase.co/storage/v1/object/public/branding/icons/JiGRModuleMenu.webp',
+    iconUrl: 'https://rggdywqnvpuwssluzfud.supabase.co/storage/v1/object/public/branding/icons/JiGRModuleMenus.webp',
     pages: [
       {
         key: 'pricing',
@@ -193,8 +192,7 @@ export const MODULE_CONFIGS: Record<string, ModuleConfig> = {
         href: '/menu/analysis'
       }
     ],
-    isActive: true,
-    theme: 'light' // Light text for dark backgrounds
+    isActive: true
   },
 
   dev: {
@@ -208,8 +206,7 @@ export const MODULE_CONFIGS: Record<string, ModuleConfig> = {
       { key: 'configcard-designer', label: 'ConfigCard Designer', href: '/dev/configcard-designer' },
       { key: 'console', label: 'Console', href: '/dev/console' }
     ],
-    isActive: true,
-    theme: 'dark' // Dark text for light background
+    isActive: true
   }
 }
 

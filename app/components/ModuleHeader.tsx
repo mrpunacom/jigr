@@ -1,16 +1,14 @@
 /**
- * Smart ModuleHeader Router Component
+ * Universal ModuleHeader Component
  * 
- * Routes to the appropriate header variant based on module theme:
- * - Light backgrounds (Admin) → ModuleHeaderDark (dark text)
- * - Dark backgrounds (Upload) → ModuleHeaderLight (light text)
+ * Single component for all modules with universal watermark backgrounds
+ * and dark text styling. Simplified from the old router approach.
  */
 
 'use client'
 
 import { ModuleConfig } from '@/lib/module-config'
-import { ModuleHeaderDark } from './ModuleHeaderDark'
-import { ModuleHeaderLight } from './ModuleHeaderLight'
+import { ModuleHeaderUniversal } from './ModuleHeaderUniversal'
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import { getUserClient } from '@/lib/auth-utils'
@@ -92,25 +90,10 @@ export function ModuleHeader({
     await supabase.auth.signOut()
     router.push('/')
   }
-  // Route to appropriate variant based on module theme
-  if (module.theme === 'dark') {
-    // Dark theme = dark text for light backgrounds
-    return (
-      <ModuleHeaderDark 
-        module={module}
-        currentPage={currentPage}
-        className={className}
-        onboardingData={onboardingData}
-        user={user}
-        userClient={userClient}
-        onSignOut={handleSignOut}
-      />
-    )
-  }
-  
-  // Default to light theme = light text for dark backgrounds
+
+  // Use universal component for all modules
   return (
-    <ModuleHeaderLight 
+    <ModuleHeaderUniversal 
       module={module}
       currentPage={currentPage}
       className={className}

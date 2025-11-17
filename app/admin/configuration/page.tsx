@@ -4,8 +4,7 @@ import React from 'react';
 import { useDisplayConfiguration } from '@/hooks/UseDisplayConfiguration';
 import { ConfigCardNew, ConfigCardSection, ConfigCardSkeleton, ConfigCardError } from '@/app/components/admin/ConfigCardNew';
 import { getCardStyle, getTextStyle, getButtonStyle } from '@/lib/design-system';
-import { getModuleConfig } from '@/lib/module-config';
-import { ModuleHeader } from '@/app/components/ModuleHeader';
+import { StandardPageWrapper } from '@/app/components/UniversalPageWrapper';
 import SecurityLegend from '@/app/components/admin/SecurityLegend';
 import type { ToggleEvent } from '@/app/types/Configuration';
 
@@ -84,21 +83,10 @@ export default function ConfigurationPage() {
     }
   };
 
-  // Get module configuration for header
-  const moduleConfig = getModuleConfig('admin');
-
   // Loading state
   if (loading) {
     return (
-      <div className="w-full mx-auto px-2 sm:px-4 md:px-6 lg:px-8 xl:max-w-7xl pt-16 pb-8 h-screen overflow-y-auto">
-        <div className="mb-6">
-          {moduleConfig && (
-            <ModuleHeader 
-              module={moduleConfig}
-              currentPage="configuration"
-            />
-          )}
-        </div>
+      <StandardPageWrapper moduleName="admin" currentPage="configuration">
 
         <div className="space-y-8">
           {/* Loading Skeletons */}
@@ -114,22 +102,14 @@ export default function ConfigurationPage() {
             ))}
           </ConfigCardSection>
         </div>
-      </div>
+      </StandardPageWrapper>
     );
   }
 
   // Error state
   if (error) {
     return (
-      <div className="w-full mx-auto px-2 sm:px-4 md:px-6 lg:px-8 xl:max-w-7xl pt-16 pb-8 h-screen overflow-y-auto">
-        <div className="mb-6">
-          {moduleConfig && (
-            <ModuleHeader 
-              module={moduleConfig}
-              currentPage="configuration"
-            />
-          )}
-        </div>
+      <StandardPageWrapper moduleName="admin" currentPage="configuration">
 
         <div className="flex items-center justify-center py-12">
           <ConfigCardError 
@@ -137,22 +117,14 @@ export default function ConfigurationPage() {
             onRetry={() => window.location.reload()}
           />
         </div>
-      </div>
+      </StandardPageWrapper>
     );
   }
 
   // No configuration state (shouldn't happen with our defaults system)
   if (!config) {
     return (
-      <div className="w-full mx-auto px-2 sm:px-4 md:px-6 lg:px-8 xl:max-w-7xl pt-16 pb-8 h-screen overflow-y-auto">
-        <div className="mb-6">
-          {moduleConfig && (
-            <ModuleHeader 
-              module={moduleConfig}
-              currentPage="configuration"
-            />
-          )}
-        </div>
+      <StandardPageWrapper moduleName="admin" currentPage="configuration">
 
         <div className="text-center py-12">
           <div className="text-4xl mb-4">⚠️</div>
@@ -169,23 +141,15 @@ export default function ConfigurationPage() {
             Refresh Page
           </button>
         </div>
-      </div>
+      </StandardPageWrapper>
     );
   }
 
   // Main render with configuration loaded
   return (
-    <div className="w-full mx-auto px-2 sm:px-4 md:px-6 lg:px-8 xl:max-w-7xl pt-16 pb-8 h-screen overflow-y-auto">
+    <StandardPageWrapper moduleName="admin" currentPage="configuration">
       
       {/* Header */}
-      <div className="mb-6">
-        {moduleConfig && (
-          <ModuleHeader 
-            module={moduleConfig}
-            currentPage="configuration"
-          />
-        )}
-      </div>
 
       {/* Configuration Status Summary */}
       <div className={`${getCardStyle('primary')} mb-8`}>
@@ -343,6 +307,6 @@ export default function ConfigurationPage() {
         </div>
       </div>
 
-    </div>
+    </StandardPageWrapper>
   );
 }

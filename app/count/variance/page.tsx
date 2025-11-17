@@ -1,12 +1,12 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { ModuleHeaderDark } from '../../components/ModuleHeaderDark'
+import { StandardPageWrapper } from '@/app/components/UniversalPageWrapper'
 import { SearchInput } from '../../components/SearchInput'
 import { EmptyState } from '../../components/EmptyState'
 import { LoadingSpinner } from '../../components/LoadingSpinner'
-import { ModuleCard } from '../../components/ModuleCard'
-import { useAuth } from '../../hooks/useAuth'
+import { ModuleCard, StatCard } from '../../components/ModuleCard'
+import { supabase } from '@/lib/supabase'
 import { 
   TrendingUp, TrendingDown, AlertTriangle, CheckCircle,
   Package, DollarSign, Activity, Target, 
@@ -53,7 +53,7 @@ interface VarianceResponse {
 }
 
 export default function CountVariancePage() {
-  const { session, loading: authLoading } = useAuth()
+  const [session, setSession] = useState<any>(null)
   const [variances, setVariances] = useState<VarianceItem[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
@@ -70,12 +70,101 @@ export default function CountVariancePage() {
   // Filter options
   const [categories, setCategories] = useState<Array<{id: string, name: string}>>([])
 
+  // Session management
+  useEffect(() => {
+    const getSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession()
+      setSession(session)
+    }
+    getSession()
+  }, [])
+
   const fetchVarianceData = useCallback(async () => {
     if (!session?.access_token) return
 
     try {
       setLoading(true)
 
+      // Use mock data instead of API call for demo
+      console.log('Loading mock variance data...')
+      
+      const mockVariances = [
+        {
+          id: 'var-1',
+          item_id: 'item-1',
+          item_name: 'Flour',
+          category_name: 'Dry Goods',
+          expected_quantity: 30,
+          actual_quantity: 25,
+          counted_quantity: 25,
+          variance: -5,
+          variance_quantity: -5,
+          variance_percentage: -16.67,
+          count_unit: 'kg',
+          location_name: 'Kitchen Prep',
+          count_date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(), // 2 days ago
+          last_counted: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(), // 2 days ago
+          variance_status: 'negative' as 'positive' | 'negative' | 'neutral',
+          threshold_exceeded: true,
+          cost_impact: 15.50
+        },
+        {
+          id: 'var-2', 
+          item_id: 'item-2',
+          item_name: 'Sugar',
+          category_name: 'Dry Goods',
+          expected_quantity: 10,
+          actual_quantity: 12,
+          counted_quantity: 12,
+          variance: 2,
+          variance_quantity: 2,
+          variance_percentage: 20.0,
+          count_unit: 'kg',
+          location_name: 'Kitchen Prep',
+          count_date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(), // 1 day ago
+          last_counted: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(), // 1 day ago
+          variance_status: 'positive' as 'positive' | 'negative' | 'neutral',
+          threshold_exceeded: true,
+          cost_impact: -8.30
+        },
+        {
+          id: 'var-3',
+          item_id: 'item-3', 
+          item_name: 'Rice',
+          category_name: 'Dry Goods',
+          expected_quantity: 15,
+          actual_quantity: 14,
+          counted_quantity: 14,
+          variance: -1,
+          variance_quantity: -1,
+          variance_percentage: -6.67,
+          count_unit: 'kg',
+          location_name: 'Dry Storage',
+          count_date: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(), // 3 days ago
+          last_counted: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(), // 3 days ago
+          variance_status: 'neutral' as 'positive' | 'negative' | 'neutral',
+          threshold_exceeded: false,
+          cost_impact: 3.20
+        }
+      ]
+
+      const mockSummary = {
+        totalVariances: 3,
+        significantVariances: 2,
+        totalCostImpact: 10.40,
+        averageVariancePercentage: -0.89,
+        lastUpdated: new Date().toISOString()
+      }
+
+      setTimeout(() => {
+        setVariances(mockVariances)
+        setSummary(mockSummary)
+        setTotalPages(1)
+        setTotalItems(3)
+        setLoading(false)
+      }, 500) // Small delay to simulate API call
+
+      /* Original API call (commented out for demo)
       const params = new URLSearchParams({
         page: currentPage.toString(),
         pageSize: '20',
@@ -106,9 +195,9 @@ export default function CountVariancePage() {
         setTotalItems(data.pagination.totalItems)
         setSummary(data.summary)
       }
+      */
     } catch (error) {
       console.error('Error fetching variance data:', error)
-    } finally {
       setLoading(false)
     }
   }, [session?.access_token, currentPage, searchTerm, selectedCategory, selectedStatus, selectedThreshold, selectedDateRange, sortBy])
@@ -117,6 +206,18 @@ export default function CountVariancePage() {
     if (!session?.access_token) return
 
     try {
+      // Use mock categories data
+      const mockCategories = [
+        { id: 'dry-goods', name: 'Dry Goods' },
+        { id: 'fresh-produce', name: 'Fresh Produce' },
+        { id: 'dairy', name: 'Dairy' },
+        { id: 'beverages', name: 'Beverages' }
+      ]
+      
+      setCategories(mockCategories)
+      return
+
+      /* Original API call (commented out for demo)
       const response = await fetch('/api/inventory/categories', {
         headers: {
           'Authorization': `Bearer ${session.access_token}`
@@ -127,17 +228,18 @@ export default function CountVariancePage() {
         const data = await response.json()
         setCategories(data.categories || [])
       }
+      */
     } catch (error) {
       console.error('Error fetching categories:', error)
     }
   }, [session?.access_token])
 
   useEffect(() => {
-    if (!authLoading && session) {
+    if (session) {
       fetchVarianceData()
       fetchCategories()
     }
-  }, [authLoading, session, fetchVarianceData, fetchCategories])
+  }, [session, fetchVarianceData, fetchCategories])
 
   // Reset to page 1 when filters change
   useEffect(() => {
@@ -184,25 +286,22 @@ export default function CountVariancePage() {
     return status === 'positive' ? 'text-green-600' : status === 'negative' ? 'text-red-600' : 'text-gray-600'
   }
 
-  if (authLoading || loading) {
+  if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <ModuleHeaderDark title="Count Variance" subtitle="Variance analysis and threshold monitoring" />
+      <StandardPageWrapper moduleName="count" currentPage="variance">
         <div className="container mx-auto px-4 py-6">
           <LoadingSpinner />
         </div>
-      </div>
+      </StandardPageWrapper>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <ModuleHeaderDark title="Count Variance" subtitle="Variance analysis and threshold monitoring" />
-      
-      <div className="container mx-auto px-4 py-6 space-y-6">
+    <StandardPageWrapper moduleName="count" currentPage="variance">
+      <div className="space-y-6">
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+          <StatCard accentColor="blue">
             <div className="flex items-center">
               <div className="p-2 bg-blue-100 rounded-lg">
                 <BarChart3 className="h-5 w-5 text-blue-600" />
@@ -212,9 +311,9 @@ export default function CountVariancePage() {
                 <p className="text-2xl font-bold text-gray-900">{summary.totalVariances || 0}</p>
               </div>
             </div>
-          </div>
+          </StatCard>
           
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+          <StatCard accentColor="green">
             <div className="flex items-center">
               <div className="p-2 bg-green-100 rounded-lg">
                 <TrendingUp className="h-5 w-5 text-green-600" />
@@ -227,9 +326,9 @@ export default function CountVariancePage() {
                 </div>
               </div>
             </div>
-          </div>
+          </StatCard>
           
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+          <StatCard accentColor="orange">
             <div className="flex items-center">
               <div className="p-2 bg-red-100 rounded-lg">
                 <TrendingDown className="h-5 w-5 text-red-600" />
@@ -242,9 +341,9 @@ export default function CountVariancePage() {
                 </div>
               </div>
             </div>
-          </div>
+          </StatCard>
           
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+          <StatCard accentColor="orange">
             <div className="flex items-center">
               <div className="p-2 bg-orange-100 rounded-lg">
                 <AlertTriangle className="h-5 w-5 text-orange-600" />
@@ -254,7 +353,7 @@ export default function CountVariancePage() {
                 <p className="text-2xl font-bold text-gray-900">{summary.itemsOverThreshold || 0}</p>
               </div>
             </div>
-          </div>
+          </StatCard>
         </div>
 
         {/* Variance Summary Card */}
@@ -296,7 +395,7 @@ export default function CountVariancePage() {
         </ModuleCard>
 
         {/* Search and Filters */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <ModuleCard className="p-6">
           <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between mb-4">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 flex-1">
               <div>
@@ -402,7 +501,7 @@ export default function CountVariancePage() {
               </select>
             </div>
           </div>
-        </div>
+        </ModuleCard>
 
         {/* Variance Analysis Results */}
         {loading ? (
@@ -641,6 +740,6 @@ export default function CountVariancePage() {
           </>
         )}
       </div>
-    </div>
+    </StandardPageWrapper>
   )
 }

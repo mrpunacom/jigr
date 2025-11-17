@@ -8,9 +8,9 @@ import { supabase } from '@/lib/supabase'
 import { DesignTokens, getCardStyle, getTextStyle } from '@/lib/design-system'
 import { getUserClient, UserClient } from '@/lib/auth-utils'
 import { getModuleConfig } from '@/lib/module-config'
-import { ModuleHeader } from '@/app/components/ModuleHeader'
 import { StatCard } from '@/app/components/ModuleCard'
 import { getThemedCardStyles, getModuleTheme } from '@/lib/theme-utils'
+import { ConsolePageWrapper } from '@/app/components/UniversalPageWrapper'
 import Link from 'next/link'
 
 export default function UploadConsolePage() {
@@ -330,24 +330,12 @@ export default function UploadConsolePage() {
     )
   }
 
-  const moduleConfig = getModuleConfig('upload')
-  
   // Get theme-aware styling
   const theme = getModuleTheme('upload')
   const { cardStyle, textColors, getInlineStyles } = getThemedCardStyles(theme)
-  
-  if (!moduleConfig) {
-    return <div>Module configuration not found</div>
-  }
 
   return (
-    <div className="px-2 sm:px-4 lg:px-6 pt-16 pb-8">
-      
-      {/* Standardized Module Header */}
-      <ModuleHeader 
-        module={moduleConfig}
-        currentPage="console"
-      />
+    <ConsolePageWrapper moduleName="upload">
 
       {/* Upload Statistics Cards - 3 Column Layout */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8 AdaptiveLayout">
@@ -595,6 +583,6 @@ export default function UploadConsolePage() {
 
       </div>
       
-    </div>
+    </ConsolePageWrapper>
   )
 }

@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { getCardStyle, getTextStyle, getButtonStyle } from '@/lib/design-system';
-import { getModuleConfig } from '@/lib/module-config';
-import { ModuleHeader } from '@/app/components/ModuleHeader';
+import { StandardPageWrapper } from '@/app/components/UniversalPageWrapper';
 
 interface FieldPlan {
   id: string;
@@ -48,7 +47,6 @@ export default function ConfigCardPlannerPage() {
   const [editingField, setEditingField] = useState<FieldPlan | null>(null);
   const [isNewField, setIsNewField] = useState(false);
 
-  const moduleConfig = getModuleConfig('dev');
 
   useEffect(() => {
     loadPlans();
@@ -392,21 +390,7 @@ Please check the console for details.`);
   }
 
   return (
-    <div 
-      className="min-h-screen bg-cover bg-center bg-no-repeat"
-      style={{
-        backgroundImage: 'url(https://rggdywqnvpuwssluzfud.supabase.co/storage/v1/object/public/module-assets/backgrounds/CafeBackdrop.jpg)'
-      }}
-    >
-      <div className="min-h-screen bg-black bg-opacity-40">
-        <div className="w-full mx-auto px-2 sm:px-4 md:px-6 lg:px-8 xl:max-w-7xl pt-16 pb-8 h-screen overflow-y-auto">
-          
-          {/* Header */}
-          {moduleConfig && (
-            <div className="mb-6">
-              <ModuleHeader module={moduleConfig} currentPage="configcard-planner" />
-            </div>
-          )}
+    <StandardPageWrapper moduleName="dev" currentPage="configcard-planner">
 
           {/* Page Header */}
           <div className={`${getCardStyle('primary')} mb-8`}>
@@ -640,9 +624,7 @@ Please check the console for details.`);
             />
           )}
 
-        </div>
-      </div>
-    </div>
+    </StandardPageWrapper>
   );
 }
 

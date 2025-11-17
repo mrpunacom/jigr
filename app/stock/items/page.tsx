@@ -3,15 +3,14 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
-import { getModuleConfig } from '@/lib/module-config'
-import { ModuleHeader } from '@/app/components/ModuleHeader'
-import { ResponsiveLayout } from '@/app/components/ResponsiveLayout'
+import { StandardPageWrapper } from '@/app/components/UniversalPageWrapper'
 import { ModuleCard } from '@/app/components/ModuleCard'
 import { SearchInput } from '@/app/components/SearchInput'
 import { DataTable } from '@/app/components/DataTable'
 import { StockLevelIndicator } from '@/app/components/StockLevelIndicator'
 import { InventoryItem, StockFilterOptions } from '@/types/InventoryTypes'
-import { Plus, Filter, Grid, List, MoreHorizontal, Eye, Edit, Clipboard } from 'lucide-react'
+import { Plus, Filter, Grid, List, MoreHorizontal, Eye, Edit, Clipboard, Upload } from 'lucide-react'
+import { UniversalImport, ImportConfig } from '@/app/components/UniversalImport'
 
 const ITEMS_PER_PAGE = 20
 
@@ -30,8 +29,8 @@ export default function StockItemsPage() {
   const [categories, setCategories] = useState<Array<{ id: string; name: string }>>([])
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('list')
   const [currentPage, setCurrentPage] = useState(1)
+  const [showImportModal, setShowImportModal] = useState(false)
 
-  const stockModule = getModuleConfig('stock')
 
   useEffect(() => {
     loadItems()
@@ -50,10 +49,20 @@ export default function StockItemsPage() {
         .eq('is_active', true)
         .order('name')
 
-      if (error) throw error
+      if (error) {
+        // Check if table doesn't exist - this is expected during development
+        if (error.code === 'PGRST116' || error.message?.includes('does not exist') || error.message?.includes('relation')) {
+          console.warn('Inventory categories table not yet created - using empty categories list')
+          setCategories([])
+          return
+        }
+        throw error
+      }
       setCategories(data || [])
     } catch (error) {
       console.error('Error loading categories:', error)
+      // Fallback to empty categories list if there's any error
+      setCategories([])
     }
   }
 
@@ -111,7 +120,16 @@ export default function StockItemsPage() {
 
       const { data, error } = await query
 
-      if (error) throw error
+      if (error) {
+        // Check if inventory tables don't exist - this is expected during development
+        if (error.code === 'PGRST116' || error.message?.includes('does not exist') || error.message?.includes('relation')) {
+          console.warn('Inventory tables not yet created - using empty items list')
+          setItems([])
+          setError('Inventory system not yet set up. Database tables need to be created.')
+          return
+        }
+        throw error
+      }
 
       // Process the data to include latest count info
       const processedItems = data?.map(item => ({
@@ -231,17 +249,109 @@ export default function StockItemsPage() {
     }
   ]
 
-  if (!stockModule) return null
+  // Import configuration for inventory items
+  const importConfig: ImportConfig = {
+    entityName: 'Inventory Items',
+    fields: [
+      {
+        key: 'item_name',
+        label: 'Item Name',
+        required: true,
+        type: 'string'
+      },
+      {
+        key: 'brand',
+        label: 'Brand',
+        type: 'string'
+      },
+      {
+        key: 'category_name',
+        label: 'Category',
+        type: 'string'
+      },
+      {
+        key: 'count_unit',
+        label: 'Count Unit',
+        required: true,
+        type: 'string'
+      },
+      {
+        key: 'par_level_low',
+        label: 'Par Level Low',
+        type: 'number'
+      },
+      {
+        key: 'par_level_high',
+        label: 'Par Level High',
+        type: 'number'
+      }
+    ],
+    sampleData: [
+      {
+        item_name: 'Flour - Plain',
+        brand: 'Champion',
+        category_name: 'Dry Goods',
+        count_unit: 'kg',
+        par_level_low: 10,
+        par_level_high: 50
+      },
+      {
+        item_name: 'Chicken Breast',
+        brand: 'Fresh Farm',
+        category_name: 'Fresh Meat',
+        count_unit: 'kg',
+        par_level_low: 5,
+        par_level_high: 20
+      }
+    ]
+  }
+
+  // Handle import of inventory items
+  const handleImport = async (data: any[]): Promise<boolean> => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session?.user) {
+        alert('You must be logged in to import items')
+        return false
+      }
+
+      // Transform data to match database schema
+      const itemsToInsert = data.map(item => ({
+        item_name: item.item_name,
+        brand: item.brand || null,
+        count_unit: item.count_unit,
+        par_level_low: item.par_level_low || null,
+        par_level_high: item.par_level_high || null,
+        client_id: session.user.id,
+        is_active: true,
+        // Note: category_id would need to be resolved from category_name
+        // For now, we'll leave it null and handle category creation separately
+        category_id: null
+      }))
+
+      const { data: insertedData, error } = await supabase
+        .from('inventory_items')
+        .insert(itemsToInsert)
+
+      if (error) {
+        console.error('Import error:', error)
+        alert(`Import failed: ${error.message}`)
+        return false
+      }
+
+      // Refresh the items list
+      await loadItems()
+      return true
+    } catch (error) {
+      console.error('Import error:', error)
+      alert('Import failed. Please try again.')
+      return false
+    }
+  }
 
   return (
-    <ResponsiveLayout>
-      <ModuleHeader 
-        module={stockModule}
-        currentPage="items"
-      />
-      
-      <main className="max-w-7xl mx-auto px-4 py-6">
-        <div className="space-y-6">
+    <StandardPageWrapper moduleName="stock" currentPage="items">
+      <div className="space-y-6">
           {/* Page Header */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
             <div>
@@ -250,7 +360,15 @@ export default function StockItemsPage() {
                 Manage your inventory stock levels and items
               </p>
             </div>
-            <div className="mt-4 sm:mt-0">
+            <div className="mt-4 sm:mt-0 flex space-x-3">
+              <button
+                onClick={() => setShowImportModal(true)}
+                className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-green-600 border border-transparent rounded-lg shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                style={{ minHeight: '48px' }}
+              >
+                <Upload className="h-4 w-4 mr-2" />
+                Import Items
+              </button>
               <button
                 className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-lg shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                 style={{ minHeight: '48px' }}
@@ -394,9 +512,10 @@ export default function StockItemsPage() {
                   </div>
                 ) : (
                   items.map((item) => (
-                    <div
+                    <ModuleCard
                       key={item.id}
-                      className="bg-white rounded-lg p-4 shadow hover:shadow-md transition-shadow cursor-pointer"
+                      className="p-4"
+                      hover
                       onClick={() => handleItemClick(item.id)}
                     >
                       <div className="space-y-3">
@@ -440,14 +559,21 @@ export default function StockItemsPage() {
                           </button>
                         </div>
                       </div>
-                    </div>
+                    </ModuleCard>
                   ))
                 )}
               </div>
             </ModuleCard>
           )}
-        </div>
-      </main>
-    </ResponsiveLayout>
+      </div>
+
+      {/* Import Modal */}
+      <UniversalImport
+        config={importConfig}
+        onImport={handleImport}
+        onClose={() => setShowImportModal(false)}
+        isOpen={showImportModal}
+      />
+    </StandardPageWrapper>
   )
 }

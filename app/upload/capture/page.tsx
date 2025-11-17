@@ -7,8 +7,7 @@ import { supabase } from '@/lib/supabase'
 import { getUserClient, UserClient } from '@/lib/auth-utils'
 import { DesignTokens, getCardStyle, getTextStyle } from '@/lib/design-system'
 import { getMappedIcon } from '@/lib/image-storage'
-import { getModuleConfig } from '@/lib/module-config'
-import { ModuleHeader } from '@/app/components/ModuleHeader'
+import { StandardPageWrapper } from '@/app/components/UniversalPageWrapper'
 import { StatCard, ActionCard, ModuleCard } from '@/app/components/ModuleCard'
 import EnhancedFileUpload from '@/lib/ImageProcessing/Components/EnhancedFileUpload'
 import { QualityReport } from '@/lib/ImageProcessing/Utils/ImageQualityValidator'
@@ -184,12 +183,12 @@ export default function UploadActionPage() {
     return (
       <div className="px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex items-center justify-center min-h-[60vh]">
-          <div className="bg-gray-900/80 border border-white/20 rounded-3xl p-6">
+          <ModuleCard className="p-6">
             <div className="text-center">
               <div className="animate-spin h-8 w-8 border-2 border-white border-t-transparent rounded-full mx-auto mb-4"></div>
               <p className="text-white font-medium">Loading Upload Action...</p>
             </div>
-          </div>
+          </ModuleCard>
         </div>
       </div>
     )
@@ -374,20 +373,9 @@ export default function UploadActionPage() {
   }
 
 
-  const moduleConfig = getModuleConfig('upload')
-  
-  if (!moduleConfig) {
-    return <div>Module configuration not found</div>
-  }
 
   return (
-    <div className="px-2 sm:px-4 lg:px-6 pt-16 pb-8">
-      
-      {/* Standardized Module Header */}
-      <ModuleHeader 
-        module={moduleConfig}
-        currentPage="capture"
-      />
+    <StandardPageWrapper moduleName="upload" currentPage="capture">
       
 
       {/* Capture Interface Cards */}
@@ -586,7 +574,7 @@ export default function UploadActionPage() {
         <div className="mt-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {todaysUploads.slice(0, 8).map((upload, index) => (
-              <div key={upload.id || index} className="bg-white/20 border border-white/20 rounded-xl p-4">
+              <div key={upload.id || index} className="bg-white/10 border border-white/20 rounded-xl p-4">
                 <div className="flex items-center space-x-3">
                   {/* Thumbnail */}
                   <div className="w-10 h-10 bg-white/10 rounded-lg overflow-hidden flex-shrink-0">
@@ -631,6 +619,6 @@ export default function UploadActionPage() {
 
 
       
-    </div>
+    </StandardPageWrapper>
   )
 }

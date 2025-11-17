@@ -1,18 +1,18 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { ModuleHeaderDark } from '../components/ModuleHeaderDark'
+import { StandardPageWrapper } from '@/app/components/UniversalPageWrapper'
 import { SearchInput } from '../components/SearchInput'
 import { FoodCostBadge } from '../components/FoodCostBadge'
 import { EmptyState } from '../components/EmptyState'
 import { LoadingSpinner } from '../components/LoadingSpinner'
-import { ModuleCard } from '../components/ModuleCard'
-import { useAuth } from '../hooks/useAuth'
+import { ModuleCard, StatCard } from '../components/ModuleCard'
+import { supabase } from '@/lib/supabase'
 import { ChefHat, DollarSign, Clock, Users, Grid3X3, List, Plus } from 'lucide-react'
 import { RecipeWithDetails, RecipeCategory, RecipesResponse } from '../../types/RecipeTypes'
 
 export default function RecipesPage() {
-  const { session, loading: authLoading } = useAuth()
+  const [session, setSession] = useState<any>(null)
   const [recipes, setRecipes] = useState<RecipeWithDetails[]>([])
   const [categories, setCategories] = useState<RecipeCategory[]>([])
   const [loading, setLoading] = useState(true)
@@ -23,6 +23,17 @@ export default function RecipesPage() {
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   const [totalItems, setTotalItems] = useState(0)
+  const [authLoading, setAuthLoading] = useState(true)
+
+  // Session management
+  useEffect(() => {
+    const getSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession()
+      setSession(session)
+      setAuthLoading(false)
+    }
+    getSession()
+  }, [])
 
   const fetchRecipes = useCallback(async () => {
     if (!session?.access_token) return
@@ -99,25 +110,22 @@ export default function RecipesPage() {
     return hours > 0 ? `${hours}h ${mins}m` : `${mins}m`
   }
 
-  if (authLoading || loading) {
+  if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <ModuleHeaderDark title="Recipes" subtitle="Recipe Management & Costing" />
+      <StandardPageWrapper moduleName="recipes" currentPage="recipes">
         <div className="container mx-auto px-4 py-6">
           <LoadingSpinner />
         </div>
-      </div>
+      </StandardPageWrapper>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <ModuleHeaderDark title="Recipes" subtitle="Recipe Management & Costing" />
-      
-      <div className="container mx-auto px-4 py-6 space-y-6">
+    <StandardPageWrapper moduleName="recipes" currentPage="recipes">
+      <div className="space-y-6">
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+          <StatCard accentColor="blue">
             <div className="flex items-center">
               <div className="p-2 bg-blue-100 rounded-lg">
                 <ChefHat className="h-5 w-5 text-blue-600" />
@@ -127,9 +135,9 @@ export default function RecipesPage() {
                 <p className="text-2xl font-bold text-gray-900">{totalItems}</p>
               </div>
             </div>
-          </div>
+          </StatCard>
           
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+          <StatCard accentColor="green">
             <div className="flex items-center">
               <div className="p-2 bg-green-100 rounded-lg">
                 <DollarSign className="h-5 w-5 text-green-600" />
@@ -144,9 +152,9 @@ export default function RecipesPage() {
                 </p>
               </div>
             </div>
-          </div>
+          </StatCard>
           
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+          <StatCard accentColor="orange">
             <div className="flex items-center">
               <div className="p-2 bg-orange-100 rounded-lg">
                 <Users className="h-5 w-5 text-orange-600" />
@@ -156,9 +164,9 @@ export default function RecipesPage() {
                 <p className="text-2xl font-bold text-gray-900">{categories.length}</p>
               </div>
             </div>
-          </div>
+          </StatCard>
           
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+          <StatCard accentColor="orange">
             <div className="flex items-center">
               <div className="p-2 bg-red-100 rounded-lg">
                 <Clock className="h-5 w-5 text-red-600" />
@@ -170,11 +178,11 @@ export default function RecipesPage() {
                 </p>
               </div>
             </div>
-          </div>
+          </StatCard>
         </div>
 
         {/* Search, Filters & Controls */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <ModuleCard className="p-6">
           <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 flex-1">
               <div>
@@ -249,7 +257,7 @@ export default function RecipesPage() {
               </button>
             </div>
           </div>
-        </div>
+        </ModuleCard>
 
         {/* Recipes Display */}
         {loading ? (
@@ -498,6 +506,6 @@ export default function RecipesPage() {
           </>
         )}
       </div>
-    </div>
+    </StandardPageWrapper>
   )
 }

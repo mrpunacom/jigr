@@ -7,11 +7,11 @@ import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
 import { getUserClient, UserClient } from '@/lib/auth-utils'
 import { DesignTokens, getCardStyle, getTextStyle, getFormFieldStyle } from '@/lib/design-system'
-import { getModuleConfig } from '@/lib/module-config'
-import { ModuleHeader } from '@/app/components/ModuleHeader'
+import { ConsolePageWrapper } from '@/app/components/UniversalPageWrapper'
 import { StatCard } from '@/app/components/ModuleCard'
 import ImageUploader from '@/app/components/ImageUploader'
 import { getThemedCardStyles, getModuleTheme } from '@/lib/theme-utils'
+import { FONT_FAMILY, FONT_SIZES, FONT_WEIGHTS, IOS_COLORS, SPACING, TOUCH_TARGETS } from '@/lib/apple-design-system'
 
 export default function AdminConsolePage() {
   const [user, setUser] = useState<any>(null)
@@ -112,15 +112,10 @@ export default function AdminConsolePage() {
     // return () => subscription.unsubscribe()
   }, [])
 
-  const moduleConfig = getModuleConfig('admin')
   
   // Get theme-aware styling
   const theme = getModuleTheme('admin')
   const { cardStyle, textColors, getInlineStyles } = getThemedCardStyles(theme)
-  
-  if (!moduleConfig) {
-    return <div>Module configuration not found</div>
-  }
 
   if (loading) {
     return (
@@ -154,60 +149,156 @@ export default function AdminConsolePage() {
   }
 
   return (
-    <div className="px-4 sm:px-8 lg:px-12 pt-16 pb-8">
-      
-      {/* Standardized Module Header */}
-      <ModuleHeader 
-        module={moduleConfig}
-        currentPage="console"
-      />
-      
+    <ConsolePageWrapper moduleName="admin">
       {/* Admin Overview Cards - 3 Column Layout */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8 AdaptiveLayout">
+      <div 
+        className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 w-full"
+        style={{ 
+          gap: SPACING.LG, 
+          marginBottom: SPACING.XXL 
+        }}
+      >
         
         {/* Business Info */}
         <StatCard accentColor="blue" theme="admin">
-          <div>
-            <div className="flex items-center justify-center mb-4">
-              <h2 className="text-gray-900 text-lg font-semibold text-center w-full">{userClient?.name || 'Business Info'}</h2>
-            </div>
-            <div className="text-center mb-6">
+          <div className="text-center">
+            {/* Icon */}
+            <div style={{ marginBottom: SPACING.LG }}>
               <Link href="/admin/company">
                 <img 
                   src="https://rggdywqnvpuwssluzfud.supabase.co/storage/v1/object/public/module-assets/icons/JiGRcafe.png"
                   alt="Business Info"
-                  className="w-16 h-16 object-contain mx-auto mb-4 cursor-pointer hover:opacity-80 transition-opacity duration-200"
+                  className="w-16 h-16 object-contain mx-auto cursor-pointer hover:opacity-80 transition-opacity duration-200"
+                  style={{ 
+                    minHeight: TOUCH_TARGETS.MINIMUM,
+                    minWidth: TOUCH_TARGETS.MINIMUM,
+                    padding: '12pt'
+                  }}
                 />
               </Link>
             </div>
-            <div className="space-y-1 text-sm text-gray-800">
-              <p><strong>Owner:</strong> {userClient?.owner_name || 'Not specified'}</p>
-              <p><strong>Type:</strong> {userClient?.business_type ? userClient.business_type.charAt(0).toUpperCase() + userClient.business_type.slice(1) : 'Not specified'}</p>
-              <p><strong>Phone:</strong> {userClient?.phone || 'Not provided'}</p>
+            
+            {/* Title */}
+            <h2 style={{
+              fontFamily: FONT_FAMILY,
+              fontSize: FONT_SIZES.HEADING_SMALL,
+              fontWeight: FONT_WEIGHTS.SEMIBOLD,
+              color: IOS_COLORS.LABEL_PRIMARY,
+              marginBottom: SPACING.SM,
+              margin: 0,
+            }}>
+              {userClient?.name || 'Business Info'}
+            </h2>
+            
+            {/* Details */}
+            <div style={{ marginTop: SPACING.MD }} className="space-y-1">
+              <p style={{
+                fontFamily: FONT_FAMILY,
+                fontSize: FONT_SIZES.CAPTION,
+                fontWeight: FONT_WEIGHTS.REGULAR,
+                color: IOS_COLORS.LABEL_SECONDARY,
+                margin: 0,
+              }}>
+                <span style={{ fontWeight: FONT_WEIGHTS.MEDIUM }}>Owner:</span> {userClient?.owner_name || 'Not specified'}
+              </p>
+              <p style={{
+                fontFamily: FONT_FAMILY,
+                fontSize: FONT_SIZES.CAPTION,
+                fontWeight: FONT_WEIGHTS.REGULAR,
+                color: IOS_COLORS.LABEL_SECONDARY,
+                margin: 0,
+              }}>
+                <span style={{ fontWeight: FONT_WEIGHTS.MEDIUM }}>Type:</span> {userClient?.business_type ? userClient.business_type.charAt(0).toUpperCase() + userClient.business_type.slice(1) : 'Not specified'}
+              </p>
+              <p style={{
+                fontFamily: FONT_FAMILY,
+                fontSize: FONT_SIZES.CAPTION,
+                fontWeight: FONT_WEIGHTS.REGULAR,
+                color: IOS_COLORS.LABEL_SECONDARY,
+                margin: 0,
+              }}>
+                <span style={{ fontWeight: FONT_WEIGHTS.MEDIUM }}>Phone:</span> {userClient?.phone || 'Not provided'}
+              </p>
             </div>
           </div>
         </StatCard>
 
         {/* Subscription */}
         <StatCard accentColor="purple" theme="admin">
-          <div>
-            <div className="flex items-center justify-center mb-4">
-              <h2 className="text-gray-900 text-lg font-semibold text-center w-full">Subscription</h2>
-            </div>
-            <div className="text-center mb-6">
+          <div className="text-center">
+            {/* Icon */}
+            <div style={{ marginBottom: SPACING.LG }}>
               <img 
                 src="https://rggdywqnvpuwssluzfud.supabase.co/storage/v1/object/public/module-assets/icons/JiGRsubscription.png"
                 alt="Subscription"
-                className="w-16 h-16 object-contain mx-auto mb-4"
+                className="w-16 h-16 object-contain mx-auto"
+                style={{ 
+                  minHeight: TOUCH_TARGETS.MINIMUM,
+                  minWidth: TOUCH_TARGETS.MINIMUM,
+                  padding: '12pt'
+                }}
               />
             </div>
-            <div className="space-y-1 text-sm text-gray-800">
-              <p><strong>Status:</strong> {userClient?.subscription_status ? userClient.subscription_status.charAt(0).toUpperCase() + userClient.subscription_status.slice(1) : 'Not specified'}</p>
-              <p><strong>Tier:</strong> {userClient?.subscription_tier ? userClient.subscription_tier.charAt(0).toUpperCase() + userClient.subscription_tier.slice(1) : 'Not specified'}</p>
-              <p><strong>Onboarding:</strong> {userClient?.onboarding_status ? userClient.onboarding_status.charAt(0).toUpperCase() + userClient.onboarding_status.slice(1) : 'Not specified'}</p>
+            
+            {/* Title */}
+            <h2 style={{
+              fontFamily: FONT_FAMILY,
+              fontSize: FONT_SIZES.HEADING_SMALL,
+              fontWeight: FONT_WEIGHTS.SEMIBOLD,
+              color: IOS_COLORS.LABEL_PRIMARY,
+              marginBottom: SPACING.SM,
+              margin: 0,
+            }}>
+              Subscription
+            </h2>
+            
+            {/* Status Indicator */}
+            <div style={{
+              fontFamily: FONT_FAMILY,
+              fontSize: FONT_SIZES.HEADING_MEDIUM,
+              fontWeight: FONT_WEIGHTS.BOLD,
+              color: IOS_COLORS.PURPLE,
+              marginBottom: SPACING.MD,
+              margin: 0,
+            }}>
+              {userClient?.subscription_tier ? userClient.subscription_tier.charAt(0).toUpperCase() + userClient.subscription_tier.slice(1) : 'Free'}
             </div>
-            <div className="mt-3 pt-3 border-t border-gray-800/10">
-              <p className="text-purple-600 text-xs text-center">
+            
+            {/* Details */}
+            <div className="space-y-1">
+              <p style={{
+                fontFamily: FONT_FAMILY,
+                fontSize: FONT_SIZES.CAPTION,
+                fontWeight: FONT_WEIGHTS.REGULAR,
+                color: IOS_COLORS.LABEL_SECONDARY,
+                margin: 0,
+              }}>
+                <span style={{ fontWeight: FONT_WEIGHTS.MEDIUM }}>Status:</span> {userClient?.subscription_status ? userClient.subscription_status.charAt(0).toUpperCase() + userClient.subscription_status.slice(1) : 'Not specified'}
+              </p>
+              <p style={{
+                fontFamily: FONT_FAMILY,
+                fontSize: FONT_SIZES.CAPTION,
+                fontWeight: FONT_WEIGHTS.REGULAR,
+                color: IOS_COLORS.LABEL_SECONDARY,
+                margin: 0,
+              }}>
+                <span style={{ fontWeight: FONT_WEIGHTS.MEDIUM }}>Onboarding:</span> {userClient?.onboarding_status ? userClient.onboarding_status.charAt(0).toUpperCase() + userClient.onboarding_status.slice(1) : 'Not specified'}
+              </p>
+            </div>
+            
+            {/* Footer Badge */}
+            <div style={{ 
+              marginTop: SPACING.MD, 
+              paddingTop: SPACING.SM, 
+              borderTop: `1px solid ${IOS_COLORS.SEPARATOR}` 
+            }}>
+              <p style={{
+                fontFamily: FONT_FAMILY,
+                fontSize: FONT_SIZES.MINIMUM,
+                fontWeight: FONT_WEIGHTS.MEDIUM,
+                color: IOS_COLORS.PURPLE,
+                margin: 0,
+              }}>
                 {userClient?.subscription_tier ? userClient.subscription_tier.charAt(0).toUpperCase() + userClient.subscription_tier.slice(1) + ' Plan' : 'Plan not specified'}
               </p>
             </div>
@@ -216,24 +307,89 @@ export default function AdminConsolePage() {
 
         {/* Team */}
         <StatCard accentColor="green" theme="admin">
-          <div>
-            <div className="flex items-center justify-center mb-4">
-              <h2 className="text-gray-900 text-lg font-semibold text-center w-full">Team</h2>
-            </div>
-            <div className="text-center mb-6">
+          <div className="text-center">
+            {/* Icon */}
+            <div style={{ marginBottom: SPACING.LG }}>
               <img 
                 src="https://rggdywqnvpuwssluzfud.supabase.co/storage/v1/object/public/module-assets/icons/JiGRteam.png"
                 alt="Team"
-                className="w-16 h-16 object-contain mx-auto mb-4"
+                className="w-16 h-16 object-contain mx-auto"
+                style={{ 
+                  minHeight: TOUCH_TARGETS.MINIMUM,
+                  minWidth: TOUCH_TARGETS.MINIMUM,
+                  padding: '12pt'
+                }}
               />
             </div>
-            <div className="space-y-1 text-sm text-gray-800">
-              <p><strong>Owner:</strong> {userClient?.owner_name || 'Not specified'}</p>
-              <p><strong>Role:</strong> {userClient?.jobTitle || userClient?.role || 'Not specified'}</p>
-              <p><strong>Status:</strong> {userClient?.status ? userClient.status.charAt(0).toUpperCase() + userClient.status.slice(1) : 'Active'}</p>
+            
+            {/* Title */}
+            <h2 style={{
+              fontFamily: FONT_FAMILY,
+              fontSize: FONT_SIZES.HEADING_SMALL,
+              fontWeight: FONT_WEIGHTS.SEMIBOLD,
+              color: IOS_COLORS.LABEL_PRIMARY,
+              marginBottom: SPACING.SM,
+              margin: 0,
+            }}>
+              Team
+            </h2>
+            
+            {/* Active Users Count */}
+            <div style={{
+              fontFamily: FONT_FAMILY,
+              fontSize: FONT_SIZES.HEADING_MEDIUM,
+              fontWeight: FONT_WEIGHTS.BOLD,
+              color: IOS_COLORS.GREEN,
+              marginBottom: SPACING.MD,
+              margin: 0,
+            }}>
+              {userClient ? '1' : '0'}
             </div>
-            <div className="mt-3 pt-3 border-t border-gray-800/10">
-              <p className="text-green-600 text-xs text-center">
+            
+            {/* Details */}
+            <div className="space-y-1">
+              <p style={{
+                fontFamily: FONT_FAMILY,
+                fontSize: FONT_SIZES.CAPTION,
+                fontWeight: FONT_WEIGHTS.REGULAR,
+                color: IOS_COLORS.LABEL_SECONDARY,
+                margin: 0,
+              }}>
+                <span style={{ fontWeight: FONT_WEIGHTS.MEDIUM }}>Owner:</span> {userClient?.owner_name || 'Not specified'}
+              </p>
+              <p style={{
+                fontFamily: FONT_FAMILY,
+                fontSize: FONT_SIZES.CAPTION,
+                fontWeight: FONT_WEIGHTS.REGULAR,
+                color: IOS_COLORS.LABEL_SECONDARY,
+                margin: 0,
+              }}>
+                <span style={{ fontWeight: FONT_WEIGHTS.MEDIUM }}>Role:</span> {userClient?.jobTitle || userClient?.role || 'Not specified'}
+              </p>
+              <p style={{
+                fontFamily: FONT_FAMILY,
+                fontSize: FONT_SIZES.CAPTION,
+                fontWeight: FONT_WEIGHTS.REGULAR,
+                color: IOS_COLORS.LABEL_SECONDARY,
+                margin: 0,
+              }}>
+                <span style={{ fontWeight: FONT_WEIGHTS.MEDIUM }}>Status:</span> {userClient?.status ? userClient.status.charAt(0).toUpperCase() + userClient.status.slice(1) : 'Active'}
+              </p>
+            </div>
+            
+            {/* Footer Badge */}
+            <div style={{ 
+              marginTop: SPACING.MD, 
+              paddingTop: SPACING.SM, 
+              borderTop: `1px solid ${IOS_COLORS.SEPARATOR}` 
+            }}>
+              <p style={{
+                fontFamily: FONT_FAMILY,
+                fontSize: FONT_SIZES.MINIMUM,
+                fontWeight: FONT_WEIGHTS.MEDIUM,
+                color: IOS_COLORS.GREEN,
+                margin: 0,
+              }}>
                 {userClient ? '1 Active User' : 'Loading users...'}
               </p>
             </div>
@@ -242,6 +398,6 @@ export default function AdminConsolePage() {
 
       </div>
       
-    </div>
+    </ConsolePageWrapper>
   )
 }

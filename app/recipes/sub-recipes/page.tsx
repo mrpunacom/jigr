@@ -1,12 +1,13 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { ModuleHeaderDark } from '../../components/ModuleHeaderDark'
+import { useRouter } from 'next/navigation'
+import { supabase } from '@/lib/supabase'
 import { SearchInput } from '../../components/SearchInput'
 import { EmptyState } from '../../components/EmptyState'
 import { LoadingSpinner } from '../../components/LoadingSpinner'
-import { ModuleCard } from '../../components/ModuleCard'
-import { useAuth } from '../../hooks/useAuth'
+import { ModuleCard, StatCard } from '../../components/ModuleCard'
+import { StandardPageWrapper } from '@/app/components/UniversalPageWrapper'
 import { 
   Beaker, DollarSign, Package, Users, 
   Plus, Factory, Clock, ChefHat, TrendingUp 
@@ -14,7 +15,7 @@ import {
 import { SubRecipeWithDetails, SubRecipesResponse } from '../../../types/RecipeTypes'
 
 export default function SubRecipesPage() {
-  const { session, loading: authLoading } = useAuth()
+  const router = useRouter()
   const [subRecipes, setSubRecipes] = useState<SubRecipeWithDetails[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
@@ -33,10 +34,14 @@ export default function SubRecipesPage() {
   ]
 
   const fetchSubRecipes = useCallback(async () => {
-    if (!session?.access_token) return
-
     try {
       setLoading(true)
+      
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session?.user) {
+        router.push('/login')
+        return
+      }
 
       const params = new URLSearchParams({
         page: currentPage.toString(),
@@ -69,13 +74,11 @@ export default function SubRecipesPage() {
     } finally {
       setLoading(false)
     }
-  }, [session?.access_token, currentPage, searchTerm, selectedType, sortBy])
+  }, [router, currentPage, searchTerm, selectedType, sortBy])
 
   useEffect(() => {
-    if (!authLoading && session) {
-      fetchSubRecipes()
-    }
-  }, [authLoading, session, fetchSubRecipes])
+    fetchSubRecipes()
+  }, [fetchSubRecipes])
 
   // Reset to page 1 when filters change
   useEffect(() => {
@@ -124,25 +127,23 @@ export default function SubRecipesPage() {
     }
   }
 
-  if (authLoading || loading) {
+  if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <ModuleHeaderDark title="Sub-Recipes" subtitle="Prep Components Management" />
+      <StandardPageWrapper moduleName="recipes" currentPage="sub-recipes">
         <div className="container mx-auto px-4 py-6">
           <LoadingSpinner />
         </div>
-      </div>
+      </StandardPageWrapper>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <ModuleHeaderDark title="Sub-Recipes" subtitle="Prep Components Management" />
+    <StandardPageWrapper moduleName="recipes" currentPage="sub-recipes">
       
       <div className="container mx-auto px-4 py-6 space-y-6">
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+          <StatCard accentColor="blue">
             <div className="flex items-center">
               <div className="p-2 bg-blue-100 rounded-lg">
                 <Beaker className="h-5 w-5 text-blue-600" />
@@ -152,9 +153,9 @@ export default function SubRecipesPage() {
                 <p className="text-2xl font-bold text-gray-900">{totalItems}</p>
               </div>
             </div>
-          </div>
+          </StatCard>
           
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+          <StatCard accentColor="green">
             <div className="flex items-center">
               <div className="p-2 bg-green-100 rounded-lg">
                 <DollarSign className="h-5 w-5 text-green-600" />
@@ -169,9 +170,9 @@ export default function SubRecipesPage() {
                 </p>
               </div>
             </div>
-          </div>
+          </StatCard>
           
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+          <StatCard accentColor="orange">
             <div className="flex items-center">
               <div className="p-2 bg-orange-100 rounded-lg">
                 <Package className="h-5 w-5 text-orange-600" />
@@ -183,9 +184,9 @@ export default function SubRecipesPage() {
                 </p>
               </div>
             </div>
-          </div>
+          </StatCard>
           
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+          <StatCard accentColor="purple">
             <div className="flex items-center">
               <div className="p-2 bg-purple-100 rounded-lg">
                 <TrendingUp className="h-5 w-5 text-purple-600" />
@@ -197,11 +198,11 @@ export default function SubRecipesPage() {
                 </p>
               </div>
             </div>
-          </div>
+          </StatCard>
         </div>
 
         {/* Search, Filters & Controls */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <ModuleCard className="p-6">
           <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 flex-1">
               <div>
@@ -259,7 +260,7 @@ export default function SubRecipesPage() {
               New Sub-Recipe
             </button>
           </div>
-        </div>
+        </ModuleCard>
 
         {/* Sub-Recipes Display */}
         {loading ? (
@@ -439,6 +440,6 @@ export default function SubRecipesPage() {
           </>
         )}
       </div>
-    </div>
+    </StandardPageWrapper>
   )
 }

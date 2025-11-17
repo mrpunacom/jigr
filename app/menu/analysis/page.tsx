@@ -1,12 +1,12 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { ModuleHeaderDark } from '../../components/ModuleHeaderDark'
 import { FoodCostBadge } from '../../components/FoodCostBadge'
 import { EmptyState } from '../../components/EmptyState'
 import { LoadingSpinner } from '../../components/LoadingSpinner'
-import { ModuleCard } from '../../components/ModuleCard'
+import { ModuleCard, StatCard } from '../../components/ModuleCard'
 import { useAuth } from '../../hooks/useAuth'
+import { StandardPageWrapper } from '@/app/components/UniversalPageWrapper'
 import { 
   TrendingUp, TrendingDown, DollarSign, Target, 
   BarChart3, PieChart, AlertTriangle, Star,
@@ -243,38 +243,35 @@ export default function MenuAnalysisPage() {
 
   if (authLoading || loading) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <ModuleHeaderDark title="Menu Analysis" subtitle="Performance Insights & Recommendations" />
+      <StandardPageWrapper moduleName="menu" currentPage="analysis">
         <div className="container mx-auto px-4 py-6">
           <LoadingSpinner />
         </div>
-      </div>
+      </StandardPageWrapper>
     )
   }
 
   if (!analytics || pricingData.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <ModuleHeaderDark title="Menu Analysis" subtitle="Performance Insights & Recommendations" />
+      <StandardPageWrapper moduleName="menu" currentPage="analysis">
         <div className="container mx-auto px-4 py-6">
           <EmptyState
             title="No menu analysis data available"
             description="Menu analysis requires recipes with menu prices and cost data. Make sure you have recipes configured with prices."
           />
         </div>
-      </div>
+      </StandardPageWrapper>
     )
   }
 
   const categories = Array.from(new Set(pricingData.map(item => item.category_name)))
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <ModuleHeaderDark title="Menu Analysis" subtitle="Performance Insights & Recommendations" />
+    <StandardPageWrapper moduleName="menu" currentPage="analysis">
       
       <div className="container mx-auto px-4 py-6 space-y-6">
         {/* Controls */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <ModuleCard className="p-6">
           <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
@@ -319,11 +316,11 @@ export default function MenuAnalysisPage() {
               </div>
             </div>
           </div>
-        </div>
+        </ModuleCard>
 
         {/* Key Metrics */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <StatCard accentColor="green" className="p-6">
             <div className="flex items-center">
               <div className="p-3 bg-green-100 rounded-lg">
                 <DollarSign className="h-6 w-6 text-green-600" />
@@ -336,9 +333,9 @@ export default function MenuAnalysisPage() {
                 <p className="text-sm text-gray-500">Monthly estimate</p>
               </div>
             </div>
-          </div>
+          </StatCard>
 
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <StatCard accentColor="blue" className="p-6">
             <div className="flex items-center">
               <div className="p-3 bg-blue-100 rounded-lg">
                 <Target className="h-6 w-6 text-blue-600" />
@@ -353,9 +350,9 @@ export default function MenuAnalysisPage() {
                 </div>
               </div>
             </div>
-          </div>
+          </StatCard>
 
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <StatCard accentColor="orange" className="p-6">
             <div className="flex items-center">
               <div className="p-3 bg-orange-100 rounded-lg">
                 <BarChart3 className="h-6 w-6 text-orange-600" />
@@ -366,7 +363,7 @@ export default function MenuAnalysisPage() {
                 <p className="text-sm text-gray-500">Across {categories.length} categories</p>
               </div>
             </div>
-          </div>
+          </StatCard>
         </div>
 
         {/* Top Performers & Underperformers */}
@@ -431,7 +428,7 @@ export default function MenuAnalysisPage() {
         </div>
 
         {/* Category Analysis */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <ModuleCard className="p-6">
           <h2 className="text-xl font-semibold text-gray-900 mb-6">Category Performance</h2>
           
           {filteredCategoryAnalysis.length === 0 ? (
@@ -498,10 +495,10 @@ export default function MenuAnalysisPage() {
               </table>
             </div>
           )}
-        </div>
+        </ModuleCard>
 
         {/* Recommendations */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <ModuleCard className="p-6">
           <h2 className="text-xl font-semibold text-gray-900 mb-6">Strategic Recommendations</h2>
           
           {analytics.recommendations.length === 0 ? (
@@ -545,8 +542,8 @@ export default function MenuAnalysisPage() {
               ))}
             </div>
           )}
-        </div>
+        </ModuleCard>
       </div>
-    </div>
+    </StandardPageWrapper>
   )
 }

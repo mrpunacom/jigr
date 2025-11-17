@@ -7,8 +7,7 @@ import { supabase } from '@/lib/supabase'
 import { getUserClient, UserClient } from '@/lib/auth-utils'
 import { getVersionDisplay } from '@/lib/version'
 import { DesignTokens, getCardStyle, getTextStyle, getFormFieldStyle, getButtonStyle } from '@/lib/design-system'
-import { getModuleConfig } from '@/lib/module-config'
-import { ModuleHeader } from '@/app/components/ModuleHeader'
+import { StandardPageWrapper } from '@/app/components/UniversalPageWrapper'
 // import RoleConfigCard from '@/app/components/admin/RoleConfigCard'
 import DepartmentConfigCardNew from '@/app/components/admin/DepartmentConfigCardNew'
 import JobTitleConfigCard from '@/app/components/admin/JobTitleConfigCard'
@@ -62,11 +61,6 @@ export default function AdminConfigurePage() {
     return () => subscription.unsubscribe()
   }, [])
 
-  const moduleConfig = getModuleConfig('admin')
-  
-  if (!moduleConfig) {
-    return <div>Module configuration not found</div>
-  }
 
   const handleSave = async () => {
     setSaving(true)
@@ -89,28 +83,17 @@ export default function AdminConfigurePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className={getCardStyle('primary')}>
-          <div className="text-center">
-            <div className="animate-spin h-8 w-8 border-2 border-white border-t-transparent rounded-full mx-auto mb-4"></div>
-            <p className={getTextStyle('body', 'light')}>Loading configuration...</p>
-          </div>
+      <StandardPageWrapper moduleName="admin" currentPage="configure">
+        <div className="text-center py-12">
+          <div className="animate-spin h-8 w-8 border-2 border-white border-t-transparent rounded-full mx-auto mb-4"></div>
+          <p className={getTextStyle('body', 'light')}>Loading configuration...</p>
         </div>
-      </div>
+      </StandardPageWrapper>
     )
   }
 
   return (
-    <div className="w-full mx-auto px-2 sm:px-4 md:px-6 lg:px-8 xl:max-w-7xl pt-16 pb-8 h-screen overflow-y-auto">
-      
-      {/* Header Section */}
-      <div className="mb-6">
-        {/* Standardized Module Header */}
-        <ModuleHeader 
-          module={moduleConfig}
-          currentPage="configure"
-        />
-      </div>
+    <StandardPageWrapper moduleName="admin" currentPage="configure">
 
       {/* Success/Error Message */}
       {message && (
@@ -210,6 +193,6 @@ export default function AdminConfigurePage() {
 
       {/* Note: Background selector and asset upload modals will be integrated in a future update */}
 
-    </div>
+    </StandardPageWrapper>
   )
 }

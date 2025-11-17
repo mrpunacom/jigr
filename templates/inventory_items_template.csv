@@ -1,0 +1,31 @@
+Item Name,Brand,Category,Count Unit,Par Level Low,Par Level High
+"Flour - Plain","Champion","Dry Goods","kg",10,50
+"Flour - Self Raising","Champion","Dry Goods","kg",5,25
+"Sugar - White","Chelsea","Dry Goods","kg",8,40
+"Sugar - Brown","Chelsea","Dry Goods","kg",5,20
+"Chicken Breast","Fresh Farm","Fresh Meat","kg",5,20
+"Beef Mince","Premium Butcher","Fresh Meat","kg",3,15
+"Salmon Fillets","Ocean Fresh","Fresh Seafood","kg",2,10
+"Prawns - Green","Ocean Fresh","Fresh Seafood","kg",1,5
+"Milk - Full Cream","Anchor","Dairy","L",10,50
+"Butter - Unsalted","Mainland","Dairy","kg",2,10
+"Cheese - Cheddar","Mainland","Dairy","kg",1,5
+"Eggs - Free Range","Farmyard","Dairy","dozen",5,30
+"Olive Oil - Extra Virgin","Cobram Estate","Oils & Vinegars","L",2,10
+"Vegetable Oil","Pams","Oils & Vinegars","L",3,15
+"Balsamic Vinegar","Cobram Estate","Oils & Vinegars","mL",500,2000
+"Salt - Sea Salt","Cerebos","Spices & Seasonings","kg",1,5
+"Black Pepper - Ground","Masterfoods","Spices & Seasonings","g",200,1000
+"Garlic - Fresh","Fresh Choice","Fresh Produce","kg",2,10
+"Onions - Brown","Fresh Choice","Fresh Produce","kg",5,25
+"Potatoes - Agria","Fresh Choice","Fresh Produce","kg",10,50
+"Carrots","Fresh Choice","Fresh Produce","kg",3,15
+"Tomatoes - Roma","Fresh Choice","Fresh Produce","kg",2,10
+"Lettuce - Iceberg","Fresh Choice","Fresh Produce","each",5,20
+"Pasta - Spaghetti","Barilla","Dry Goods","kg",3,15
+"Rice - Jasmine","SunRice","Dry Goods","kg",5,25
+"Canned Tomatoes - Whole","Watties","Pantry","can",12,48
+"Chicken Stock","Maggi","Pantry","L",2,10
+"Baking Powder","Edmonds","Baking","g",500,2000
+"Vanilla Extract","Queen","Baking","mL",100,500
+"Dark Chocolate - 70%","Whittakers","Baking","g",500,2000

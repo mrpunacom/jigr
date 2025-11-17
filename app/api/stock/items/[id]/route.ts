@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { extractClientId, ApiErrors } from '@/lib/utils/api-auth'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -13,20 +14,11 @@ export async function GET(
   try {
     const { id: itemId } = await params
 
-    // Get user from auth header
-    const authorization = request.headers.get('authorization')
-    if (!authorization) {
-      return NextResponse.json({ error: 'No authorization header' }, { status: 401 })
+    // Extract client_id using standardized utility
+    const clientId = await extractClientId(request)
+    if (!clientId) {
+      return NextResponse.json({ error: ApiErrors.UNAUTHORIZED }, { status: 401 })
     }
-
-    const token = authorization.replace('Bearer ', '')
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token)
-    
-    if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const userId = user.id
 
     // Load item details
     const { data: itemData, error: itemError } = await supabase
@@ -36,7 +28,7 @@ export async function GET(
         inventory_categories!left(name)
       `)
       .eq('id', itemId)
-      .eq('client_id', userId)
+      .eq('client_id', clientId)
       .single()
 
     if (itemError) {
@@ -51,7 +43,7 @@ export async function GET(
       .from('inventory_count')
       .select('*')
       .eq('item_id', itemId)
-      .eq('client_id', userId)
+      .eq('client_id', clientId)
       .order('count_date', { ascending: false })
       .limit(1)
       .single()
@@ -64,7 +56,7 @@ export async function GET(
         vendor_companies!left(name, email, phone)
       `)
       .eq('item_id', itemId)
-      .eq('client_id', userId)
+      .eq('client_id', clientId)
       .eq('status', 'active')
       .order('expiration_date', { ascending: true, nullsFirst: false })
 
@@ -78,7 +70,7 @@ export async function GET(
         vendor_companies!inner(name, email, phone)
       `)
       .eq('item_id', itemId)
-      .eq('client_id', userId)
+      .eq('client_id', clientId)
       .order('is_preferred', { ascending: false })
 
     if (vendorError) throw vendorError
@@ -88,7 +80,7 @@ export async function GET(
       .from('inventory_count')
       .select('*')
       .eq('item_id', itemId)
-      .eq('client_id', userId)
+      .eq('client_id', clientId)
       .order('count_date', { ascending: false })
       .limit(10)
 

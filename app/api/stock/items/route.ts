@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { extractClientId, ApiErrors } from '@/lib/utils/api-auth'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -8,21 +9,11 @@ const supabase = createClient(
 
 export async function GET(request: NextRequest) {
   try {
-    // Get user from auth header
-    const authorization = request.headers.get('authorization')
-    if (!authorization) {
-      return NextResponse.json({ error: 'No authorization header' }, { status: 401 })
+    // Extract client_id using standardized utility
+    const clientId = await extractClientId(request)
+    if (!clientId) {
+      return NextResponse.json({ error: ApiErrors.UNAUTHORIZED }, { status: 401 })
     }
-
-    // Extract user from JWT token (simplified for now)
-    const token = authorization.replace('Bearer ', '')
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token)
-    
-    if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const userId = user.id
     const url = new URL(request.url)
     
     // Parse query parameters
@@ -46,7 +37,7 @@ export async function GET(request: NextRequest) {
           counted_by
         )
       `)
-      .eq('client_id', userId)
+      .eq('client_id', clientId)
 
     // Apply search filter
     if (search) {

@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { getCardStyle, getTextStyle, getButtonStyle } from '@/lib/design-system';
-import { getModuleConfig } from '@/lib/module-config';
-import { ModuleHeader } from '@/app/components/ModuleHeader';
+import { StandardPageWrapper } from '@/app/components/UniversalPageWrapper';
 
 interface FieldOption {
   value: string;
@@ -56,7 +55,6 @@ export default function ConfigCardDesignerPage() {
   const [editingField, setEditingField] = useState<ConfigCardField | null>(null);
   const [isNewField, setIsNewField] = useState(false);
 
-  const moduleConfig = getModuleConfig('dev');
 
   // Load existing ConfigCard definitions
   useEffect(() => {
@@ -240,45 +238,17 @@ export default function ConfigCardDesignerPage() {
 
   if (loading) {
     return (
-      <div 
-        className="min-h-screen bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage: 'url(https://rggdywqnvpuwssluzfud.supabase.co/storage/v1/object/public/module-assets/backgrounds/CafeBackdrop.jpg)'
-        }}
-      >
-        <div className="min-h-screen bg-black bg-opacity-40">
-          <div className="w-full mx-auto px-2 sm:px-4 md:px-6 lg:px-8 xl:max-w-7xl pt-16 pb-8 h-screen overflow-y-auto">
-            {moduleConfig && (
-              <div className="mb-6">
-                <ModuleHeader module={moduleConfig} currentPage="configcard-designer" />
-              </div>
-            )}
+      <StandardPageWrapper moduleName="dev" currentPage="configcard-designer">
             <div className="text-center py-12">
               <div className="w-8 h-8 border-4 border-white border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
               <h2 className="text-2xl font-bold text-white mb-4">Loading ConfigCard Designer</h2>
             </div>
-          </div>
-        </div>
-      </div>
+      </StandardPageWrapper>
     );
   }
 
   return (
-    <div 
-      className="min-h-screen bg-cover bg-center bg-no-repeat"
-      style={{
-        backgroundImage: 'url(https://rggdywqnvpuwssluzfud.supabase.co/storage/v1/object/public/module-assets/backgrounds/CafeBackdrop.jpg)'
-      }}
-    >
-      <div className="min-h-screen bg-black bg-opacity-40">
-        <div className="w-full mx-auto px-2 sm:px-4 md:px-6 lg:px-8 xl:max-w-7xl pt-16 pb-8 h-screen overflow-y-auto">
-          
-          {/* Header */}
-          {moduleConfig && (
-            <div className="mb-6">
-              <ModuleHeader module={moduleConfig} currentPage="configcard-designer" />
-            </div>
-          )}
+    <StandardPageWrapper moduleName="dev" currentPage="configcard-designer">
 
           {/* Page Header */}
           <div className={`${getCardStyle('primary')} mb-8`}>
@@ -475,9 +445,7 @@ export default function ConfigCardDesignerPage() {
             />
           )}
 
-        </div>
-      </div>
-    </div>
+    </StandardPageWrapper>
   );
 }
 

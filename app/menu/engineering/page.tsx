@@ -1,12 +1,12 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { ModuleHeaderDark } from '../../components/ModuleHeaderDark'
 import { SearchInput } from '../../components/SearchInput'
 import { EmptyState } from '../../components/EmptyState'
 import { LoadingSpinner } from '../../components/LoadingSpinner'
-import { ModuleCard } from '../../components/ModuleCard'
+import { ModuleCard, StatCard } from '../../components/ModuleCard'
 import { useAuth } from '../../hooks/useAuth'
+import { StandardPageWrapper } from '@/app/components/UniversalPageWrapper'
 import { 
   Star, TrendingUp, HelpCircle, Trash2, 
   BarChart3, Target, AlertTriangle, Info,
@@ -106,32 +106,29 @@ export default function MenuEngineeringPage() {
 
   if (authLoading || loading) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <ModuleHeaderDark title="Menu Engineering" subtitle="Profitability × Popularity Analysis" />
+      <StandardPageWrapper moduleName="menu" currentPage="engineering">
         <div className="container mx-auto px-4 py-6">
           <LoadingSpinner />
         </div>
-      </div>
+      </StandardPageWrapper>
     )
   }
 
   if (!matrix) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <ModuleHeaderDark title="Menu Engineering" subtitle="Profitability × Popularity Analysis" />
+      <StandardPageWrapper moduleName="menu" currentPage="engineering">
         <div className="container mx-auto px-4 py-6">
           <EmptyState
             title="No menu engineering data available"
             description="Menu engineering analysis requires recipes with menu prices and sales data. Make sure you have recipes configured with prices."
           />
         </div>
-      </div>
+      </StandardPageWrapper>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <ModuleHeaderDark title="Menu Engineering" subtitle="Profitability × Popularity Analysis" />
+    <StandardPageWrapper moduleName="menu" currentPage="engineering">
       
       <div className="container mx-auto px-4 py-6 space-y-6">
         {/* Sales Data Warning */}
@@ -156,7 +153,7 @@ export default function MenuEngineeringPage() {
 
         {/* Summary Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+          <StatCard accentColor="blue">
             <div className="flex items-center">
               <div className="p-2 bg-gray-100 rounded-lg">
                 <BarChart3 className="h-5 w-5 text-gray-600" />
@@ -166,9 +163,9 @@ export default function MenuEngineeringPage() {
                 <p className="text-2xl font-bold text-gray-900">{matrix.total_items}</p>
               </div>
             </div>
-          </div>
+          </StatCard>
           
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+          <StatCard accentColor="green">
             <div className="flex items-center">
               <div className="p-2 bg-green-100 rounded-lg">
                 <DollarSign className="h-5 w-5 text-green-600" />
@@ -180,9 +177,9 @@ export default function MenuEngineeringPage() {
                 </p>
               </div>
             </div>
-          </div>
+          </StatCard>
           
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+          <StatCard accentColor="blue">
             <div className="flex items-center">
               <div className="p-2 bg-blue-100 rounded-lg">
                 <Users className="h-5 w-5 text-blue-600" />
@@ -192,9 +189,9 @@ export default function MenuEngineeringPage() {
                 <p className="text-2xl font-bold text-gray-900">{matrix.median_sales}</p>
               </div>
             </div>
-          </div>
+          </StatCard>
           
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+          <StatCard accentColor="yellow">
             <div className="flex items-center">
               <div className="p-2 bg-yellow-100 rounded-lg">
                 <Star className="h-5 w-5 text-yellow-600" />
@@ -204,11 +201,11 @@ export default function MenuEngineeringPage() {
                 <p className="text-2xl font-bold text-gray-900">{matrix.stars.count}</p>
               </div>
             </div>
-          </div>
+          </StatCard>
         </div>
 
         {/* Search */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <ModuleCard className="p-6">
           <div className="max-w-md">
             <SearchInput
               value={searchTerm}
@@ -216,7 +213,7 @@ export default function MenuEngineeringPage() {
               placeholder="Search menu items..."
             />
           </div>
-        </div>
+        </ModuleCard>
 
         {/* Menu Engineering Matrix */}
         <ModuleCard theme="light" className="p-6">
@@ -403,7 +400,7 @@ export default function MenuEngineeringPage() {
 
         {/* Expanded Quadrant Items */}
         {expandedQuadrant && matrix && (
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <ModuleCard className="p-6">
             <h3 className="text-lg font-semibold mb-4 flex items-center">
               {getQuadrantIcon(expandedQuadrant)}
               <span className="ml-2">
@@ -485,9 +482,9 @@ export default function MenuEngineeringPage() {
                 </div>
               )
             })()}
-          </div>
+          </ModuleCard>
         )}
       </div>
-    </div>
+    </StandardPageWrapper>
   )
 }

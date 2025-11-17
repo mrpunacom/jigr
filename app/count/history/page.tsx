@@ -1,11 +1,12 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { ModuleHeaderDark } from '../../components/ModuleHeaderDark'
+import { StandardPageWrapper } from '@/app/components/UniversalPageWrapper'
 import { SearchInput } from '../../components/SearchInput'
 import { EmptyState } from '../../components/EmptyState'
 import { LoadingSpinner } from '../../components/LoadingSpinner'
-import { useAuth } from '../../hooks/useAuth'
+import { StatCard, ModuleCard } from '../../components/ModuleCard'
+import { supabase } from '@/lib/supabase'
 import { 
   History, Calendar, User, MapPin, 
   FileText, Package, Clock, Filter,
@@ -48,7 +49,16 @@ interface CountHistoryResponse {
 }
 
 export default function CountHistoryPage() {
-  const { session, loading: authLoading } = useAuth()
+  const [session, setSession] = useState<any>(null)
+
+  // Session management
+  useEffect(() => {
+    const getSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession()
+      setSession(session)
+    }
+    getSession()
+  }, [])
   const [counts, setCounts] = useState<CountHistoryItem[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
@@ -132,11 +142,11 @@ export default function CountHistoryPage() {
   }, [session?.access_token])
 
   useEffect(() => {
-    if (!authLoading && session) {
+    if (session) {
       fetchCountHistory()
       fetchFilterOptions()
     }
-  }, [authLoading, session, fetchCountHistory, fetchFilterOptions])
+  }, [session, fetchCountHistory, fetchFilterOptions])
 
   // Reset to page 1 when filters change
   useEffect(() => {
@@ -168,25 +178,22 @@ export default function CountHistoryPage() {
     return `${quantity.toLocaleString()} ${unit}`
   }
 
-  if (authLoading || loading) {
+  if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <ModuleHeaderDark title="Count History" subtitle="Historical count records and audit trail" />
+      <StandardPageWrapper moduleName="count" currentPage="history">
         <div className="container mx-auto px-4 py-6">
           <LoadingSpinner />
         </div>
-      </div>
+      </StandardPageWrapper>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <ModuleHeaderDark title="Count History" subtitle="Historical count records and audit trail" />
-      
-      <div className="container mx-auto px-4 py-6 space-y-6">
+    <StandardPageWrapper moduleName="count" currentPage="history">
+      <div className="space-y-6">
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+          <StatCard accentColor="blue">
             <div className="flex items-center">
               <div className="p-2 bg-blue-100 rounded-lg">
                 <History className="h-5 w-5 text-blue-600" />
@@ -196,9 +203,9 @@ export default function CountHistoryPage() {
                 <p className="text-2xl font-bold text-gray-900">{summary.totalCounts || 0}</p>
               </div>
             </div>
-          </div>
+          </StatCard>
           
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+          <StatCard accentColor="green">
             <div className="flex items-center">
               <div className="p-2 bg-green-100 rounded-lg">
                 <Package className="h-5 w-5 text-green-600" />
@@ -208,9 +215,9 @@ export default function CountHistoryPage() {
                 <p className="text-2xl font-bold text-gray-900">{summary.uniqueItems || 0}</p>
               </div>
             </div>
-          </div>
+          </StatCard>
           
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+          <StatCard accentColor="purple">
             <div className="flex items-center">
               <div className="p-2 bg-purple-100 rounded-lg">
                 <Calendar className="h-5 w-5 text-purple-600" />
@@ -225,9 +232,9 @@ export default function CountHistoryPage() {
                 </p>
               </div>
             </div>
-          </div>
+          </StatCard>
           
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+          <StatCard accentColor="orange">
             <div className="flex items-center">
               <div className="p-2 bg-orange-100 rounded-lg">
                 <User className="h-5 w-5 text-orange-600" />
@@ -239,11 +246,11 @@ export default function CountHistoryPage() {
                 </p>
               </div>
             </div>
-          </div>
+          </StatCard>
         </div>
 
         {/* Search and Filters */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <ModuleCard className="p-6">
           <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between mb-4">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 flex-1">
               <div>
@@ -354,7 +361,7 @@ export default function CountHistoryPage() {
               </select>
             </div>
           </div>
-        </div>
+        </ModuleCard>
 
         {/* Count History Table */}
         {loading ? (
@@ -548,6 +555,6 @@ export default function CountHistoryPage() {
           </>
         )}
       </div>
-    </div>
+    </StandardPageWrapper>
   )
 }

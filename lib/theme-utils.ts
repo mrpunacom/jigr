@@ -43,17 +43,20 @@ export function getCardStyle(theme: ThemeMode): CardStyleConfig {
   }
 
   if (theme === 'light') {
-    // Light theme: Lighter cards for dark backgrounds
+    // Light theme: Much stronger cards for watermark backgrounds - need excellent contrast
     return {
       ...baseStyle,
-      backgroundColor: 'rgba(255, 255, 255, 0.18)'
+      backgroundColor: 'rgba(255, 255, 255, 0.92)', // Increased from 0.18 to 0.92 for strong contrast against watermarks
+      border: '1px solid rgba(255, 255, 255, 0.3)', // Stronger border
+      boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.05)' // Enhanced shadow
     }
   } else {
     // Dark theme: Much darker cards for light backgrounds - need strong contrast
     return {
       ...baseStyle,
-      backgroundColor: 'rgba(255, 255, 255, 0.47)',
-      border: '1px solid rgba(0, 0, 0, 0.1)'
+      backgroundColor: 'rgba(255, 255, 255, 0.95)', // Even stronger for dark theme
+      border: '1px solid rgba(0, 0, 0, 0.12)', // Subtle dark border
+      boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)' // Enhanced shadow
     }
   }
 }
@@ -65,12 +68,12 @@ export function getCardStyle(theme: ThemeMode): CardStyleConfig {
  */
 export function getTextColors(theme: ThemeMode): TextColorConfig {
   if (theme === 'light') {
-    // Light theme: Light text for dark backgrounds
+    // Light theme: Dark text for strong white cards (since cards are now 0.92 white)
     return {
-      title: 'text-white',
-      body: 'text-white',
-      secondary: 'text-white/70',
-      accent: 'text-white/90'
+      title: 'text-gray-900',
+      body: 'text-gray-800', 
+      secondary: 'text-gray-600',
+      accent: 'text-gray-700'
     }
   } else {
     // Dark theme: Dark text for light backgrounds

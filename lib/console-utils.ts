@@ -18,15 +18,14 @@ interface LogConfig {
 // Configuration based on environment
 const getLogConfig = (): LogConfig => {
   const env = process.env.NODE_ENV || 'development'
-  const isTestingMode = typeof window !== 'undefined' && window.location.search.includes('quiet=true')
   
-  if (isTestingMode || env === 'production') {
+  if (env === 'production') {
     return {
       showDebug: false,
       showInfo: false,
       showAuth: false,
       showAPI: false,
-      environment: 'testing'
+      environment: 'production'
     }
   }
   
@@ -89,14 +88,9 @@ export const logger = {
 
 /**
  * Enable quiet mode for clean testing
- * Add ?quiet=true to URL to suppress debug logs
  */
 export const enableQuietMode = () => {
   if (typeof window !== 'undefined') {
-    const url = new URL(window.location.href)
-    url.searchParams.set('quiet', 'true')
-    window.history.replaceState({}, '', url.toString())
-    
     // Override console.log globally to suppress all logs except errors and warnings
     const originalLog = console.log
     const originalInfo = console.info
@@ -120,7 +114,7 @@ export const enableQuietMode = () => {
     
     // Show notification that quiet mode is enabled
     originalLog(`🔇 Quiet mode enabled - console.log calls suppressed`)
-    originalLog(`🔊 To re-enable debug logs, remove ?quiet=true from URL`)
+    originalLog(`🔊 To re-enable debug logs, use jigrLogger.verbose()`)
   }
 }
 
@@ -128,9 +122,7 @@ export const enableQuietMode = () => {
  * Auto-enable quiet mode by default for production-like experience
  */
 export const autoEnableQuietMode = () => {
-  if (typeof window !== 'undefined' && !window.location.search.includes('verbose=true')) {
-    enableQuietMode()
-  }
+  // Removed automatic quiet mode - let developer control it manually
 }
 
 /**
@@ -138,10 +130,6 @@ export const autoEnableQuietMode = () => {
  */
 export const disableQuietMode = () => {
   if (typeof window !== 'undefined') {
-    const url = new URL(window.location.href)
-    url.searchParams.delete('quiet')
-    window.history.replaceState({}, '', url.toString())
-    
     // Restore original console functions
     const originalConsole = (window as any).originalConsole
     if (originalConsole) {
@@ -173,8 +161,8 @@ export const testUtils = {
   },
   
   getCurrentMode: () => {
-    const isQuiet = typeof window !== 'undefined' && window.location.search.includes('quiet=true')
-    return isQuiet ? 'quiet' : 'verbose'
+    const originalConsole = typeof window !== 'undefined' && (window as any).originalConsole
+    return originalConsole ? 'quiet' : 'verbose'
   }
 }
 

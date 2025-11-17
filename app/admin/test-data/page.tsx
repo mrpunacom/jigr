@@ -4,6 +4,7 @@
 // Simple admin interface for viewing and cleaning test data
 
 import { useState, useEffect } from 'react'
+import { ModuleCard, StatCard } from '../../components/ModuleCard'
 
 interface TestDataStats {
   totalTestRecords: number
@@ -119,26 +120,26 @@ export default function TestDataManagementPage() {
 
         {/* Statistics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <StatCard accentColor="blue">
             <h3 className="text-lg font-medium text-gray-900 mb-2">Total Test Records</h3>
             <p className="text-3xl font-bold text-blue-600">{stats?.totalTestRecords || 0}</p>
-          </div>
+          </StatCard>
           
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <StatCard accentColor="yellow">
             <h3 className="text-lg font-medium text-gray-900 mb-2">Test Sessions</h3>
             <p className="text-3xl font-bold text-yellow-600">{stats?.testSessions || 0}</p>
-          </div>
+          </StatCard>
           
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <StatCard accentColor="green">
             <h3 className="text-lg font-medium text-gray-900 mb-2">Status</h3>
             <p className="text-sm text-green-600 font-medium">
               {stats?.totalTestRecords === 0 ? 'No test data' : `${stats?.totalTestRecords} test records`}
             </p>
-          </div>
+          </StatCard>
         </div>
 
         {/* Actions */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
+        <ModuleCard className="p-6 mb-8">
           <h3 className="text-lg font-medium text-gray-900 mb-4">Quick Actions</h3>
           <div className="flex flex-wrap gap-4">
             <button
@@ -156,11 +157,11 @@ export default function TestDataManagementPage() {
               {cleanupLoading ? '⏳ Cleaning...' : '🗑️ Clean All Test Data'}
             </button>
           </div>
-        </div>
+        </ModuleCard>
 
         {/* Test Sessions List */}
         {stats?.sessionGroups && Object.keys(stats.sessionGroups).length > 0 && (
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <ModuleCard className="p-6">
             <h3 className="text-lg font-medium text-gray-900 mb-4">Test Sessions</h3>
             <div className="space-y-4">
               {Object.entries(stats.sessionGroups).map(([sessionId, records]) => (
@@ -185,7 +186,7 @@ export default function TestDataManagementPage() {
                 </div>
               ))}
             </div>
-          </div>
+          </ModuleCard>
         )}
 
         {/* No test data message */}
