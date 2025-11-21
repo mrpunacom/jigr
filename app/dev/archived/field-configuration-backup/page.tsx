@@ -2,8 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { getCardStyle, getTextStyle, getButtonStyle } from '@/lib/design-system';
-import { getModuleConfig } from '@/lib/module-config';
-import { ModuleHeader } from '@/app/components/ModuleHeader';
+import { StandardPageWrapper } from '@/app/components/UniversalPageWrapper';
 
 interface FieldDefinition {
   key: string;

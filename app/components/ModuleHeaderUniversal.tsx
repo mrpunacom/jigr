@@ -19,6 +19,8 @@ import { getTextStyle } from '@/lib/design-system'
 import { ModuleConfig } from '@/lib/module-config'
 import { HamburgerDropdown } from './HamburgerDropdown'
 import { UserAvatarDropdown } from './UserAvatarDropdown'
+import ExplanationTrigger from './explanation/ExplanationTrigger'
+import { useExplanation } from './explanation/useExplanation'
 import { supabase } from '@/lib/supabase'
 import { logger } from '@/lib/console-utils'
 import { TOUCH_TARGETS, FONT_FAMILY, FONT_SIZES, FONT_WEIGHTS, IOS_COLORS, BUTTON_STATES, ANIMATIONS } from '@/lib/apple-design-system'
@@ -163,6 +165,7 @@ function ComplexModuleHeader({
   const [showHamburgerDropdown, setShowHamburgerDropdown] = useState(false)
   const [showUserDropdown, setShowUserDropdown] = useState(false)
   const [userAvatar, setUserAvatar] = useState<string | null>(null)
+  const { openModal } = useExplanation()
   
   const bgImage = backgroundImage || getBackgroundImage(module.title)
   const hasBackground = bgImage && bgImage.length > 0
@@ -209,6 +212,24 @@ function ComplexModuleHeader({
 
   // Universal dark text for all modules
   const textColorClass = 'text-gray-800'
+
+  // Handle explanation trigger click
+  const handleExplanationTrigger = () => {
+    const pageId = `${module.key.toLowerCase()}-${currentPage}`
+    const context = {
+      moduleKey: module.key.toLowerCase(),
+      pageKey: currentPage,
+      fullPath: window.location.pathname,
+      permissions: ['read'], // Default permissions - should be replaced with actual user permissions
+      userRole: 'STAFF' as const, // Default role - should be replaced with actual user role
+      userId: user?.id,
+      currentData: {
+        moduleName: module.title,
+        pageTitle: currentPageData?.label || currentPage
+      }
+    }
+    openModal(pageId, context)
+  }
   
   return (
     <>
@@ -286,8 +307,19 @@ function ComplexModuleHeader({
             </div>
           </div>
 
-          {/* Right Side: Hamburger + User Avatar */}
+          {/* Right Side: Help + Hamburger + User Avatar */}
           <div className="flex items-center space-x-4">
+            {/* Explanation/Help Trigger */}
+            <ExplanationTrigger
+              position="header"
+              variant="icon"
+              size="medium"
+              showTooltip={true}
+              tooltipText="Get help with this page"
+              onTrigger={handleExplanationTrigger}
+              className="explanation-trigger explanation-trigger-icon"
+            />
+            
             {/* Hamburger Menu Button */}
             <button
               onClick={() => setShowHamburgerDropdown(!showHamburgerDropdown)}

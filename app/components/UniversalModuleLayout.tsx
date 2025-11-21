@@ -21,6 +21,8 @@ import { supabase } from '@/lib/supabase'
 import { getUserClient, UserClient } from '@/lib/auth-utils'
 import { DeviceProvider } from '@/contexts/DeviceContext'
 import { getModuleConfig, ModuleLayoutConfig } from '@/lib/module-config'
+import { SmartExplanationTrigger } from '@/app/components/explanation/ExplanationTrigger'
+import { useExplanation } from '@/app/components/explanation/useExplanation'
 import ConsoleToggle from '@/app/components/ConsoleToggle'
 
 // Default layout configuration
@@ -95,6 +97,35 @@ function ModuleLoadingState() {
         <p className="text-gray-600">Loading...</p>
       </div>
     </div>
+  )
+}
+
+// Helper component for explanation trigger integration
+function ExplanationTriggerWrapper({ moduleName }: { moduleName: string }) {
+  const { openModal } = useExplanation()
+  const containerRef = { current: document.body }
+
+  const handleTrigger = (pageId: string, context: any) => {
+    openModal(pageId, {
+      ...context,
+      moduleKey: moduleName,
+      pageKey: context.pageKey || 'console',
+      permissions: ['read'], // Default permissions - should be replaced with actual user permissions
+      userRole: 'STAFF' // Default role - should be replaced with actual user role
+    })
+  }
+
+  return (
+    <SmartExplanationTrigger
+      onTrigger={handleTrigger}
+      containerRef={containerRef}
+      overrideProps={{
+        position: 'floating',
+        placement: 'bottom-right',
+        variant: 'icon',
+        size: 'medium'
+      }}
+    />
   )
 }
 
@@ -202,6 +233,9 @@ export function UniversalModuleLayout({
         {/* No background logic needed here - keeps layouts clean */}
         
         {renderLayoutVariant()}
+        
+        {/* Explanation System Trigger */}
+        <ExplanationTriggerWrapper moduleName={moduleName} />
         
         {/* Console Toggle for Development */}
         <ConsoleToggle />

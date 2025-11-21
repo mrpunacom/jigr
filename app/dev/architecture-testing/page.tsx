@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { withHeroOrDevAuth } from '@/lib/dev-auth-context'
+import { TestingAssignmentCard } from '@/app/components/testing/TestingAssignmentCard'
+import { SmartNotificationSystem } from '@/app/components/testing/SmartNotificationSystem'
 
 // TypeScript interfaces for architecture mapping
 interface ComponentDefinition {
@@ -484,11 +486,43 @@ function ArchitectureTestingMapPage() {
           <h1 style={{ fontSize: '32px', fontWeight: 'bold', margin: '0 0 8px 0' }}>
             🏗️ JiGR Architecture Testing Map
           </h1>
+          <div style={{ display: 'flex', gap: '12px', margin: '8px 0 16px 0' }}>
+            <Link
+              href="/dev/feedback-analytics"
+              style={{
+                backgroundColor: 'rgba(139, 92, 246, 0.2)',
+                color: '#A78BFA',
+                padding: '6px 12px',
+                borderRadius: '6px',
+                fontSize: '12px',
+                textDecoration: 'none',
+                fontWeight: '600',
+                border: '1px solid rgba(139, 92, 246, 0.4)'
+              }}
+            >
+              📊 Analytics Dashboard
+            </Link>
+            <Link
+              href="/dev/architecture-testing"
+              style={{
+                backgroundColor: 'rgba(34, 197, 94, 0.2)',
+                color: '#4ADE80',
+                padding: '6px 12px',
+                borderRadius: '6px',
+                fontSize: '12px',
+                textDecoration: 'none',
+                fontWeight: '600',
+                border: '1px solid rgba(34, 197, 94, 0.4)'
+              }}
+            >
+              🏗️ Architecture Testing (Current)
+            </Link>
+          </div>
           <p style={{ fontSize: '16px', opacity: 0.8, margin: '0 0 20px 0' }}>
             Comprehensive testing dashboard for systematic QA of all pages and components
           </p>
 
-          {/* Integration Notice */}
+          {/* Enhanced Integration Notice */}
           <div style={{
             backgroundColor: 'rgba(59, 130, 246, 0.1)',
             border: '1px solid rgba(59, 130, 246, 0.3)',
@@ -497,11 +531,13 @@ function ArchitectureTestingMapPage() {
             marginBottom: '20px'
           }}>
             <div style={{ fontSize: '14px', fontWeight: '600', marginBottom: '8px' }}>
-              🔗 Integrated with Feedback System
+              🚀 Enhanced Testing System Integration
             </div>
             <div style={{ fontSize: '12px', opacity: 0.8 }}>
-              Test pages using links below - they integrate with the existing feedback widget system. 
-              Use this dashboard for systematic component testing, feedback widget for quick issue reporting.
+              • **Feedback Widget**: Auto device detection + screenshot capture<br />
+              • **Smart Notifications**: GitHub/Slack alerts for critical issues<br />
+              • **Analytics Dashboard**: Real-time feedback insights and trends<br />
+              • **Assignment System**: Systematic task delegation and tracking
             </div>
           </div>
 
@@ -800,6 +836,11 @@ function ArchitectureTestingMapPage() {
           })}
         </div>
 
+        {/* Testing Assignments Section */}
+        <div style={{ marginTop: '30px' }}>
+          <TestingAssignmentCard />
+        </div>
+
         {/* Footer */}
         <div style={{
           marginTop: '40px',
@@ -810,8 +851,11 @@ function ArchitectureTestingMapPage() {
           fontSize: '12px',
           opacity: 0.6
         }}>
-          JiGR Architecture Testing Dashboard • Dev Team Authenticated • Integrated with Feedback System • {new Date().toLocaleDateString()}
+          JiGR Enhanced Testing System • Smart Notifications • Real-time Analytics • Assignment Management • {new Date().toLocaleDateString()}
         </div>
+      
+        {/* Smart Notification System */}
+        <SmartNotificationSystem />
       </div>
     </div>
   )

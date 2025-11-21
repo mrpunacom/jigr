@@ -10,6 +10,10 @@ interface FeedbackNote {
   timestamp: string
   severity: 'low' | 'medium' | 'high' | 'critical'
   category: 'bug' | 'ui' | 'ux' | 'performance' | 'suggestion' | 'champion-suggestion' | 'champion-evaluation' | 'champion-priority'
+  deviceInfo?: string
+  screenshot?: string
+  browserInfo?: string
+  viewportSize?: string
 }
 
 interface AllNotes {
@@ -26,14 +30,68 @@ export const FeedbackWidget = () => {
   const [isHero, setIsHero] = useState(false)
   const [testerId, setTesterId] = useState('')
   const [userClient, setUserClient] = useState<any>(null)
+  const [deviceInfo, setDeviceInfo] = useState('')
+  const [screenshot, setScreenshot] = useState<string | null>(null)
+  const [takingScreenshot, setTakingScreenshot] = useState(false)
+  const [includeScreenshot, setIncludeScreenshot] = useState(false)
   const pathname = usePathname()
   
+  // Detect device and browser information
+  const detectDeviceInfo = () => {
+    const userAgent = navigator.userAgent
+    const platform = navigator.platform
+    const language = navigator.language
+    const viewport = `${window.innerWidth}x${window.innerHeight}`
+    const screen = `${window.screen.width}x${window.screen.height}`
+    const devicePixelRatio = window.devicePixelRatio
+    const online = navigator.onLine
+    
+    // Detect device type
+    const isMobile = /iPhone|iPad|iPod|Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(userAgent)
+    const isTablet = /iPad|Android(?!.*Mobile)/i.test(userAgent) || (platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+    const deviceType = isTablet ? 'Tablet' : isMobile ? 'Mobile' : 'Desktop'
+    
+    // Detect browser
+    let browserName = 'Unknown'
+    if (userAgent.includes('Safari') && !userAgent.includes('Chrome')) {
+      browserName = 'Safari'
+    } else if (userAgent.includes('Chrome')) {
+      browserName = 'Chrome'
+    } else if (userAgent.includes('Firefox')) {
+      browserName = 'Firefox'
+    } else if (userAgent.includes('Edge')) {
+      browserName = 'Edge'
+    }
+    
+    // Check for Safari 12 specifically (iPad Air 2013 target)
+    const safariVersion = userAgent.match(/Version\/(\d+\.\d+)/)
+    const isSafari12 = safariVersion && parseFloat(safariVersion[1]) <= 12
+    
+    return {
+      deviceType,
+      platform,
+      browser: browserName,
+      safariVersion: isSafari12 ? `Safari ${safariVersion?.[1] || 'Unknown'}` : null,
+      viewport,
+      screen,
+      devicePixelRatio,
+      language,
+      online,
+      userAgent: userAgent.substring(0, 100) + '...' // Truncate for storage
+    }
+  }
+
   useEffect(() => {
     const checkAccess = async () => {
       // Check if in testing mode via URL parameter
       const params = new URLSearchParams(window.location.search)
       const testMode = params.get('testing') === 'true'
       const testerIdParam = params.get('testerId') || 'anonymous'
+      
+      // Detect device information
+      const deviceData = detectDeviceInfo()
+      const deviceInfoString = `${deviceData.deviceType} | ${deviceData.browser} | ${deviceData.viewport} | ${deviceData.platform}${deviceData.safariVersion ? ` | ${deviceData.safariVersion}` : ''}`
+      setDeviceInfo(deviceInfoString)
       
       // Check if user is a Hero (automatic access)
       let heroMode = false
@@ -80,14 +138,103 @@ export const FeedbackWidget = () => {
   // Don't render if not in testing mode
   if (!isTester) return null
   
+  // Take screenshot using html2canvas-like functionality
+  const takeScreenshot = async () => {
+    setTakingScreenshot(true)
+    try {
+      // Try to use the newer Screen Capture API if available
+      if ('getDisplayMedia' in navigator.mediaDevices) {
+        const stream = await navigator.mediaDevices.getDisplayMedia({
+          video: { mediaSource: 'screen' }
+        })
+        
+        const video = document.createElement('video')
+        video.srcObject = stream
+        video.play()
+        
+        video.onloadedmetadata = () => {
+          const canvas = document.createElement('canvas')
+          canvas.width = video.videoWidth
+          canvas.height = video.videoHeight
+          
+          const ctx = canvas.getContext('2d')
+          ctx?.drawImage(video, 0, 0)
+          
+          const dataURL = canvas.toDataURL('image/jpeg', 0.7)
+          setScreenshot(dataURL)
+          setIncludeScreenshot(true)
+          
+          // Stop all tracks
+          stream.getTracks().forEach(track => track.stop())
+        }
+      } else {
+        // Fallback: Create a simple page screenshot indicator
+        const canvas = document.createElement('canvas')
+        canvas.width = 400
+        canvas.height = 300
+        const ctx = canvas.getContext('2d')
+        
+        if (ctx) {
+          // Create a simple screenshot placeholder
+          ctx.fillStyle = '#f3f4f6'
+          ctx.fillRect(0, 0, 400, 300)
+          ctx.fillStyle = '#374151'
+          ctx.font = '16px Arial'
+          ctx.textAlign = 'center'
+          ctx.fillText('Screenshot capture', 200, 140)
+          ctx.fillText('not available on this device', 200, 160)
+          ctx.fillText(`Page: ${pathname}`, 200, 190)
+          ctx.fillText(`Time: ${new Date().toLocaleTimeString()}`, 200, 210)
+          
+          setScreenshot(canvas.toDataURL('image/jpeg', 0.7))
+          setIncludeScreenshot(true)
+        }
+      }
+    } catch (error) {
+      console.warn('Screenshot capture failed:', error)
+      // Create error placeholder
+      const canvas = document.createElement('canvas')
+      canvas.width = 400
+      canvas.height = 200
+      const ctx = canvas.getContext('2d')
+      
+      if (ctx) {
+        ctx.fillStyle = '#fef2f2'
+        ctx.fillRect(0, 0, 400, 200)
+        ctx.fillStyle = '#dc2626'
+        ctx.font = '14px Arial'
+        ctx.textAlign = 'center'
+        ctx.fillText('Screenshot failed', 200, 90)
+        ctx.fillText('Manual description recommended', 200, 110)
+        
+        setScreenshot(canvas.toDataURL('image/jpeg', 0.7))
+      }
+    } finally {
+      setTakingScreenshot(false)
+    }
+  }
+
   const saveNote = () => {
     if (!notes.trim()) return
+    
+    const deviceData = detectDeviceInfo()
     
     const newNote: FeedbackNote = {
       note: notes.trim(),
       timestamp: new Date().toISOString(),
       severity,
-      category
+      category,
+      deviceInfo,
+      screenshot: includeScreenshot ? screenshot : undefined,
+      browserInfo: JSON.stringify({
+        browser: deviceData.browser,
+        viewport: deviceData.viewport,
+        screen: deviceData.screen,
+        devicePixelRatio: deviceData.devicePixelRatio,
+        language: deviceData.language,
+        online: deviceData.online
+      }),
+      viewportSize: deviceData.viewport
     }
     
     const updatedNotes = {
@@ -99,6 +246,8 @@ export const FeedbackWidget = () => {
     const storageKey = isHero ? `HeroFeedbackNotes_${testerId}` : `TesterFeedbackNotes_${testerId}`
     localStorage.setItem(storageKey, JSON.stringify(updatedNotes))
     setNotes('')
+    setScreenshot(null)
+    setIncludeScreenshot(false)
     setIsOpen(false)
     
     // Show confirmation
@@ -130,12 +279,19 @@ export const FeedbackWidget = () => {
     
     const feedbackData = {
       testerId: testerId,
-      device: 'iPad Air Safari 12',
+      device: 'iPad Air Safari 12', // Legacy field
+      deviceInfo: deviceInfo, // Enhanced device detection
       timestamp: new Date().toISOString(),
       appVersion: process.env.NEXT_PUBLIC_APP_VERSION || '1.11.1',
       totalPages: Object.keys(allNotes).length,
       totalNotes: totalNotes,
-      feedback: allNotes
+      feedback: allNotes,
+      enhancedFeedback: {
+        hasScreenshots: Object.values(allNotes).flat().some(note => note.screenshot),
+        totalScreenshots: Object.values(allNotes).flat().filter(note => note.screenshot).length,
+        deviceTypes: [...new Set(Object.values(allNotes).flat().map(note => note.deviceInfo).filter(Boolean))],
+        viewportSizes: [...new Set(Object.values(allNotes).flat().map(note => note.viewportSize).filter(Boolean))]
+      }
     }
     
     const subject = isHero 
@@ -147,6 +303,7 @@ JiGR Hospitality Compliance Platform - ${isHero ? 'Hero' : 'Tester'} Feedback Re
 === FEEDBACK SUMMARY ===
 Tester ID: ${feedbackData.testerId}
 Device: ${feedbackData.device}
+Detailed Device Info: ${feedbackData.deviceInfo || 'Not available'}
 App Version: ${feedbackData.appVersion}
 Testing Date: ${new Date(feedbackData.timestamp).toLocaleDateString('en-NZ')}
 Total Pages Reviewed: ${feedbackData.totalPages}
@@ -161,6 +318,9 @@ ${pageNotes.map((note, index) => `
   Category: ${note.category.toUpperCase()}
   Severity: ${note.severity.toUpperCase()}
   Time: ${new Date(note.timestamp).toLocaleString('en-NZ')}
+  Device: ${note.deviceInfo || 'Not specified'}
+  Viewport: ${note.viewportSize || 'Not specified'}
+  Screenshot: ${note.screenshot ? 'Included' : 'Not included'}
   Feedback: ${note.note}
 `).join('\n')}
 `).join('\n')}
@@ -357,6 +517,104 @@ Generated by JiGR Testing Feedback System
               <option value="high">High</option>
               <option value="critical">Critical</option>
             </select>
+          </div>
+          
+          {/* Device Info Display */}
+          <div style={{ 
+            fontSize: '11px', 
+            color: '#6B7280', 
+            marginBottom: '12px',
+            padding: '8px',
+            backgroundColor: '#F9FAFB',
+            borderRadius: '6px',
+            border: '1px solid #E5E7EB'
+          }}>
+            📱 Device: {deviceInfo}
+          </div>
+          
+          {/* Screenshot Section */}
+          <div style={{ marginBottom: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+              <input
+                type="checkbox"
+                id="includeScreenshot"
+                checked={includeScreenshot}
+                onChange={(e) => setIncludeScreenshot(e.target.checked)}
+                style={{ margin: 0 }}
+              />
+              <label htmlFor="includeScreenshot" style={{ 
+                fontSize: '12px', 
+                fontWeight: '500',
+                cursor: 'pointer',
+                color: '#374151'
+              }}>
+                📸 Include Screenshot
+              </label>
+              {!screenshot && (
+                <button
+                  onClick={takeScreenshot}
+                  disabled={takingScreenshot}
+                  style={{
+                    fontSize: '11px',
+                    padding: '4px 8px',
+                    backgroundColor: takingScreenshot ? '#9CA3AF' : '#3B82F6',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: takingScreenshot ? 'not-allowed' : 'pointer',
+                    fontFamily: 'inherit'
+                  }}
+                >
+                  {takingScreenshot ? '📸 Capturing...' : '📸 Capture'}
+                </button>
+              )}
+            </div>
+            
+            {/* Screenshot Preview */}
+            {screenshot && includeScreenshot && (
+              <div style={{
+                marginTop: '8px',
+                border: '1px solid #D1D5DB',
+                borderRadius: '6px',
+                overflow: 'hidden'
+              }}>
+                <img
+                  src={screenshot}
+                  alt="Screenshot preview"
+                  style={{
+                    width: '100%',
+                    maxHeight: '120px',
+                    objectFit: 'cover'
+                  }}
+                />
+                <div style={{
+                  padding: '6px',
+                  backgroundColor: '#F9FAFB',
+                  fontSize: '10px',
+                  color: '#6B7280',
+                  display: 'flex',
+                  justifyContent: 'space-between'
+                }}>
+                  <span>Screenshot captured</span>
+                  <button
+                    onClick={() => {
+                      setScreenshot(null)
+                      setIncludeScreenshot(false)
+                    }}
+                    style={{
+                      fontSize: '10px',
+                      color: '#EF4444',
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      padding: 0
+                    }}
+                  >
+                    Remove
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
           
           {/* Action Buttons */}

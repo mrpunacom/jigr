@@ -446,3 +446,632 @@ div[style*="linear-gradient"] {
   transform: translateZ(0);
   will-change: transform;
 }
+
+/* ========================================
+   EXPLANATION SYSTEM STYLES
+   ======================================== */
+
+/* Explanation Modal Animations - Safari 12 Compatible */
+@-webkit-keyframes explanation-modal-fade-in {
+  0% {
+    opacity: 0;
+    -webkit-transform: scale(0.95);
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
+}
+
+@keyframes explanation-modal-fade-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@-webkit-keyframes explanation-modal-fade-out {
+  0% {
+    opacity: 1;
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    -webkit-transform: scale(0.95);
+    transform: scale(0.95);
+  }
+}
+
+@keyframes explanation-modal-fade-out {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
+/* Explanation Modal Backdrop */
+.explanation-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 50;
+  
+  /* Safari 12 compatible backdrop-blur */
+  background: rgba(0, 0, 0, 0.4);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  
+  /* Animation */
+  -webkit-animation: explanation-modal-fade-in 0.2s ease-out;
+  animation: explanation-modal-fade-in 0.2s ease-out;
+  
+  /* Hardware acceleration for smooth performance */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  will-change: opacity, backdrop-filter;
+}
+
+/* Safari 12 fallback for backdrop-filter */
+@supports not (backdrop-filter: blur(4px)) {
+  .explanation-modal-backdrop {
+    background: rgba(0, 0, 0, 0.6);
+  }
+}
+
+/* Explanation Modal Container */
+.explanation-modal-container {
+  position: relative;
+  background-color: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  width: 100%;
+  max-width: 64rem;
+  max-height: 90vh;
+  min-height: 60vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  
+  /* iPad Air 2013 optimizations */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  
+  /* Animation */
+  -webkit-animation: explanation-modal-fade-in 0.3s ease-out 0.1s both;
+  animation: explanation-modal-fade-in 0.3s ease-out 0.1s both;
+}
+
+/* Explanation Trigger Button Base */
+.explanation-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  touch-action: manipulation;
+  
+  /* iPad Air 2013 minimum touch targets */
+  min-height: 48px;
+  min-width: 48px;
+  
+  /* Hardware acceleration */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  will-change: transform, box-shadow;
+  
+  /* Smooth transitions */
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  -webkit-transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Explanation Trigger Variants */
+.explanation-trigger-icon {
+  border-radius: 50%;
+  background-color: #3b82f6;
+  color: white;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.explanation-trigger-icon:hover {
+  background-color: #2563eb;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  -webkit-transform: translateY(-1px) translateZ(0);
+  transform: translateY(-1px) translateZ(0);
+}
+
+.explanation-trigger-icon:active {
+  -webkit-transform: translateY(0) scale(0.95) translateZ(0);
+  transform: translateY(0) scale(0.95) translateZ(0);
+}
+
+.explanation-trigger-button {
+  border-radius: 0.5rem;
+  background-color: white;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  padding: 0.5rem 0.75rem;
+}
+
+.explanation-trigger-button:hover {
+  background-color: #f9fafb;
+  border-color: #9ca3af;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+.explanation-trigger-text {
+  border-radius: 0.375rem;
+  background-color: transparent;
+  color: #6b7280;
+  padding: 0.25rem 0.5rem;
+  min-height: 32px;
+  min-width: 32px;
+}
+
+.explanation-trigger-text:hover {
+  color: #3b82f6;
+  background-color: #eff6ff;
+}
+
+/* Explanation Trigger Positioning */
+.explanation-trigger-floating {
+  position: fixed;
+  z-index: 40;
+}
+
+.explanation-trigger-floating.bottom-right {
+  bottom: 1rem;
+  right: 1rem;
+}
+
+.explanation-trigger-floating.bottom-left {
+  bottom: 1rem;
+  left: 1rem;
+}
+
+.explanation-trigger-floating.top-right {
+  top: 1rem;
+  right: 1rem;
+}
+
+.explanation-trigger-floating.top-left {
+  top: 1rem;
+  left: 1rem;
+}
+
+.explanation-trigger-floating.center {
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%) translateZ(0);
+  transform: translate(-50%, -50%) translateZ(0);
+}
+
+/* Explanation Trigger Sizes */
+.explanation-trigger-small {
+  width: 2rem;
+  height: 2rem;
+  padding: 0.25rem;
+}
+
+.explanation-trigger-medium {
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0.5rem;
+}
+
+.explanation-trigger-large {
+  width: 3rem;
+  height: 3rem;
+  padding: 0.625rem;
+}
+
+/* Explanation Tooltip */
+.explanation-tooltip {
+  position: fixed;
+  z-index: 50;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  color: white;
+  background-color: #1f2937;
+  border-radius: 0.375rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  pointer-events: none;
+  
+  /* Hardware acceleration */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  
+  /* Smooth appearance */
+  opacity: 0;
+  -webkit-animation: explanation-tooltip-fade-in 0.2s ease-out 0.3s both;
+  animation: explanation-tooltip-fade-in 0.2s ease-out 0.3s both;
+}
+
+@-webkit-keyframes explanation-tooltip-fade-in {
+  0% { opacity: 0; -webkit-transform: translateY(4px) translateZ(0); }
+  100% { opacity: 1; -webkit-transform: translateY(0) translateZ(0); }
+}
+
+@keyframes explanation-tooltip-fade-in {
+  0% { opacity: 0; transform: translateY(4px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Explanation Tooltip Arrow */
+.explanation-tooltip-arrow {
+  position: absolute;
+  width: 0.5rem;
+  height: 0.5rem;
+  background-color: #1f2937;
+  -webkit-transform: rotate(45deg) translateZ(0);
+  transform: rotate(45deg) translateZ(0);
+}
+
+/* Explanation Content Sections */
+.explanation-content-section {
+  padding: 1.5rem;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.explanation-content-section:last-child {
+  border-bottom: none;
+}
+
+.explanation-content-section h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.explanation-content-section p {
+  color: #6b7280;
+  line-height: 1.625;
+}
+
+/* Explanation Feature Cards */
+.explanation-feature-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  transition: border-color 0.2s ease-in-out;
+  -webkit-transition: border-color 0.2s ease-in-out;
+}
+
+.explanation-feature-card:hover {
+  border-color: #d1d5db;
+}
+
+.explanation-feature-title {
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 0.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.explanation-feature-description {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-bottom: 0.5rem;
+}
+
+.explanation-feature-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #3b82f6;
+  text-decoration: none;
+  min-height: 32px;
+  transition: color 0.2s ease-in-out;
+  -webkit-transition: color 0.2s ease-in-out;
+}
+
+.explanation-feature-action:hover {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+/* Explanation Quick Actions */
+.explanation-quick-action {
+  padding: 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  text-align: left;
+  background-color: white;
+  cursor: pointer;
+  min-height: 80px;
+  transition: all 0.2s ease-in-out;
+  -webkit-transition: all 0.2s ease-in-out;
+  
+  /* iPad touch targets */
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.explanation-quick-action:hover {
+  border-color: #a855f7;
+  background-color: #faf5ff;
+}
+
+.explanation-quick-action-icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.explanation-quick-action-title {
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 0.25rem;
+  transition: color 0.2s ease-in-out;
+  -webkit-transition: color 0.2s ease-in-out;
+}
+
+.explanation-quick-action:hover .explanation-quick-action-title {
+  color: #7c3aed;
+}
+
+.explanation-quick-action-description {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.explanation-quick-action-shortcut {
+  padding: 0.125rem 0.5rem;
+  background-color: #f3f4f6;
+  color: #6b7280;
+  font-size: 0.75rem;
+  border-radius: 0.25rem;
+}
+
+/* Explanation Tips */
+.explanation-tip {
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid;
+  margin-bottom: 0.75rem;
+}
+
+.explanation-tip:last-child {
+  margin-bottom: 0;
+}
+
+.explanation-tip-icon {
+  flex-shrink: 0;
+  width: 1rem;
+  height: 1rem;
+}
+
+.explanation-tip-text {
+  font-size: 0.875rem;
+}
+
+.explanation-tip-action {
+  margin-top: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  min-height: 32px;
+}
+
+/* Tip type variants */
+.explanation-tip-warning {
+  background-color: #fefce8;
+  border-color: #fde047;
+  color: #a16207;
+}
+
+.explanation-tip-success {
+  background-color: #f0fdf4;
+  border-color: #bbf7d0;
+  color: #166534;
+}
+
+.explanation-tip-info {
+  background-color: #eff6ff;
+  border-color: #93c5fd;
+  color: #1e40af;
+}
+
+.explanation-tip-tip {
+  background-color: #faf5ff;
+  border-color: #d8b4fe;
+  color: #7c2d12;
+}
+
+/* Explanation Related Pages */
+.explanation-related-page {
+  padding: 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  text-align: left;
+  background-color: white;
+  cursor: pointer;
+  min-height: 80px;
+  transition: all 0.2s ease-in-out;
+  -webkit-transition: all 0.2s ease-in-out;
+  
+  /* iPad touch targets */
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.explanation-related-page:hover {
+  border-color: #fb923c;
+  background-color: #fff7ed;
+}
+
+.explanation-related-page-title {
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 0.25rem;
+  transition: color 0.2s ease-in-out;
+  -webkit-transition: color 0.2s ease-in-out;
+}
+
+.explanation-related-page:hover .explanation-related-page-title {
+  color: #ea580c;
+}
+
+.explanation-related-page-description {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.explanation-related-page-badge {
+  padding: 0.125rem 0.5rem;
+  background-color: #dbeafe;
+  color: #1e40af;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border-radius: 9999px;
+}
+
+.explanation-related-page-module {
+  padding: 0.125rem 0.5rem;
+  background-color: #f3f4f6;
+  color: #6b7280;
+  font-size: 0.75rem;
+  border-radius: 0.25rem;
+}
+
+/* Error Display */
+.explanation-error {
+  position: fixed;
+  bottom: 1rem;
+  left: 1rem;
+  right: 1rem;
+  margin: 0 auto;
+  max-width: 28rem;
+  background-color: #fef2f2;
+  border: 1px solid #fca5a5;
+  color: #dc2626;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  z-index: 50;
+  
+  /* Hardware acceleration */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  
+  /* Animation */
+  -webkit-animation: explanation-error-slide-up 0.3s ease-out;
+  animation: explanation-error-slide-up 0.3s ease-out;
+}
+
+@-webkit-keyframes explanation-error-slide-up {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateY(100%) translateZ(0);
+    transform: translateY(100%) translateZ(0);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: translateY(0) translateZ(0);
+    transform: translateY(0) translateZ(0);
+  }
+}
+
+@keyframes explanation-error-slide-up {
+  0% {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.explanation-error-dismiss {
+  background: none;
+  border: none;
+  color: #dc2626;
+  cursor: pointer;
+  padding: 0;
+  font-size: 1.25rem;
+  line-height: 1;
+  min-width: 24px;
+  min-height: 24px;
+}
+
+/* Responsive Design for iPad Air 2013 */
+@media (max-width: 1024px) {
+  .explanation-modal-container {
+    margin: 1rem;
+    max-width: calc(100vw - 2rem);
+    max-height: calc(100vh - 2rem);
+  }
+  
+  .explanation-content-section {
+    padding: 1rem;
+  }
+  
+  .explanation-feature-card,
+  .explanation-quick-action,
+  .explanation-related-page {
+    min-height: 88px; /* Larger touch targets on tablets */
+  }
+}
+
+@media (max-width: 768px) {
+  .explanation-modal-container {
+    margin: 0.5rem;
+    max-width: calc(100vw - 1rem);
+    max-height: calc(100vh - 1rem);
+    min-height: auto;
+  }
+  
+  .explanation-trigger-floating.bottom-right {
+    bottom: 0.75rem;
+    right: 0.75rem;
+  }
+  
+  .explanation-trigger-floating.bottom-left {
+    bottom: 0.75rem;
+    left: 0.75rem;
+  }
+}
+
+/* Focus states for accessibility */
+.explanation-trigger:focus,
+.explanation-quick-action:focus,
+.explanation-related-page:focus,
+.explanation-feature-action:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Print styles */
+@media print {
+  .explanation-modal-backdrop,
+  .explanation-trigger,
+  .explanation-error {
+    display: none !important;
+  }
+}

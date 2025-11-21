@@ -1,6 +1,7 @@
 import { Inter, Playfair_Display } from 'next/font/google'
 import { FeedbackWidget } from './components/testing/FeedbackWidget'
 import ConsoleManager from './components/ConsoleManager'
+import { ExplanationProvider } from './components/explanation/ExplanationProvider'
 // import BackgroundManager from './components/BackgroundManager' // DISABLED: Now using UniversalModuleHeader for backgrounds
 import './globals.css'
 import '../styles/ipad-responsive.css'
@@ -24,15 +25,20 @@ export default function RootLayout({
         {/* Dynamic Background Manager - DISABLED: Now using UniversalModuleHeader for backgrounds */}
         {/* <BackgroundManager /> */}
         
-        <main className="min-h-screen">
-          {children}
-        </main>
-        
-        {/* Console Management - Auto-enable quiet mode */}
-        <ConsoleManager />
-        
-        {/* Testing Feedback Widget - Only visible with ?testing=true parameter */}
-        <FeedbackWidget />
+        <ExplanationProvider
+          defaultPermissions={['read']}
+          defaultUserRole="STAFF"
+        >
+          <main className="min-h-screen">
+            {children}
+          </main>
+          
+          {/* Console Management - Auto-enable quiet mode */}
+          <ConsoleManager />
+          
+          {/* Testing Feedback Widget - Only visible with ?testing=true parameter */}
+          <FeedbackWidget />
+        </ExplanationProvider>
       </body>
     </html>
   )
