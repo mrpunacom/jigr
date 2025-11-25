@@ -79,8 +79,8 @@ A comprehensive multi-tenant SaaS platform for New Zealand hospitality businesse
 
 1. **Clone and install**:
    ```bash
-   git clone <repository-url>
-   cd hospitality-compliance-saas
+   git clone https://github.com/mrpunacom/jigr.git
+   cd jigr
    npm install
    ```
 

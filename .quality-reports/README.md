@@ -96,7 +96,7 @@ scripts/
 ### 5. Fix Issues
 **Option A: Claude Code (Automated)**
 ```bash
-claude --project hospitality-compliance
+claude --project jigr
 # Then: "Read .quality-reports/ActionItems.md and fix all issues"
 ```
 
