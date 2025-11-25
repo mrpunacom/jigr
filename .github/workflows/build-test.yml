@@ -27,8 +27,12 @@ jobs:
       run: npm ci
     
     - name: TypeScript build test
-      run: npm run build
+      run: |
+        echo "Increasing Node.js memory limit for large codebase..."
+        export NODE_OPTIONS="--max-old-space-size=4096"
+        npm run build
       env:
+        NODE_OPTIONS: "--max-old-space-size=4096"
         NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
         NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
         SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
