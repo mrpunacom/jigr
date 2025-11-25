@@ -8,11 +8,6 @@ import { ModuleCard, StatCard } from '../../components/ModuleCard'
 import { useAuth } from '../../hooks/useAuth'
 import { StandardPageWrapper } from '@/app/components/UniversalPageWrapper'
 import { 
-  Star, TrendingUp, HelpCircle, Trash2, 
-  BarChart3, Target, AlertTriangle, Info,
-  ChevronDown, ChevronUp, Users, DollarSign
-} from 'lucide-react'
-import { 
   MenuEngineeringMatrix,
   MenuEngineeringResponse,
   QuadrantSummary,
@@ -71,10 +66,10 @@ export default function MenuEngineeringPage() {
 
   const getQuadrantIcon = (quadrant: string) => {
     switch (quadrant) {
-      case 'star': return <Star className="h-6 w-6 text-yellow-500" />
-      case 'plowhorse': return <TrendingUp className="h-6 w-6 text-blue-500" />
-      case 'puzzle': return <HelpCircle className="h-6 w-6 text-orange-500" />
-      case 'dog': return <Trash2 className="h-6 w-6 text-red-500" />
+      case 'star': return <span className="icon-[tabler--star] h-6 w-6 text-yellow-500"></span>
+      case 'plowhorse': return <span className="icon-[tabler--trending-up] h-6 w-6 text-blue-500"></span>
+      case 'puzzle': return <span className="icon-[tabler--help-circle] h-6 w-6 text-orange-500"></span>
+      case 'dog': return <span className="icon-[tabler--trash] h-6 w-6 text-red-500"></span>
       default: return null
     }
   }
@@ -134,7 +129,7 @@ export default function MenuEngineeringPage() {
         {/* Sales Data Warning */}
         {showDataWarning && (
           <div className="bg-blue-100 border border-blue-200 text-blue-800 px-4 py-3 rounded-lg flex items-start">
-            <Info className="h-5 w-5 mr-3 flex-shrink-0 mt-0.5" />
+            <span className="icon-[tabler--info-circle] h-5 w-5 mr-3 flex-shrink-0 mt-0.5"></span>
             <div className="flex-1">
               <p className="font-medium">Limited Sales Data</p>
               <p className="text-sm mt-1">
@@ -156,7 +151,7 @@ export default function MenuEngineeringPage() {
           <StatCard accentColor="blue">
             <div className="flex items-center">
               <div className="p-2 bg-gray-100 rounded-lg">
-                <BarChart3 className="h-5 w-5 text-gray-600" />
+                <span className="icon-[tabler--chart-bar] h-5 w-5 text-gray-600"></span>
               </div>
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-900">Total Items</p>
@@ -168,7 +163,7 @@ export default function MenuEngineeringPage() {
           <StatCard accentColor="green">
             <div className="flex items-center">
               <div className="p-2 bg-green-100 rounded-lg">
-                <DollarSign className="h-5 w-5 text-green-600" />
+                <span className="icon-[tabler--currency-dollar] h-5 w-5 text-green-600"></span>
               </div>
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-900">Median Margin</p>
@@ -182,7 +177,7 @@ export default function MenuEngineeringPage() {
           <StatCard accentColor="blue">
             <div className="flex items-center">
               <div className="p-2 bg-blue-100 rounded-lg">
-                <Users className="h-5 w-5 text-blue-600" />
+                <span className="icon-[tabler--users] h-5 w-5 text-blue-600"></span>
               </div>
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-900">Median Sales</p>
@@ -194,7 +189,7 @@ export default function MenuEngineeringPage() {
           <StatCard accentColor="yellow">
             <div className="flex items-center">
               <div className="p-2 bg-yellow-100 rounded-lg">
-                <Star className="h-5 w-5 text-yellow-600" />
+                <span className="icon-[tabler--star] h-5 w-5 text-yellow-600"></span>
               </div>
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-900">Stars</p>
@@ -218,7 +213,7 @@ export default function MenuEngineeringPage() {
         {/* Menu Engineering Matrix */}
         <ModuleCard theme="light" className="p-6">
           <div className="flex items-center mb-6">
-            <Target className="h-6 w-6 text-white mr-3" />
+            <span className="icon-[tabler--target] h-6 w-6 text-white mr-3"></span>
             <h2 className="text-xl font-semibold text-white">Menu Engineering Matrix</h2>
           </div>
 
@@ -260,9 +255,9 @@ export default function MenuEngineeringPage() {
                 className="flex items-center text-sm font-medium hover:underline"
               >
                 {expandedQuadrant === 'star' ? (
-                  <>Hide Items <ChevronUp className="h-4 w-4 ml-1" /></>
+                  <>Hide Items <span className="icon-[tabler--chevron-up] h-4 w-4 ml-1"></span></>
                 ) : (
-                  <>Show Items <ChevronDown className="h-4 w-4 ml-1" /></>
+                  <>Show Items <span className="icon-[tabler--chevron-down] h-4 w-4 ml-1"></span></>
                 )}
               </button>
             </div>
@@ -303,9 +298,9 @@ export default function MenuEngineeringPage() {
                 className="flex items-center text-sm font-medium hover:underline"
               >
                 {expandedQuadrant === 'plowhorse' ? (
-                  <>Hide Items <ChevronUp className="h-4 w-4 ml-1" /></>
+                  <>Hide Items <span className="icon-[tabler--chevron-up] h-4 w-4 ml-1"></span></>
                 ) : (
-                  <>Show Items <ChevronDown className="h-4 w-4 ml-1" /></>
+                  <>Show Items <span className="icon-[tabler--chevron-down] h-4 w-4 ml-1"></span></>
                 )}
               </button>
             </div>
@@ -346,9 +341,9 @@ export default function MenuEngineeringPage() {
                 className="flex items-center text-sm font-medium hover:underline"
               >
                 {expandedQuadrant === 'puzzle' ? (
-                  <>Hide Items <ChevronUp className="h-4 w-4 ml-1" /></>
+                  <>Hide Items <span className="icon-[tabler--chevron-up] h-4 w-4 ml-1"></span></>
                 ) : (
-                  <>Show Items <ChevronDown className="h-4 w-4 ml-1" /></>
+                  <>Show Items <span className="icon-[tabler--chevron-down] h-4 w-4 ml-1"></span></>
                 )}
               </button>
             </div>
@@ -389,9 +384,9 @@ export default function MenuEngineeringPage() {
                 className="flex items-center text-sm font-medium hover:underline"
               >
                 {expandedQuadrant === 'dog' ? (
-                  <>Hide Items <ChevronUp className="h-4 w-4 ml-1" /></>
+                  <>Hide Items <span className="icon-[tabler--chevron-up] h-4 w-4 ml-1"></span></>
                 ) : (
-                  <>Show Items <ChevronDown className="h-4 w-4 ml-1" /></>
+                  <>Show Items <span className="icon-[tabler--chevron-down] h-4 w-4 ml-1"></span></>
                 )}
               </button>
             </div>

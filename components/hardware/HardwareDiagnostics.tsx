@@ -1,17 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { 
-  Bluetooth, 
-  Camera, 
-  Printer, 
-  CheckCircle, 
-  XCircle, 
-  AlertTriangle, 
-  Wifi,
-  Smartphone,
-  Monitor
-} from 'lucide-react';
 
 interface DiagnosticTest {
   id: string;
@@ -192,7 +181,7 @@ export default function HardwareDiagnostics() {
           }
 
         case 'camera-api':
-          if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+          if (navigator.mediaDevices && typeof navigator.mediaDevices.getUserMedia === 'function') {
             return {
               ...test,
               status: 'passed',
@@ -372,11 +361,11 @@ export default function HardwareDiagnostics() {
   const getStatusIcon = (status: DiagnosticTest['status']) => {
     switch (status) {
       case 'passed':
-        return <CheckCircle className="w-5 h-5 text-green-500" />;
+        return <span className="icon-[tabler--circle-check] w-5 h-5 text-green-500"></span>;
       case 'failed':
-        return <XCircle className="w-5 h-5 text-red-500" />;
+        return <span className="icon-[tabler--x] w-5 h-5 text-red-500"></span>;
       case 'warning':
-        return <AlertTriangle className="w-5 h-5 text-yellow-500" />;
+        return <span className="icon-[tabler--alert-triangle] w-5 h-5 text-yellow-500"></span>;
       case 'running':
         return <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />;
       default:
@@ -387,15 +376,15 @@ export default function HardwareDiagnostics() {
   const getCategoryIcon = (category: DiagnosticTest['category']) => {
     switch (category) {
       case 'bluetooth':
-        return <Bluetooth className="w-4 h-4" />;
+        return <span className="icon-[tabler--bluetooth] w-4 h-4"></span>;
       case 'camera':
-        return <Camera className="w-4 h-4" />;
+        return <span className="icon-[tabler--camera] w-4 h-4"></span>;
       case 'printer':
-        return <Printer className="w-4 h-4" />;
+        return <span className="icon-[tabler--printer] w-4 h-4"></span>;
       case 'device':
-        return <Smartphone className="w-4 h-4" />;
+        return <span className="icon-[tabler--device-mobile] w-4 h-4"></span>;
       case 'browser':
-        return <Monitor className="w-4 h-4" />;
+        return <span className="icon-[tabler--device-desktop] w-4 h-4"></span>;
     }
   };
 

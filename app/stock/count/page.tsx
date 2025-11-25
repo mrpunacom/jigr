@@ -2,9 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { getModuleConfig } from '@/lib/module-config';
-import { ModuleHeader } from '@/app/components/ModuleHeader';
-import { ResponsiveLayout } from '@/app/components/ResponsiveLayout';
+import { StandardPageWrapper } from '@/app/components/UniversalPageWrapper';
 import { ModuleCard } from '@/app/components/ModuleCard';
 import { MethodSelector } from '@/app/components/stock/counting/MethodSelector';
 import { ItemSearchSelector } from '@/app/components/stock/counting/ItemSearchSelector';
@@ -23,7 +21,6 @@ export default function CountingInterface() {
   const [anomalies, setAnomalies] = useState<any[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const stockModule = getModuleConfig('stock');
 
   const handleMethodSelect = (method: string) => {
     setCountingMethod(method);
@@ -123,10 +120,7 @@ export default function CountingInterface() {
   };
 
   return (
-    <ResponsiveLayout>
-      <ModuleHeader module={stockModule!} currentPage="action" />
-      
-      <main className="max-w-4xl mx-auto px-4 py-6">
+    <StandardPageWrapper moduleName="STOCK" currentPage="count">
         <div className="space-y-6">
           {/* Page Header */}
           <div className="text-center">
@@ -260,7 +254,6 @@ export default function CountingInterface() {
             </div>
           </div>
         </div>
-      </main>
-    </ResponsiveLayout>
+    </StandardPageWrapper>
   );
 }

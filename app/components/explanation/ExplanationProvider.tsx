@@ -50,7 +50,7 @@ function explanationReducer(
           isOpen: true,
           content: null,
           context: action.payload.context,
-          trigger: action.payload.trigger || 'icon'
+          trigger: (action.payload.trigger as 'icon' | 'shortcut' | 'auto' | 'onboarding') || 'icon'
         },
         isLoading: true,
         error: null

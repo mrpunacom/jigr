@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { Printer, Download, Eye } from 'lucide-react';
 import { 
   generateContainerLabel, 
   generateItemLabel,
@@ -82,7 +81,7 @@ export default function LabelPrinter({
     <>
       <div className="bg-white border rounded-lg p-4">
         <h3 className="font-semibold mb-3 flex items-center gap-2">
-          <Printer className="w-5 h-5" />
+          <span className="icon-[tabler--printer] w-5 h-5"></span>
           Print {labelType === 'container' ? 'Container' : 'Item'} Label
         </h3>
         
@@ -122,7 +121,7 @@ export default function LabelPrinter({
             className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-lg font-medium flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             style={{ minHeight: '48px' }} // iPad Air 2013 touch target
           >
-            <Printer className="w-5 h-5" />
+            <span className="icon-[tabler--printer] w-5 h-5"></span>
             {isPrinting ? 'Printing...' : 'Print Label'}
           </button>
 
@@ -132,7 +131,7 @@ export default function LabelPrinter({
             className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-3 rounded-lg font-medium flex items-center justify-center gap-2"
             style={{ minHeight: '48px' }} // iPad Air 2013 touch target
           >
-            <Eye className="w-5 h-5" />
+            <span className="icon-[tabler--eye] w-5 h-5"></span>
             Preview
           </button>
 
@@ -142,7 +141,7 @@ export default function LabelPrinter({
             className="bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-lg font-medium flex items-center justify-center gap-2"
             style={{ minHeight: '48px' }} // iPad Air 2013 touch target
           >
-            <Download className="w-5 h-5" />
+            <span className="icon-[tabler--download] w-5 h-5"></span>
             Download
           </button>
         </div>
@@ -230,7 +229,7 @@ export default function LabelPrinter({
                 className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-lg font-medium flex items-center justify-center gap-2"
                 style={{ minHeight: '48px' }} // iPad Air 2013 touch target
               >
-                <Printer className="w-5 h-5" />
+                <span className="icon-[tabler--printer] w-5 h-5"></span>
                 Print This Label
               </button>
               <button
@@ -238,7 +237,7 @@ export default function LabelPrinter({
                 className="px-4 py-3 bg-gray-600 hover:bg-gray-700 text-white rounded-lg"
                 style={{ minHeight: '48px' }} // iPad Air 2013 touch target
               >
-                <Download className="w-5 h-5" />
+                <span className="icon-[tabler--download] w-5 h-5"></span>
               </button>
             </div>
           </div>

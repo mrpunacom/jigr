@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState, useRef } from 'react';
-import { HelpCircle, Info, BookOpen, Lightbulb } from 'lucide-react';
+// Removed Lucide React imports - using Tabler icons via CSS classes
 import { ExplanationTriggerProps, PageContext } from '@/lib/explanationTypes';
 
 interface ExplanationTriggerComponent extends React.FC<ExplanationTriggerProps> {
@@ -61,7 +61,7 @@ const ExplanationTrigger: ExplanationTriggerComponent = ({
     const targetPageId = currentPageId || 'general-help';
     
     if (onTrigger) {
-      onTrigger(targetPageId, context);
+      onTrigger(targetPageId);
     }
   };
 
@@ -93,13 +93,13 @@ const ExplanationTrigger: ExplanationTriggerComponent = ({
   const getIcon = () => {
     switch (variant) {
       case 'icon':
-        return <HelpCircle className="w-full h-full" />;
+        return <span className="icon-[tabler--help-circle] w-full h-full"></span>;
       case 'button':
-        return <BookOpen className="w-4 h-4" />;
+        return <span className="icon-[tabler--book-open] w-4 h-4"></span>;
       case 'text':
-        return <Lightbulb className="w-4 h-4" />;
+        return <span className="icon-[tabler--bulb] w-4 h-4"></span>;
       default:
-        return <Info className="w-full h-full" />;
+        return <span className="icon-[tabler--info-circle] w-full h-full"></span>;
     }
   };
 
@@ -325,6 +325,18 @@ export const SmartExplanationTrigger: React.FC<{
 }> = ({ onTrigger, containerRef, overrideProps = {} }) => {
   const smartPosition = useSmartTriggerPosition(containerRef || { current: document.body });
 
+  const handleTrigger = (pageId: string) => {
+    // Generate context for smart trigger
+    const context: PageContext = {
+      moduleKey: window.location.pathname.split('/')[1] || 'general',
+      pageKey: window.location.pathname.split('/')[2] || 'help',
+      fullPath: window.location.pathname,
+      permissions: ['read'],
+      userRole: 'STAFF'
+    };
+    onTrigger(pageId, context);
+  };
+
   return (
     <ExplanationTrigger
       position={smartPosition}
@@ -332,7 +344,7 @@ export const SmartExplanationTrigger: React.FC<{
       size="medium"
       placement="bottom-right"
       showTooltip={true}
-      onTrigger={onTrigger}
+      onTrigger={handleTrigger}
       {...overrideProps}
     />
   );

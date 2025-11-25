@@ -89,7 +89,7 @@ export class SmartLinkResolver {
     } catch (error) {
       // Track resolution error
       this.analyticsTracker?.('link_resolution_error', {
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         action: action.type,
         href: action.href
       });
@@ -100,7 +100,7 @@ export class SmartLinkResolver {
         isAccessible: false,
         openInModal: false,
         requiresConfirmation: true,
-        confirmationMessage: `Navigation error: ${error.message}`
+        confirmationMessage: `Navigation error: ${error instanceof Error ? error.message : String(error)}`
       };
     }
   }

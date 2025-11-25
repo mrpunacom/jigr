@@ -354,6 +354,7 @@ export interface CountSubmissionRequest {
   
   // Additional context
   notes?: string;
+  anomaly_notes?: string;
 }
 
 export interface CountSubmissionResponse {

@@ -11,6 +11,7 @@ import { getModuleConfig } from '@/lib/module-config'
 import { StatCard } from '@/app/components/ModuleCard'
 import { getThemedCardStyles, getModuleTheme } from '@/lib/theme-utils'
 import { ConsolePageWrapper } from '@/app/components/UniversalPageWrapper'
+import { UniversalFooter } from '@/app/components/UniversalFooter'
 import Link from 'next/link'
 
 export default function UploadConsolePage() {
@@ -583,6 +584,7 @@ export default function UploadConsolePage() {
 
       </div>
       
+      <UniversalFooter />
     </ConsolePageWrapper>
   )
 }

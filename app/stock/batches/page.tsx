@@ -3,23 +3,11 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
-import { getModuleConfig } from '@/lib/module-config'
-import { ModuleHeader } from '@/app/components/ModuleHeader'
-import { ResponsiveLayout } from '@/app/components/ResponsiveLayout'
+import { StandardPageWrapper } from '@/app/components/UniversalPageWrapper'
 import { ModuleCard } from '@/app/components/ModuleCard'
 import { DataTable } from '@/app/components/DataTable'
 import { ExpirationBadge, ExpirationUrgencySection } from '@/app/components/ExpirationBadge'
 import { SearchInput } from '@/app/components/SearchInput'
-import { 
-  Clock, 
-  Package, 
-  AlertTriangle,
-  CheckCircle,
-  RefreshCw,
-  Filter,
-  Eye,
-  Trash2
-} from 'lucide-react'
 
 interface BatchData {
   id: string
@@ -67,7 +55,6 @@ export default function StockBatchesPage() {
     good: false
   })
 
-  const stockModule = getModuleConfig('stock')
 
   useEffect(() => {
     loadBatchData()
@@ -217,7 +204,7 @@ export default function StockBatchesPage() {
             title="View Details"
             style={{ minHeight: '44px', minWidth: '44px' }}
           >
-            <Eye className="h-4 w-4" />
+            <span className="icon-[tabler--eye] h-4 w-4"></span>
           </button>
           {batch.urgency_level === 'critical' && (
             <>
@@ -227,7 +214,7 @@ export default function StockBatchesPage() {
                 title="Record Usage"
                 style={{ minHeight: '44px', minWidth: '44px' }}
               >
-                <CheckCircle className="h-4 w-4" />
+                <span className="icon-[tabler--circle-check] h-4 w-4"></span>
               </button>
               <button
                 onClick={() => handleBatchAction('waste', value, batch.item_name)}
@@ -235,7 +222,7 @@ export default function StockBatchesPage() {
                 title="Record Waste"
                 style={{ minHeight: '44px', minWidth: '44px' }}
               >
-                <Trash2 className="h-4 w-4" />
+                <span className="icon-[tabler--trash] h-4 w-4"></span>
               </button>
             </>
           )}
@@ -245,43 +232,34 @@ export default function StockBatchesPage() {
   ]
 
   const tabs = [
-    { id: 'all', label: 'All Batches', icon: Package },
-    { id: 'expiring', label: 'Expiring Soon', icon: Clock },
-    { id: 'expired', label: 'Expired', icon: AlertTriangle },
-    { id: 'active', label: 'Active', icon: CheckCircle }
+    { id: 'all', label: 'All Batches', icon: () => <span className="icon-[tabler--package] h-4 w-4"></span> },
+    { id: 'expiring', label: 'Expiring Soon', icon: () => <span className="icon-[tabler--clock] h-4 w-4"></span> },
+    { id: 'expired', label: 'Expired', icon: () => <span className="icon-[tabler--alert-triangle] h-4 w-4"></span> },
+    { id: 'active', label: 'Active', icon: () => <span className="icon-[tabler--circle-check] h-4 w-4"></span> }
   ]
 
   if (loading) {
     return (
-      <ResponsiveLayout>
-        <ModuleHeader module={stockModule!} currentPage="batches" />
-        <main className="max-w-7xl mx-auto px-4 py-6">
-          <div className="flex items-center justify-center py-12">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
-          </div>
-        </main>
-      </ResponsiveLayout>
+      <StandardPageWrapper moduleName="STOCK" currentPage="batches">
+        <div className="flex items-center justify-center py-12">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+        </div>
+      </StandardPageWrapper>
     )
   }
 
   if (error) {
     return (
-      <ResponsiveLayout>
-        <ModuleHeader module={stockModule!} currentPage="batches" />
-        <main className="max-w-7xl mx-auto px-4 py-6">
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg">
-            {error}
-          </div>
-        </main>
-      </ResponsiveLayout>
+      <StandardPageWrapper moduleName="STOCK" currentPage="batches">
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg">
+          {error}
+        </div>
+      </StandardPageWrapper>
     )
   }
 
   return (
-    <ResponsiveLayout>
-      <ModuleHeader module={stockModule!} currentPage="batches" />
-      
-      <main className="max-w-7xl mx-auto px-4 py-6">
+    <StandardPageWrapper moduleName="STOCK" currentPage="batches">
         <div className="space-y-6">
           {/* Page Header */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
@@ -301,7 +279,7 @@ export default function StockBatchesPage() {
                 style={{ minHeight: '44px', minWidth: '44px' }}
                 title="Refresh"
               >
-                <RefreshCw className="h-4 w-4" />
+                <span className="icon-[tabler--refresh] h-4 w-4"></span>
               </button>
             </div>
           </div>
@@ -310,7 +288,7 @@ export default function StockBatchesPage() {
           <ModuleCard theme="light" className="p-0 overflow-hidden">
             <div className="flex border-b border-white/10">
               {tabs.map((tab) => {
-                const Icon = tab.icon
+                const IconComponent = tab.icon
                 return (
                   <button
                     key={tab.id}
@@ -323,7 +301,7 @@ export default function StockBatchesPage() {
                     style={{ minHeight: '60px' }}
                   >
                     <div className="flex items-center justify-center space-x-2">
-                      <Icon className="h-4 w-4" />
+                      <IconComponent />
                       <span>{tab.label}</span>
                     </div>
                   </button>
@@ -403,7 +381,7 @@ export default function StockBatchesPage() {
            groupedBatches.good.length === 0 && (
             <ModuleCard theme="light" className="p-8">
               <div className="text-center">
-                <CheckCircle className="h-12 w-12 text-green-400 mx-auto mb-4" />
+                <span className="icon-[tabler--circle-check] h-12 w-12 text-green-400 mx-auto mb-4"></span>
                 <h3 className="text-lg font-semibold text-white mb-2">
                   No Batches Expiring Soon
                 </h3>
@@ -414,7 +392,6 @@ export default function StockBatchesPage() {
             </ModuleCard>
           )}
         </div>
-      </main>
-    </ResponsiveLayout>
+    </StandardPageWrapper>
   )
 }

@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Camera, AlertCircle, CheckCircle } from 'lucide-react';
 import { SearchBar } from '@/app/components/stock/shared/SearchBar';
 import { ItemCard } from '@/app/components/stock/shared/ItemCard';
 
@@ -201,7 +200,7 @@ export function ItemSearchSelector({ method, onSelect }: ItemSearchSelectorProps
             "
             style={{ minHeight: '52px' }}
           >
-            <Camera className="w-5 h-5" />
+            <span className="icon-[tabler--camera] w-5 h-5"></span>
             {barcodeScanning ? 'Looking up item...' : '📷 Scan Barcode'}
           </button>
         </div>
@@ -210,7 +209,7 @@ export function ItemSearchSelector({ method, onSelect }: ItemSearchSelectorProps
       {/* Barcode Error Display */}
       {barcodeError && (
         <div className="mb-4 p-3 bg-red-500/20 border border-red-400/50 rounded-lg flex items-start gap-3">
-          <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
+          <span className="icon-[tabler--alert-circle] w-5 h-5 text-red-400 flex-shrink-0 mt-0.5"></span>
           <div className="flex-1">
             <p className="text-red-200 text-sm">{barcodeError}</p>
             <button

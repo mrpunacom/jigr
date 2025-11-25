@@ -196,13 +196,21 @@ export async function POST(request: Request) {
         });
       
       // Update container usage
-      await supabase
-        .from('container_instances')
-        .update({
-          times_used: supabase.raw('times_used + 1'),
-          last_used_date: formatDate(new Date())
-        })
-        .eq('id', body.container_instance_id);
+      if (body.container_instance_id) {
+        const { data: containerData } = await supabase
+          .from('container_instances')
+          .select('times_used')
+          .eq('id', body.container_instance_id)
+          .single();
+        
+        await supabase
+          .from('container_instances')
+          .update({
+            times_used: (containerData?.times_used || 0) + 1,
+            last_used_date: formatDate(new Date())
+          })
+          .eq('id', body.container_instance_id);
+      }
     }
     
     // UPDATE KEG TRACKING

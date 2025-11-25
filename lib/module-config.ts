@@ -3,7 +3,11 @@
  * 
  * Centralized configuration for all hospitality compliance modules
  * including icons, descriptions, and standard page structures.
+ * 
+ * Integrates with SmartHelp system for personalized taglines and purpose statements.
  */
+
+import { getModuleDefinition, getPersonalizedTagline, getModulePurpose, getCompanyName, DEFAULT_COMPANY_NAME } from './moduleDefinitions'
 
 export interface ModulePage {
   key: string
@@ -26,6 +30,10 @@ export interface ModuleConfig {
   pages: ModulePage[]
   isActive: boolean
   layoutConfig?: ModuleLayoutConfig
+  
+  // SmartHelp integration
+  getPersonalizedTitle?: (companyName?: string) => string
+  getPurpose?: (useShort?: boolean) => string
 }
 
 // Standard 3-page structure for each module
@@ -111,13 +119,30 @@ export const MODULE_CONFIGS: Record<string, ModuleConfig> = {
     }
   },
   
+  repairs: {
+    key: 'repairs',
+    title: 'REPAIRS',
+    description: 'Equipment maintenance and repair tracking',
+    iconUrl: 'https://rggdywqnvpuwssluzfud.supabase.co/storage/v1/object/public/JiGRModuleRepair',
+    pages: [
+      { key: 'console', label: 'Console', href: '/repairs/console' },
+      { key: 'safety', label: 'Safety', href: '/repairs/safety' },
+      { key: 'reports', label: 'Reports', href: '/repairs/reports' }
+    ],
+    isActive: true
+  },
+  
   diary: {
     key: 'diary',
     title: 'DIARY',
     description: 'Daily logs and incident reporting', 
-    iconUrl: 'https://rggdywqnvpuwssluzfud.supabase.co/storage/v1/object/public/module-assets/icons/JiGRdiaryWhite.png',
-    pages: createModulePages('diary'),
-    isActive: false
+    iconUrl: 'https://rggdywqnvpuwssluzfud.supabase.co/storage/v1/object/public/JiGRModuleDiary',
+    pages: [
+      { key: 'console', label: 'Console', href: '/diary/console' },
+      { key: 'expiring', label: 'Expiring', href: '/diary/expiring' },
+      { key: 'reports', label: 'Reports', href: '/diary/reports' }
+    ],
+    isActive: true
   },
   
   recipes: {
@@ -193,6 +218,37 @@ export const MODULE_CONFIGS: Record<string, ModuleConfig> = {
       }
     ],
     isActive: true
+  },
+
+  vendors: {
+    key: 'vendors',
+    title: 'VENDORS',
+    description: 'Supplier and vendor management',
+    iconUrl: 'https://rggdywqnvpuwssluzfud.supabase.co/storage/v1/object/public/branding/icons/JiGRModuleVendors.webp',
+    pages: [
+      {
+        key: 'console',
+        label: 'Console',
+        href: '/vendors/console'
+      },
+      {
+        key: 'list',
+        label: 'List',
+        href: '/vendors/list'
+      },
+      {
+        key: 'analytics',
+        label: 'Analytics',
+        href: '/vendors/analytics'
+      }
+    ],
+    isActive: true,
+    layoutConfig: {
+      variant: 'default',
+      padding: 'standard',
+      maxWidth: 'container',
+      backgroundBehavior: 'universal'
+    }
   },
 
   dev: {

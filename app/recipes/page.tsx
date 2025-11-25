@@ -7,12 +7,11 @@ import { FoodCostBadge } from '../components/FoodCostBadge'
 import { EmptyState } from '../components/EmptyState'
 import { LoadingSpinner } from '../components/LoadingSpinner'
 import { ModuleCard, StatCard } from '../components/ModuleCard'
-import { supabase } from '@/lib/supabase'
-import { ChefHat, DollarSign, Clock, Users, Grid3X3, List, Plus } from 'lucide-react'
+import { useAuth } from '../hooks/useAuth'
 import { RecipeWithDetails, RecipeCategory, RecipesResponse } from '../../types/RecipeTypes'
 
 export default function RecipesPage() {
-  const [session, setSession] = useState<any>(null)
+  const { session, loading: authLoading } = useAuth()
   const [recipes, setRecipes] = useState<RecipeWithDetails[]>([])
   const [categories, setCategories] = useState<RecipeCategory[]>([])
   const [loading, setLoading] = useState(true)
@@ -23,17 +22,6 @@ export default function RecipesPage() {
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   const [totalItems, setTotalItems] = useState(0)
-  const [authLoading, setAuthLoading] = useState(true)
-
-  // Session management
-  useEffect(() => {
-    const getSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession()
-      setSession(session)
-      setAuthLoading(false)
-    }
-    getSession()
-  }, [])
 
   const fetchRecipes = useCallback(async () => {
     if (!session?.access_token) return
@@ -110,9 +98,9 @@ export default function RecipesPage() {
     return hours > 0 ? `${hours}h ${mins}m` : `${mins}m`
   }
 
-  if (loading) {
+  if (authLoading || loading) {
     return (
-      <StandardPageWrapper moduleName="recipes" currentPage="recipes">
+      <StandardPageWrapper moduleName="RECIPES" currentPage="recipes">
         <div className="container mx-auto px-4 py-6">
           <LoadingSpinner />
         </div>
@@ -121,14 +109,14 @@ export default function RecipesPage() {
   }
 
   return (
-    <StandardPageWrapper moduleName="recipes" currentPage="recipes">
+    <StandardPageWrapper moduleName="RECIPES" currentPage="recipes">
       <div className="space-y-6">
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <StatCard accentColor="blue">
             <div className="flex items-center">
               <div className="p-2 bg-blue-100 rounded-lg">
-                <ChefHat className="h-5 w-5 text-blue-600" />
+                <span className="icon-[tabler--chef-hat] h-5 w-5 text-blue-600"></span>
               </div>
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-900">Total Recipes</p>
@@ -140,7 +128,7 @@ export default function RecipesPage() {
           <StatCard accentColor="green">
             <div className="flex items-center">
               <div className="p-2 bg-green-100 rounded-lg">
-                <DollarSign className="h-5 w-5 text-green-600" />
+                <span className="icon-[tabler--currency-dollar] h-5 w-5 text-green-600"></span>
               </div>
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-900">Avg Food Cost</p>
@@ -157,7 +145,7 @@ export default function RecipesPage() {
           <StatCard accentColor="orange">
             <div className="flex items-center">
               <div className="p-2 bg-orange-100 rounded-lg">
-                <Users className="h-5 w-5 text-orange-600" />
+                <span className="icon-[tabler--users] h-5 w-5 text-orange-600"></span>
               </div>
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-900">Categories</p>
@@ -169,7 +157,7 @@ export default function RecipesPage() {
           <StatCard accentColor="orange">
             <div className="flex items-center">
               <div className="p-2 bg-red-100 rounded-lg">
-                <Clock className="h-5 w-5 text-red-600" />
+                <span className="icon-[tabler--clock] h-5 w-5 text-red-600"></span>
               </div>
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-900">Need Review</p>
@@ -235,13 +223,13 @@ export default function RecipesPage() {
                   onClick={() => setViewMode('grid')}
                   className={`p-2 rounded-l-lg ${viewMode === 'grid' ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-200'}`}
                 >
-                  <Grid3X3 className="h-4 w-4" />
+                  <span className="icon-[tabler--grid-dots] h-4 w-4"></span>
                 </button>
                 <button
                   onClick={() => setViewMode('list')}
                   className={`p-2 rounded-r-lg ${viewMode === 'list' ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-200'}`}
                 >
-                  <List className="h-4 w-4" />
+                  <span className="icon-[tabler--list] h-4 w-4"></span>
                 </button>
               </div>
               
@@ -252,7 +240,7 @@ export default function RecipesPage() {
                 }}
                 className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
               >
-                <Plus className="h-4 w-4 mr-2" />
+                <span className="icon-[tabler--plus] h-4 w-4 mr-2"></span>
                 New Recipe
               </button>
             </div>
@@ -277,7 +265,7 @@ export default function RecipesPage() {
                 }}
                 className="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
               >
-                <Plus className="h-4 w-4 mr-2" />
+                <span className="icon-[tabler--plus] h-4 w-4 mr-2"></span>
                 Add Recipe
               </button>
             }
@@ -305,7 +293,7 @@ export default function RecipesPage() {
                             className="w-full h-full object-cover rounded-lg"
                           />
                         ) : (
-                          <ChefHat className="h-16 w-16 text-gray-400" />
+                          <span className="icon-[tabler--chef-hat] h-16 w-16 text-gray-400"></span>
                         )}
                       </div>
 
@@ -404,7 +392,7 @@ export default function RecipesPage() {
                                   />
                                 ) : (
                                   <div className="h-10 w-10 bg-gray-200 rounded-lg flex items-center justify-center">
-                                    <ChefHat className="h-5 w-5 text-gray-400" />
+                                    <span className="icon-[tabler--chef-hat] h-5 w-5 text-gray-400"></span>
                                   </div>
                                 )}
                               </div>

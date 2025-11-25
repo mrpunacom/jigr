@@ -13,7 +13,7 @@ import { StatCard } from '@/app/components/ModuleCard'
 // Removed RoleBasedSidebar - using AppleSidebar from layout instead
 import UserInvitationModal from '@/app/components/team/UserInvitationModal'
 import type { InvitationFormData, UserRole } from '@/app/components/team/UserInvitationModal'
-import { Users, UserPlus, Settings, MoreVertical, Clock, Mail, Crown, Shield, Wrench, UserIcon } from 'lucide-react'
+// Removed Lucide React imports - using Tabler icons via CSS classes
 
 interface TeamMember {
   id: string

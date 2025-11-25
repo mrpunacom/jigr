@@ -146,7 +146,7 @@ export function detectHardwareCapabilities(): {
       /ipad/.test(userAgent) && 
       (memory && memory <= 2) || 
       /os 12_/.test(userAgent) ||
-      (performance.hardwareConcurrency && performance.hardwareConcurrency <= 2)
+      (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 2)
     );
   })();
 

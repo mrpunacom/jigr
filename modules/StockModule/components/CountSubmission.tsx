@@ -19,30 +19,6 @@
 'use client'
 
 import React, { useState, useEffect, useCallback } from 'react'
-import { 
-  ArrowLeft,
-  Camera,
-  Scale,
-  Calculator,
-  Wine,
-  Beer,
-  ChefHat,
-  Package,
-  AlertTriangle,
-  CheckCircle,
-  Clock,
-  Bluetooth,
-  BarChart3,
-  Thermometer,
-  Calendar,
-  Eye,
-  Save,
-  Send,
-  RefreshCw,
-  Info,
-  Plus,
-  Minus
-} from 'lucide-react'
 import { StockDesignTokens, getWorkflowStyles, StockResponsiveUtils, WorkflowConfig } from '../StockModuleCore'
 import type { 
   InventoryItem, 
@@ -304,7 +280,7 @@ const CountHeader: React.FC<CountHeaderProps> = ({ currentStep, selectedItem, on
                 onClick={onBack}
                 className={`p-2 hover:bg-gray-100 rounded-lg transition-colors ${StockResponsiveUtils.ipadOptimized.button}`}
               >
-                <ArrowLeft size={24} />
+                <span className="icon-[tabler--arrow-left] w-6 h-6"></span>
               </button>
             )}
             
@@ -340,7 +316,7 @@ const CountHeader: React.FC<CountHeaderProps> = ({ currentStep, selectedItem, on
                     ? 'border-blue-600 bg-blue-50 text-blue-600'
                     : 'border-gray-300 text-gray-400'
                 }`}>
-                  {index < stepIndex ? <CheckCircle size={16} /> : index + 1}
+                  {index < stepIndex ? <span className="icon-[tabler--circle-check] w-4 h-4"></span> : index + 1}
                 </div>
                 <span className="text-sm font-medium hidden sm:block">
                   {step === 'select-item' ? 'Select Item' :
@@ -398,7 +374,7 @@ const ItemSelection: React.FC<ItemSelectionProps> = ({ onItemSelected }) => {
               className={`w-full pl-4 pr-12 py-3 border border-gray-300 rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${StockResponsiveUtils.ipadOptimized.input}`}
             />
             <button className="absolute right-3 top-1/2 transform -translate-y-1/2 p-2 text-gray-400 hover:text-gray-600">
-              <Camera size={24} />
+              <span className="icon-[tabler--camera] w-6 h-6"></span>
             </button>
           </div>
 
@@ -682,7 +658,7 @@ const CountInterface: React.FC<CountInterfaceProps> = ({
         >
           {submissionState.isValidating ? (
             <div className="flex items-center gap-2">
-              <RefreshCw size={20} className="animate-spin" />
+              <span className="icon-[tabler--refresh] w-5 h-5 animate-spin"></span>
               Validating...
             </div>
           ) : (
@@ -728,7 +704,7 @@ const ManualCountInterface: React.FC<ManualCountInterfaceProps> = ({ item, formD
             onClick={() => updateQuantity(quantity - 1)}
             className={`p-4 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors ${StockResponsiveUtils.ipadOptimized.button}`}
           >
-            <Minus size={24} />
+            <span className="icon-[tabler--minus] w-6 h-6"></span>
           </button>
           
           <input
@@ -743,7 +719,7 @@ const ManualCountInterface: React.FC<ManualCountInterfaceProps> = ({ item, formD
             onClick={() => updateQuantity(quantity + 1)}
             className={`p-4 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors ${StockResponsiveUtils.ipadOptimized.button}`}
           >
-            <Plus size={24} />
+            <span className="icon-[tabler--plus] w-6 h-6"></span>
           </button>
         </div>
 
@@ -827,7 +803,7 @@ const ContainerWeightInterface: React.FC<ContainerWeightInterfaceProps> = ({
         <div className="bg-white rounded-lg shadow-sm border p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Assign Container</h3>
           <button className="w-full p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-300 transition-colors">
-            <Package size={32} className="mx-auto text-gray-400 mb-2" />
+            <span className="icon-[tabler--package] w-8 h-8 mx-auto text-gray-400 mb-2"></span>
             <p className="font-medium text-gray-900">Scan or Select Container</p>
             <p className="text-sm text-gray-500">Tap to choose from available containers</p>
           </button>
@@ -840,7 +816,7 @@ const ContainerWeightInterface: React.FC<ContainerWeightInterfaceProps> = ({
               <p className="font-semibold text-green-900">{assignedContainer.container_barcode}</p>
               <p className="text-sm text-green-700">Tare Weight: {assignedContainer.tare_weight_grams}g</p>
             </div>
-            <CheckCircle size={24} className="text-green-600" />
+            <span className="icon-[tabler--circle-check] w-6 h-6 text-green-600"></span>
           </div>
         </div>
       )}
@@ -854,7 +830,7 @@ const ContainerWeightInterface: React.FC<ContainerWeightInterfaceProps> = ({
           scaleConnected ? 'bg-green-50 text-green-900' : 'bg-gray-50 text-gray-900'
         }`}>
           <div className="flex items-center gap-2">
-            <Bluetooth size={20} className={scaleConnected ? 'text-green-600' : 'text-gray-600'} />
+            <span className={`icon-[tabler--bluetooth] w-5 h-5 ${scaleConnected ? 'text-green-600' : 'text-gray-600'}`}></span>
             <span className="font-medium">
               {scaleConnected ? 'Scale Connected' : 'Scale Disconnected'}
             </span>
@@ -945,14 +921,14 @@ const getDefaultCountingMethod = (workflow: CountingWorkflow): 'manual' | 'weigh
 const getWorkflowIcon = (iconName: string, size: number = 20) => {
   const iconProps = { size }
   const icons: Record<string, React.ReactElement> = {
-    Calculator: <Calculator {...iconProps} />,
-    Scale: <Scale {...iconProps} />,
-    Wine: <Wine {...iconProps} />,
-    Beer: <Beer {...iconProps} />,
-    ChefHat: <ChefHat {...iconProps} />
+    Calculator: <span className="icon-[tabler--calculator] w-6 h-6"></span>,
+    Scale: <span className="icon-[tabler--scale] w-6 h-6"></span>,
+    Wine: <span className="icon-[tabler--glass-full] w-6 h-6"></span>,
+    Beer: <span className="icon-[tabler--beer] w-6 h-6"></span>,
+    ChefHat: <span className="icon-[tabler--chef-hat] w-6 h-6"></span>
   }
   
-  return icons[iconName] || <Calculator {...iconProps} />
+  return icons[iconName] || <span className="icon-[tabler--calculator] w-6 h-6"></span>
 }
 
 // ============================================================================
@@ -983,7 +959,7 @@ const BatchWeightInterface: React.FC<any> = () => (
 const AnomalyDisplay: React.FC<{ anomalies: WeightAnomaly[] }> = ({ anomalies }) => (
   <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
     <div className="flex items-center gap-2 mb-4">
-      <AlertTriangle size={20} className="text-yellow-600" />
+      <span className="icon-[tabler--alert-triangle] w-5 h-5 text-yellow-600"></span>
       <h3 className="text-lg font-semibold text-yellow-900">Anomalies Detected</h3>
     </div>
     
@@ -1007,7 +983,7 @@ const ReviewSubmission: React.FC<any> = () => (
 
 const SubmissionComplete: React.FC<any> = () => (
   <div className="bg-white rounded-lg shadow-sm border p-6 text-center">
-    <CheckCircle size={64} className="mx-auto text-green-600 mb-4" />
+    <span className="icon-[tabler--circle-check] w-16 h-16 mx-auto text-green-600 mb-4"></span>
     <h3 className="text-lg font-semibold text-gray-900 mb-4">Count Submitted Successfully!</h3>
     <p className="text-gray-600">Your inventory count has been recorded and validated.</p>
   </div>

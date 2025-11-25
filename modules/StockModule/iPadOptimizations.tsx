@@ -52,7 +52,7 @@ export const detectDeviceCapabilities = (): DeviceCapabilities => {
     /OS 12_/.test(userAgent) || 
     /OS 11_/.test(userAgent) ||
     /OS 10_/.test(userAgent) ||
-    (performance.hardwareConcurrency && performance.hardwareConcurrency <= 2)
+    ((navigator as any).hardwareConcurrency && (navigator as any).hardwareConcurrency <= 2)
   )
 
   // Check for WebGL support
@@ -356,7 +356,7 @@ export const TouchEnhancements = {
       
       if (capabilities.isLegacyiPad) {
         // Add momentum scrolling and optimize for legacy devices
-        container.style.webkitOverflowScrolling = 'touch'
+        ;(container.style as any).webkitOverflowScrolling = 'touch'
         container.style.overscrollBehavior = 'contain'
         
         // Debounce scroll events for better performance

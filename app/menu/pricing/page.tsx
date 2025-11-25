@@ -9,10 +9,6 @@ import { ModuleCard, StatCard } from '../../components/ModuleCard'
 import { useAuth } from '../../hooks/useAuth'
 import { StandardPageWrapper } from '@/app/components/UniversalPageWrapper'
 import { 
-  DollarSign, TrendingUp, AlertTriangle, Target,
-  RefreshCw, Download, Edit2, Check, X, Calculator
-} from 'lucide-react'
-import { 
   MenuPricingItem, 
   MenuPricingResponse, 
   PricingSummary,
@@ -226,7 +222,7 @@ export default function MenuPricingPage() {
             <StatCard accentColor="blue">
               <div className="flex items-center">
                 <div className="p-2 bg-blue-100 rounded-lg">
-                  <DollarSign className="h-5 w-5 text-blue-600" />
+                  <span className="icon-[tabler--currency-dollar] h-5 w-5 text-blue-600"></span>
                 </div>
                 <div className="ml-3">
                   <p className="text-sm font-medium text-gray-900">Menu Items</p>
@@ -238,7 +234,7 @@ export default function MenuPricingPage() {
             <StatCard accentColor="green">
               <div className="flex items-center">
                 <div className="p-2 bg-green-100 rounded-lg">
-                  <Target className="h-5 w-5 text-green-600" />
+                  <span className="icon-[tabler--target] h-5 w-5 text-green-600"></span>
                 </div>
                 <div className="ml-3">
                   <p className="text-sm font-medium text-gray-900">Avg Food Cost</p>
@@ -252,7 +248,7 @@ export default function MenuPricingPage() {
             <StatCard accentColor="orange">
               <div className="flex items-center">
                 <div className="p-2 bg-orange-100 rounded-lg">
-                  <TrendingUp className="h-5 w-5 text-orange-600" />
+                  <span className="icon-[tabler--trending-up] h-5 w-5 text-orange-600"></span>
                 </div>
                 <div className="ml-3">
                   <p className="text-sm font-medium text-gray-900">In Target Range</p>
@@ -269,7 +265,7 @@ export default function MenuPricingPage() {
             <StatCard accentColor="orange">
               <div className="flex items-center">
                 <div className="p-2 bg-red-100 rounded-lg">
-                  <AlertTriangle className="h-5 w-5 text-red-600" />
+                  <span className="icon-[tabler--alert-triangle] h-5 w-5 text-red-600"></span>
                 </div>
                 <div className="ml-3">
                   <p className="text-sm font-medium text-gray-900">Need Attention</p>
@@ -357,7 +353,7 @@ export default function MenuPricingPage() {
                 {updating ? (
                   <div className="animate-spin h-4 w-4 border-2 border-gray-500 border-t-transparent rounded-full mr-2"></div>
                 ) : (
-                  <RefreshCw className="h-4 w-4 mr-2" />
+                  <span className="icon-[tabler--refresh] h-4 w-4 mr-2"></span>
                 )}
                 Update Costs
               </button>
@@ -369,7 +365,7 @@ export default function MenuPricingPage() {
                 }}
                 className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
               >
-                <Download className="h-4 w-4 mr-2" />
+                <span className="icon-[tabler--download] h-4 w-4 mr-2"></span>
                 Export
               </button>
             </div>
@@ -445,13 +441,13 @@ export default function MenuPricingPage() {
                               onClick={() => savePrice(item)}
                               className="p-1 text-green-600 hover:text-green-800"
                             >
-                              <Check className="h-4 w-4" />
+                              <span className="icon-[tabler--check] h-4 w-4"></span>
                             </button>
                             <button
                               onClick={cancelEdit}
                               className="p-1 text-red-600 hover:text-red-800"
                             >
-                              <X className="h-4 w-4" />
+                              <span className="icon-[tabler--x] h-4 w-4"></span>
                             </button>
                           </div>
                         ) : (
@@ -463,7 +459,7 @@ export default function MenuPricingPage() {
                               onClick={() => startEdit(item)}
                               className="p-1 text-gray-400 hover:text-gray-600"
                             >
-                              <Edit2 className="h-4 w-4" />
+                              <span className="icon-[tabler--edit] h-4 w-4"></span>
                             </button>
                           </div>
                         )}
@@ -494,7 +490,7 @@ export default function MenuPricingPage() {
                           }}
                           className="text-green-600 hover:text-green-900"
                         >
-                          <Calculator className="h-4 w-4 inline" />
+                          <span className="icon-[tabler--calculator] h-4 w-4 inline"></span>
                         </button>
                       </td>
                     </tr>

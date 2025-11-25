@@ -1,5 +1,4 @@
 import { ModuleCard } from './ModuleCard'
-import { Phone, Mail, Calendar, Package } from 'lucide-react'
 
 interface VendorCardProps {
   vendor: {
@@ -81,14 +80,14 @@ export function VendorCard({
         <div className="space-y-2">
           {vendor.phone && (
             <div className="flex items-center space-x-2 text-sm text-white/70">
-              <Phone className="h-4 w-4" />
+              <span className="icon-[tabler--phone] h-4 w-4"></span>
               <span>{vendor.phone}</span>
             </div>
           )}
           
           {vendor.email && (
             <div className="flex items-center space-x-2 text-sm text-white/70">
-              <Mail className="h-4 w-4" />
+              <span className="icon-[tabler--mail] h-4 w-4"></span>
               <span className="truncate">{vendor.email}</span>
             </div>
           )}
@@ -97,7 +96,7 @@ export function VendorCard({
         {/* Stats */}
         <div className="flex items-center justify-between pt-3 border-t border-white/10">
           <div className="flex items-center space-x-2 text-sm text-white/70">
-            <Package className="h-4 w-4" />
+            <span className="icon-[tabler--package] h-4 w-4"></span>
             <span>
               {vendor.item_count || 0} {vendor.item_count === 1 ? 'item' : 'items'}
             </span>
@@ -105,7 +104,7 @@ export function VendorCard({
 
           {vendor.last_delivery_date && (
             <div className="flex items-center space-x-2 text-sm text-white/70">
-              <Calendar className="h-4 w-4" />
+              <span className="icon-[tabler--calendar] h-4 w-4"></span>
               <span>
                 {new Date(vendor.last_delivery_date).toLocaleDateString()}
               </span>
@@ -139,13 +138,13 @@ export function ContactInfo({
     <div className={`space-y-1 ${className}`}>
       {phone && (
         <div className="flex items-center space-x-2 text-sm">
-          <Phone className="h-4 w-4 text-gray-400" />
+          <span className="icon-[tabler--phone] h-4 w-4 text-gray-400"></span>
           <span className="text-gray-600">{phone}</span>
         </div>
       )}
       {email && (
         <div className="flex items-center space-x-2 text-sm">
-          <Mail className="h-4 w-4 text-gray-400" />
+          <span className="icon-[tabler--mail] h-4 w-4 text-gray-400"></span>
           <span className="text-gray-600 truncate">{email}</span>
         </div>
       )}

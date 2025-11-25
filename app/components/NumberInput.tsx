@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { Plus, Minus } from 'lucide-react'
 
 interface NumberInputProps {
   value: number
@@ -100,7 +99,7 @@ export function NumberInput({
           className="flex items-center justify-center w-16 h-16 text-gray-600 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed rounded-l-lg transition-colors"
           style={{ minHeight: '64px', minWidth: '64px' }}
         >
-          <Minus className="h-6 w-6" />
+          <span className="icon-[tabler--minus] h-6 w-6"></span>
         </button>
 
         {/* Number input */}
@@ -132,7 +131,7 @@ export function NumberInput({
           className="flex items-center justify-center w-16 h-16 text-gray-600 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed rounded-r-lg transition-colors"
           style={{ minHeight: '64px', minWidth: '64px' }}
         >
-          <Plus className="h-6 w-6" />
+          <span className="icon-[tabler--plus] h-6 w-6"></span>
         </button>
       </div>
 

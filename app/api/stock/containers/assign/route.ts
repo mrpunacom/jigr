@@ -177,11 +177,8 @@ export async function POST(request: NextRequest) {
         assigned_by: user_id,
         session_notes: assignmentData.session_notes
       },
-      message: 'Container successfully assigned for counting'
-    }
-    
-    if (warningMessage) {
-      response.warning = warningMessage
+      message: 'Container successfully assigned for counting',
+      ...(warningMessage && { warning: warningMessage })
     }
     
     return successResponse(response, 201)

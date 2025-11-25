@@ -47,13 +47,13 @@ export class ExplanationContextDetector {
     const urlContext = this.detectFromURL();
     const domContext = this.detectFromDOM();
     const stateContext = this.detectFromApplicationState();
-    const moduleContext = this.detectModuleSpecificContext(urlContext.moduleKey);
+    const moduleContext = this.detectModuleSpecificContext(urlContext.moduleKey || 'general');
 
     return {
-      ...urlContext,
-      ...domContext,
-      ...stateContext,
-      ...moduleContext,
+      moduleKey: urlContext.moduleKey || 'general',
+      pageKey: urlContext.pageKey || 'help',
+      fullPath: urlContext.fullPath || '/',
+      itemId: urlContext.itemId,
       userId: options.userId,
       companyId: options.companyId,
       userRole: options.userRole || this.detectUserRole(),

@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-
-const GOOGLE_TOKEN_URL = 'https://oauth2.googleapis.com/token';
+import { getTokensFromCode, saveOAuthTokens } from '@/lib/google-sheets';
 
 export async function GET(request: Request) {
   try {
@@ -10,87 +9,84 @@ export async function GET(request: Request) {
     const state = searchParams.get('state'); // user_id from initiation
     const error = searchParams.get('error');
     
+    // Get cookies set during initiation
+    const cookieHeader = request.headers.get('cookie') || '';
+    const cookies = Object.fromEntries(
+      cookieHeader.split('; ').map(c => c.split('=', 2))
+    );
+    const redirectTo = cookies.oauth_redirect_to || '/stock/import';
+    const module = cookies.oauth_module || 'stock';
+    
     // Handle OAuth errors
     if (error) {
       console.error('Google OAuth error:', error);
       return NextResponse.redirect(
-        `${process.env.NEXT_PUBLIC_APP_URL}/stock/import?error=access_denied`
+        `${process.env.NEXT_PUBLIC_APP_URL}${redirectTo}?error=access_denied`
       );
     }
     
     if (!code || !state) {
       return NextResponse.redirect(
-        `${process.env.NEXT_PUBLIC_APP_URL}/stock/import?error=invalid_callback`
+        `${process.env.NEXT_PUBLIC_APP_URL}${redirectTo}?error=invalid_callback`
       );
     }
     
-    // Exchange authorization code for tokens
-    const tokenResponse = await fetch(GOOGLE_TOKEN_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      body: new URLSearchParams({
-        code,
-        client_id: process.env.GOOGLE_CLIENT_ID!,
-        client_secret: process.env.GOOGLE_CLIENT_SECRET!,
-        redirect_uri: `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/google/callback`,
-        grant_type: 'authorization_code'
-      })
-    });
-    
-    if (!tokenResponse.ok) {
-      const errorText = await tokenResponse.text();
-      console.error('Token exchange failed:', errorText);
-      throw new Error('Failed to exchange code for tokens');
-    }
-    
-    const tokens = await tokenResponse.json();
+    // Exchange authorization code for tokens using our utility
+    const tokens = await getTokensFromCode(code);
     
     // Validate we got a refresh token
     if (!tokens.refresh_token) {
       console.error('No refresh token received - user may have already connected');
       return NextResponse.redirect(
-        `${process.env.NEXT_PUBLIC_APP_URL}/stock/import?error=no_refresh_token`
+        `${process.env.NEXT_PUBLIC_APP_URL}${redirectTo}?error=no_refresh_token`
       );
     }
     
-    // Store tokens in database
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    // Store tokens in database using our utility
+    await saveOAuthTokens(
+      state, // user_id
+      tokens.access_token,
+      tokens.refresh_token,
+      tokens.expiry_date
     );
     
-    const expiresAt = new Date(Date.now() + tokens.expires_in * 1000);
-    
-    const { error: dbError } = await supabase
-      .from('google_oauth_tokens')
-      .upsert({
-        user_id: state,
-        access_token: tokens.access_token,
-        refresh_token: tokens.refresh_token,
-        token_type: tokens.token_type || 'Bearer',
-        expires_at: expiresAt.toISOString(),
-        scope: tokens.scope,
-        connected_at: new Date().toISOString()
-      }, {
-        onConflict: 'user_id'
-      });
-    
-    if (dbError) {
-      console.error('Database error storing tokens:', dbError);
-      throw new Error('Failed to store OAuth tokens');
+    // Success! Redirect based on module
+    let successRedirect;
+    switch (module) {
+      case 'menu':
+        successRedirect = `${process.env.NEXT_PUBLIC_APP_URL}/menu/import/google?success=true`;
+        break;
+      case 'recipes':
+        successRedirect = `${process.env.NEXT_PUBLIC_APP_URL}/recipes/import?success=true`;
+        break;
+      case 'stock':
+      default:
+        successRedirect = `${process.env.NEXT_PUBLIC_APP_URL}/stock/import/google/select-sheet?success=true`;
+        break;
     }
     
-    // Success! Redirect to sheet selector
-    return NextResponse.redirect(
-      `${process.env.NEXT_PUBLIC_APP_URL}/stock/import/google/select-sheet?success=true`
-    );
+    const response = NextResponse.redirect(successRedirect);
+    
+    // Clear OAuth state cookies
+    response.cookies.delete('oauth_redirect_to');
+    response.cookies.delete('oauth_module');
+    
+    console.log(`✅ Google OAuth completed for user ${state}, module: ${module}`);
+    
+    return response;
     
   } catch (error: any) {
     console.error('Google OAuth callback error:', error);
+    
+    // Get fallback redirect from cookies
+    const cookieHeader = request.headers.get('cookie') || '';
+    const cookies = Object.fromEntries(
+      cookieHeader.split('; ').map(c => c.split('=', 2))
+    );
+    const redirectTo = cookies.oauth_redirect_to || '/stock/import';
+    
     return NextResponse.redirect(
-      `${process.env.NEXT_PUBLIC_APP_URL}/stock/import?error=token_exchange_failed`
+      `${process.env.NEXT_PUBLIC_APP_URL}${redirectTo}?error=token_exchange_failed`
     );
   }
 }

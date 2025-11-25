@@ -33,20 +33,20 @@ export async function GET(request: NextRequest) {
     logApiRequest('/api/stock/containers', 'GET', client_id, user_id)
     
     // Parse query parameters for filtering
-    const status = getQueryParam(searchParams, 'status') as VerificationStatus | null
-    const isActive = getBooleanQueryParam(searchParams, 'is_active')
-    const containerTypeId = getQueryParam(searchParams, 'container_type_id')
-    const locationId = getQueryParam(searchParams, 'location_id')
-    const needsVerification = getBooleanQueryParam(searchParams, 'needs_verification')
-    const search = getQueryParam(searchParams, 'search')
+    const status = searchParams.get('status') as VerificationStatus | null
+    const isActive = searchParams.get('is_active') === 'true'
+    const containerTypeId = searchParams.get('container_type_id')
+    const locationId = searchParams.get('location_id')
+    const needsVerification = searchParams.get('needs_verification') === 'true'
+    const search = searchParams.get('search')
     
     // Pagination parameters
-    const page = parseInt(getQueryParam(searchParams, 'page') || '1')
-    const pageSize = parseInt(getQueryParam(searchParams, 'pageSize') || '20')
+    const page = parseInt(searchParams.get('page') || '1')
+    const pageSize = parseInt(searchParams.get('pageSize') || '20')
     
     // Sorting parameters
-    const sortBy = getQueryParam(searchParams, 'sortBy') || 'container_barcode'
-    const sortOrder = getQueryParam(searchParams, 'sortOrder') || 'asc'
+    const sortBy = searchParams.get('sortBy') || 'container_barcode'
+    const sortOrder = searchParams.get('sortOrder') || 'asc'
     
     // Build the base query with container type relations
     let query = supabase
@@ -305,12 +305,9 @@ export async function POST(request: NextRequest) {
       
       // Usage tracking
       times_used: 0,
-      last_used_date: null,
       
       // Lifecycle management
-      is_active: true,
-      retired_date: null,
-      retirement_reason: null
+      is_active: true
     }
     
     // Create the container

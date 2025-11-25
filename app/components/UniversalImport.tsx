@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useRef, useCallback } from 'react'
-import { Upload, Download, FileText, CheckCircle, XCircle, AlertTriangle, X } from 'lucide-react'
 
 export interface ImportField {
   key: string
@@ -320,7 +319,7 @@ export function UniversalImport({
             }}
             className="text-gray-400 hover:text-gray-600"
           >
-            <X className="h-6 w-6" />
+            <span className="icon-[tabler--x] h-6 w-6"></span>
           </button>
         </div>
 
@@ -330,7 +329,7 @@ export function UniversalImport({
           {step === 'upload' && (
             <div className="space-y-6">
               <div className="text-center">
-                <FileText className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+                <span className="icon-[tabler--file-text] h-16 w-16 text-gray-400 mx-auto mb-4"></span>
                 <h3 className="text-lg font-medium text-gray-900 mb-2">
                   Upload your {entityName} file
                 </h3>
@@ -347,7 +346,7 @@ export function UniversalImport({
                     onChange={(e) => e.target.files?.[0] && handleFileUpload(e.target.files[0])}
                     className="hidden"
                   />
-                  <Upload className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                  <span className="icon-[tabler--upload] h-12 w-12 text-gray-400 mx-auto mb-4"></span>
                   <button
                     onClick={() => fileInputRef.current?.click()}
                     className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-colors"
@@ -369,7 +368,7 @@ export function UniversalImport({
                     onClick={downloadTemplate}
                     className="flex items-center space-x-2 text-blue-600 hover:text-blue-700"
                   >
-                    <Download className="h-4 w-4" />
+                    <span className="icon-[tabler--download] h-4 w-4"></span>
                     <span>Download Template</span>
                   </button>
                 </div>
@@ -432,12 +431,12 @@ export function UniversalImport({
                 <h3 className="text-lg font-medium text-gray-900 mb-2">Preview & Validate</h3>
                 <div className="flex items-center space-x-6 text-sm">
                   <span className="flex items-center space-x-2">
-                    <CheckCircle className="h-4 w-4 text-green-500" />
+                    <span className="icon-[tabler--circle-check] h-4 w-4 text-green-500"></span>
                     <span>{importResult.summary.valid} valid records</span>
                   </span>
                   {importResult.summary.invalid > 0 && (
                     <span className="flex items-center space-x-2">
-                      <XCircle className="h-4 w-4 text-red-500" />
+                      <span className="icon-[tabler--circle-x] h-4 w-4 text-red-500"></span>
                       <span>{importResult.summary.invalid} invalid records</span>
                     </span>
                   )}
@@ -448,7 +447,7 @@ export function UniversalImport({
               {errors.length > 0 && (
                 <div className="bg-red-50 border border-red-200 rounded-lg p-4">
                   <div className="flex items-center space-x-2 mb-3">
-                    <AlertTriangle className="h-5 w-5 text-red-600" />
+                    <span className="icon-[tabler--alert-triangle] h-5 w-5 text-red-600"></span>
                     <h4 className="font-medium text-red-800">Validation Errors</h4>
                   </div>
                   <div className="max-h-40 overflow-y-auto">
@@ -534,7 +533,7 @@ export function UniversalImport({
           {/* Complete Step */}
           {step === 'complete' && importResult && (
             <div className="text-center py-12">
-              <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
+              <span className="icon-[tabler--circle-check] h-16 w-16 text-green-500 mx-auto mb-4"></span>
               <h3 className="text-lg font-medium text-gray-900 mb-2">Import Complete!</h3>
               <p className="text-gray-600 mb-6">
                 Successfully imported {importResult.summary.valid} {entityName}

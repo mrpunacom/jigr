@@ -145,9 +145,9 @@ export async function GET(request: NextRequest) {
         for (const category of defaultCategories) {
           await supabase
             .from('recipe_categories')
-            .insert(category)
-            .onConflict('client_id, category_name')
-            .ignoreDuplicates()
+            .upsert(category, { 
+              onConflict: 'client_id, category_name'
+            })
         }
       }
     }

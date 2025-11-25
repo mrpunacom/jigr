@@ -8,24 +8,6 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { 
-  Calculator, 
-  Scale, 
-  Wine, 
-  Beer, 
-  ChefHat, 
-  Package, 
-  BarChart3,
-  AlertTriangle,
-  CheckCircle,
-  Clock,
-  Plus,
-  Search,
-  Filter,
-  TrendingUp,
-  Users,
-  Archive
-} from 'lucide-react'
 import { StockDesignTokens, getWorkflowStyles, StockResponsiveUtils } from '../StockModuleCore'
 import { WorkflowConfig } from '../StockModuleCore'
 
@@ -113,28 +95,28 @@ export const StockDashboard: React.FC = () => {
           <StatCard
             title="Total Items"
             value={stats?.totalItems || 0}
-            icon={Package}
+            icon={() => <span className="icon-[tabler--package] w-5 h-5"></span>}
             color="blue"
             trend="+12 this week"
           />
           <StatCard
             title="Pending Counts"
             value={stats?.pendingCounts || 0}
-            icon={Clock}
+            icon={() => <span className="icon-[tabler--clock] w-5 h-5"></span>}
             color="yellow"
             trend="23 due today"
           />
           <StatCard
             title="Anomalies"
             value={stats?.anomaliesDetected || 0}
-            icon={AlertTriangle}
+            icon={() => <span className="icon-[tabler--alert-triangle] w-5 h-5"></span>}
             color="red"
             trend="3 need review"
           />
           <StatCard
             title="Containers"
             value={stats?.containersInUse || 0}
-            icon={Archive}
+            icon={() => <span className="icon-[tabler--archive] w-5 h-5"></span>}
             color="green"
             trend="8 in use"
           />
@@ -197,11 +179,11 @@ const DashboardHeader: React.FC<{ stats: DashboardStats | null }> = ({ stats }) 
           
           <div className="flex items-center gap-3">
             <button className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center gap-2">
-              <Plus size={20} />
+              <span className="icon-[tabler--plus] w-5 h-5"></span>
               Submit Count
             </button>
             <button className="bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 px-6 py-3 rounded-lg font-medium transition-colors flex items-center gap-2">
-              <Package size={20} />
+              <span className="icon-[tabler--package] w-5 h-5"></span>
               Add Item
             </button>
           </div>
@@ -221,7 +203,7 @@ const QuickActionsBar: React.FC = () => {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+            <span className="icon-[tabler--search] absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5"></span>
             <input
               type="text"
               placeholder="Search inventory items..."
@@ -230,18 +212,18 @@ const QuickActionsBar: React.FC = () => {
           </div>
           
           <button className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">
-            <Filter size={20} />
+            <span className="icon-[tabler--filter] w-5 h-5"></span>
             Filter
           </button>
         </div>
         
         <div className="flex items-center gap-3">
           <button className="flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded-lg transition-colors">
-            <BarChart3 size={20} />
+            <span className="icon-[tabler--chart-bar] w-5 h-5"></span>
             Reports
           </button>
           <button className="flex items-center gap-2 px-4 py-2 bg-purple-50 text-purple-700 hover:bg-purple-100 rounded-lg transition-colors">
-            <Archive size={20} />
+            <span className="icon-[tabler--archive] w-5 h-5"></span>
             Containers
           </button>
         </div>
@@ -461,11 +443,11 @@ const DashboardSkeleton: React.FC = () => (
 const ActivityIcon: React.FC<{ type: string; status: string }> = ({ type, status }) => {
   const iconProps = { size: 20 }
   
-  if (type === 'count') return <CheckCircle {...iconProps} className="text-green-600" />
-  if (type === 'anomaly') return <AlertTriangle {...iconProps} className="text-yellow-600" />
-  if (type === 'container') return <Archive {...iconProps} className="text-blue-600" />
+  if (type === 'count') return <span className="icon-[tabler--circle-check] w-4 h-4 text-green-600"></span>
+  if (type === 'anomaly') return <span className="icon-[tabler--alert-triangle] w-4 h-4 text-yellow-600"></span>
+  if (type === 'container') return <span className="icon-[tabler--archive] w-4 h-4 text-blue-600"></span>
   
-  return <Clock {...iconProps} className="text-gray-600" />
+  return <span className="icon-[tabler--clock] w-4 h-4 text-gray-600"></span>
 }
 
 const WorkflowBadge: React.FC<{ workflow: string }> = ({ workflow }) => {
@@ -487,14 +469,14 @@ const WorkflowBadge: React.FC<{ workflow: string }> = ({ workflow }) => {
 
 const getWorkflowIcon = (iconName: string) => {
   const icons: Record<string, React.ComponentType<any>> = {
-    Calculator,
-    Scale,
-    Wine,
-    Beer,
-    ChefHat
+    () => <span className="icon-[tabler--calculator] w-6 h-6"></span>,
+    () => <span className="icon-[tabler--scale] w-6 h-6"></span>,
+    () => <span className="icon-[tabler--glass-full] w-6 h-6"></span>,
+    () => <span className="icon-[tabler--beer] w-6 h-6"></span>,
+    () => <span className="icon-[tabler--chef-hat] w-6 h-6"></span>
   }
   
-  return icons[iconName] || Calculator
+  return icons[iconName] || (() => <span className="icon-[tabler--calculator] w-6 h-6"></span>)
 }
 
 export default StockDashboard

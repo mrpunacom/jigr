@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { FileSpreadsheet, ExternalLink, Loader2, ArrowLeft } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { StandardPageWrapper } from '@/app/components/UniversalPageWrapper';
 
 interface Spreadsheet {
   id: string;
@@ -138,17 +138,19 @@ export default function SelectSheetPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <Loader2 className="w-12 h-12 animate-spin text-blue-600 mx-auto mb-4" />
-          <p className="text-gray-600">Loading your Google Sheets...</p>
+      <StandardPageWrapper moduleName="STOCK" currentPage="import">
+        <div className="flex items-center justify-center py-12">
+          <div className="text-center">
+            <span className="icon-[tabler--loader-2] w-12 h-12 animate-spin text-blue-600 mx-auto mb-4"></span>
+            <p className="text-gray-600">Loading your Google Sheets...</p>
+          </div>
         </div>
-      </div>
+      </StandardPageWrapper>
     );
   }
 
   return (
-    <div className="max-w-7xl mx-auto p-6">
+    <StandardPageWrapper moduleName="STOCK" currentPage="import">
       {/* Header */}
       <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
         <div className="flex items-center gap-4 mb-2">
@@ -156,7 +158,7 @@ export default function SelectSheetPage() {
             onClick={() => router.push('/stock/import')}
             className="p-2 hover:bg-gray-100 rounded-lg"
           >
-            <ArrowLeft className="w-5 h-5" />
+            <span className="icon-[tabler--arrow-left] w-5 h-5"></span>
           </button>
           <div>
             <h1 className="text-2xl font-bold">Select Google Sheet</h1>
@@ -178,7 +180,7 @@ export default function SelectSheetPage() {
         {/* Spreadsheet List */}
         <div className="bg-white rounded-lg shadow-lg p-6">
           <h3 className="font-semibold mb-4 flex items-center gap-2">
-            <FileSpreadsheet className="w-5 h-5 text-green-600" />
+            <span className="icon-[tabler--file-spreadsheet] w-5 h-5 text-green-600"></span>
             Your Spreadsheets ({spreadsheets.length})
           </h3>
           
@@ -200,7 +202,7 @@ export default function SelectSheetPage() {
                   }`}
                 >
                   <div className="flex items-start gap-3">
-                    <FileSpreadsheet className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                    <span className="icon-[tabler--file-spreadsheet] w-5 h-5 text-green-600 flex-shrink-0 mt-0.5"></span>
                     <div className="flex-1 min-w-0">
                       <div className="font-medium truncate">{sheet.name}</div>
                       <div className="text-sm text-gray-500">
@@ -215,7 +217,7 @@ export default function SelectSheetPage() {
                       className="text-blue-600 hover:text-blue-700 p-1"
                       title="Open in Google Sheets"
                     >
-                      <ExternalLink className="w-4 h-4" />
+                      <span className="icon-[tabler--external-link] w-4 h-4"></span>
                     </a>
                   </div>
                 </button>
@@ -232,7 +234,7 @@ export default function SelectSheetPage() {
           
           {loadingSheets ? (
             <div className="text-center py-12">
-              <Loader2 className="w-8 h-8 animate-spin text-blue-600 mx-auto mb-2" />
+              <span className="icon-[tabler--loader-2] w-8 h-8 animate-spin text-blue-600 mx-auto mb-2"></span>
               <p className="text-sm text-gray-600">Loading sheets...</p>
             </div>
           ) : sheets.length === 0 ? (
@@ -281,7 +283,7 @@ export default function SelectSheetPage() {
         >
           {analyzing ? (
             <>
-              <Loader2 className="w-5 h-5 animate-spin" />
+              <span className="icon-[tabler--loader-2] w-5 h-5 animate-spin"></span>
               Analyzing with AI...
             </>
           ) : (
@@ -289,6 +291,6 @@ export default function SelectSheetPage() {
           )}
         </button>
       </div>
-    </div>
+    </StandardPageWrapper>
   );
 }

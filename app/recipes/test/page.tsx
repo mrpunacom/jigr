@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { LoadingSpinner } from '../../components/LoadingSpinner'
+import { StandardPageWrapper } from '@/app/components/UniversalPageWrapper'
 
 export default function TestRecipePage() {
   const [loading, setLoading] = useState(true)
@@ -52,7 +53,8 @@ export default function TestRecipePage() {
   if (loading) {
     console.log('🧪 TEST Rendering loading spinner')
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center p-4">
+      <StandardPageWrapper moduleName="RECIPES" currentPage="test">
+        <div className="flex flex-col items-center justify-center py-12">
         <LoadingSpinner />
         <div className="mt-8 space-y-2 text-center">
           <p className="text-lg font-semibold">Test Recipe Page - Loading State</p>
@@ -65,13 +67,15 @@ export default function TestRecipePage() {
             </p>
           </div>
         </div>
-      </div>
+        </div>
+      </StandardPageWrapper>
     )
   }
-  
+
   console.log('🧪 TEST Rendering data (loading finished)')
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4">
+    <StandardPageWrapper moduleName="RECIPES" currentPage="test">
+      <div className="flex flex-col items-center justify-center py-12">
       <div className="max-w-2xl w-full bg-white rounded-lg shadow-lg p-8">
         <h1 className="text-3xl font-bold text-green-600 mb-4">
           ✅ Test Page Success!
@@ -110,6 +114,7 @@ export default function TestRecipePage() {
           Test Reload
         </button>
       </div>
-    </div>
+      </div>
+    </StandardPageWrapper>
   )
 }

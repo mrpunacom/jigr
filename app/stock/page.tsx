@@ -4,24 +4,13 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import { getModuleConfig } from '@/lib/module-config'
-import { ModuleHeader } from '@/app/components/ModuleHeader'
+import { ModuleHeaderUniversal } from '@/app/components/ModuleHeaderUniversal'
 import { ResponsiveLayout } from '@/app/components/ResponsiveLayout'
 import { ModuleCard } from '@/app/components/ModuleCard'
 import { MetricCard, AlertMetricCard } from '@/app/components/MetricCard'
 import { QuickActionButton, QuickActionGrid } from '@/app/components/QuickActionButton'
 import { DataTable } from '@/app/components/DataTable'
 import { StockLevelIndicator } from '@/app/components/StockLevelIndicator'
-import { 
-  DollarSign, 
-  AlertTriangle, 
-  Clock,
-  Clipboard,
-  ScanLine,
-  Package,
-  TrendingUp,
-  Eye,
-  ShoppingCart
-} from 'lucide-react'
 
 interface DashboardMetrics {
   totalValue: {
@@ -181,7 +170,7 @@ export default function StockDashboardPage() {
             title="View Item"
             style={{ minHeight: '44px', minWidth: '44px' }}
           >
-            <Eye className="h-4 w-4" />
+            <span className="icon-[tabler--eye] h-4 w-4"></span>
           </button>
           <button
             onClick={() => router.push(`/count/new?item_id=${value}&item_name=${encodeURIComponent(item.item_name)}`)}
@@ -189,7 +178,7 @@ export default function StockDashboardPage() {
             title="Count Item"
             style={{ minHeight: '44px', minWidth: '44px' }}
           >
-            <Clipboard className="h-4 w-4" />
+            <span className="icon-[tabler--clipboard] h-4 w-4"></span>
           </button>
         </div>
       )
@@ -240,7 +229,7 @@ export default function StockDashboardPage() {
   if (loading) {
     return (
       <ResponsiveLayout>
-        <ModuleHeader module={stockModule!} currentPage="console" />
+        <ModuleHeaderUniversal module={stockModule!} currentPage="console" />
         <main className="max-w-7xl mx-auto px-4 py-6">
           <div className="flex items-center justify-center py-12">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
@@ -253,7 +242,7 @@ export default function StockDashboardPage() {
   if (error || !data) {
     return (
       <ResponsiveLayout>
-        <ModuleHeader module={stockModule!} currentPage="console" />
+        <ModuleHeaderUniversal module={stockModule!} currentPage="console" />
         <main className="max-w-7xl mx-auto px-4 py-6">
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg">
             {error || 'Failed to load dashboard data'}
@@ -265,7 +254,7 @@ export default function StockDashboardPage() {
 
   return (
     <ResponsiveLayout>
-      <ModuleHeader module={stockModule!} currentPage="console" />
+      <ModuleHeaderUniversal module={stockModule!} currentPage="console" />
       
       <main className="max-w-7xl mx-auto px-4 py-6">
         <div className="space-y-8">
@@ -288,7 +277,7 @@ export default function StockDashboardPage() {
               title="Total Inventory Value"
               value={data.metrics.totalValue.formatted}
               subtitle={data.metrics.totalValue.subtitle}
-              icon={DollarSign}
+              icon={() => <span className="icon-[tabler--currency-dollar] w-5 h-5"></span>}
               theme="light"
             />
 
@@ -296,7 +285,7 @@ export default function StockDashboardPage() {
               title="Items Below Par"
               value={data.metrics.itemsBelowParCount.value}
               subtitle={data.metrics.itemsBelowParCount.subtitle}
-              icon={AlertTriangle}
+              icon={() => <span className="icon-[tabler--alert-triangle] w-5 h-5"></span>}
               alertLevel={data.metrics.itemsBelowParCount.value > 0 ? 'warning' : 'success'}
               count={data.metrics.itemsBelowParCount.value}
               onClick={data.metrics.itemsBelowParCount.value > 0 ? handleViewBelowPar : undefined}
@@ -306,7 +295,7 @@ export default function StockDashboardPage() {
               title="Expiring Soon"
               value={data.metrics.expiringCount.value}
               subtitle={data.metrics.expiringCount.subtitle}
-              icon={Clock}
+              icon={() => <span className="icon-[tabler--clock] w-5 h-5"></span>}
               alertLevel={data.metrics.expiringCount.value > 0 ? 'critical' : 'success'}
               count={data.metrics.expiringCount.value}
               onClick={data.metrics.expiringCount.value > 0 ? handleViewExpiring : undefined}
@@ -320,14 +309,14 @@ export default function StockDashboardPage() {
               <QuickActionButton
                 title="Start Count"
                 description="Begin stocktake session"
-                icon={Clipboard}
+                icon={() => <span className="icon-[tabler--clipboard] w-5 h-5"></span>}
                 onClick={() => handleQuickAction('count')}
                 size="medium"
               />
               <QuickActionButton
                 title="Scan Barcode"
                 description="Find items quickly"
-                icon={ScanLine}
+                icon={() => <span className="icon-[tabler--scan] w-5 h-5"></span>}
                 onClick={() => handleQuickAction('scan')}
                 size="medium"
                 disabled={true}
@@ -335,7 +324,7 @@ export default function StockDashboardPage() {
               <QuickActionButton
                 title="Receive Delivery"
                 description="Add new stock batches"
-                icon={Package}
+                icon={() => <span className="icon-[tabler--package] w-5 h-5"></span>}
                 onClick={() => handleQuickAction('receive')}
                 size="medium"
                 disabled={true}
@@ -387,7 +376,7 @@ export default function StockDashboardPage() {
           {data.itemsBelowPar.length === 0 && data.expiringBatches.length === 0 && (
             <ModuleCard theme="light" className="p-8">
               <div className="text-center">
-                <TrendingUp className="h-12 w-12 text-green-400 mx-auto mb-4" />
+                <span className="icon-[tabler--trending-up] h-12 w-12 text-green-400 mx-auto mb-4"></span>
                 <h3 className="text-lg font-semibold text-white mb-2">
                   Your inventory is in great shape! 
                 </h3>
@@ -397,7 +386,7 @@ export default function StockDashboardPage() {
                 <QuickActionButton
                   title="View All Items"
                   description="Browse your complete inventory"
-                  icon={Eye}
+                  icon={() => <span className="icon-[tabler--eye] w-5 h-5"></span>}
                   onClick={() => router.push('/stock/items')}
                   size="small"
                 />

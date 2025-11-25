@@ -9,7 +9,6 @@ import { SearchInput } from '@/app/components/SearchInput'
 import { DataTable } from '@/app/components/DataTable'
 import { StockLevelIndicator } from '@/app/components/StockLevelIndicator'
 import { InventoryItem, StockFilterOptions } from '@/types/InventoryTypes'
-import { Plus, Filter, Grid, List, MoreHorizontal, Eye, Edit, Clipboard, Upload } from 'lucide-react'
 import { UniversalImport, ImportConfig } from '@/app/components/UniversalImport'
 
 const ITEMS_PER_PAGE = 20
@@ -227,7 +226,7 @@ export default function StockItemsPage() {
             title="View Details"
             style={{ minHeight: '44px', minWidth: '44px' }}
           >
-            <Eye className="h-4 w-4" />
+            <span className="icon-[tabler--eye] h-4 w-4"></span>
           </button>
           <button
             onClick={() => handleCountItem(value, item.item_name)}
@@ -235,14 +234,14 @@ export default function StockItemsPage() {
             title="Count This Item"
             style={{ minHeight: '44px', minWidth: '44px' }}
           >
-            <Clipboard className="h-4 w-4" />
+            <span className="icon-[tabler--clipboard] h-4 w-4"></span>
           </button>
           <button
             className="p-2 text-gray-600 hover:bg-gray-50 rounded-lg"
             title="More Options"
             style={{ minHeight: '44px', minWidth: '44px' }}
           >
-            <MoreHorizontal className="h-4 w-4" />
+            <span className="icon-[tabler--dots] h-4 w-4"></span>
           </button>
         </div>
       )
@@ -366,14 +365,14 @@ export default function StockItemsPage() {
                 className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-green-600 border border-transparent rounded-lg shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
                 style={{ minHeight: '48px' }}
               >
-                <Upload className="h-4 w-4 mr-2" />
+                <span className="icon-[tabler--upload] h-4 w-4 mr-2"></span>
                 Import Items
               </button>
               <button
                 className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-lg shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                 style={{ minHeight: '48px' }}
               >
-                <Plus className="h-4 w-4 mr-2" />
+                <span className="icon-[tabler--plus] h-4 w-4 mr-2"></span>
                 Add Item
               </button>
             </div>
@@ -459,7 +458,7 @@ export default function StockItemsPage() {
                       }`}
                       style={{ minHeight: '48px' }}
                     >
-                      <List className="h-4 w-4 mx-auto" />
+                      <span className="icon-[tabler--list] h-4 w-4 mx-auto"></span>
                     </button>
                     <button
                       onClick={() => setViewMode('grid')}
@@ -470,7 +469,7 @@ export default function StockItemsPage() {
                       }`}
                       style={{ minHeight: '48px' }}
                     >
-                      <Grid className="h-4 w-4 mx-auto" />
+                      <span className="icon-[tabler--grid-dots] h-4 w-4 mx-auto"></span>
                     </button>
                   </div>
                 </div>
@@ -555,7 +554,7 @@ export default function StockItemsPage() {
                             className="px-2 py-1 text-xs font-medium text-gray-600 bg-gray-50 rounded hover:bg-gray-100"
                             style={{ minHeight: '32px', minWidth: '32px' }}
                           >
-                            <MoreHorizontal className="h-3 w-3 mx-auto" />
+                            <span className="icon-[tabler--dots] h-3 w-3 mx-auto"></span>
                           </button>
                         </div>
                       </div>

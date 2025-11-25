@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { Scale, Camera, Calculator, AlertCircle } from 'lucide-react';
 
 // Manual Weight Entry Component
 interface ManualWeightEntryProps {
@@ -39,9 +38,9 @@ export function ManualWeightEntry({
   return (
     <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
       <div className="flex items-center gap-2 mb-3">
-        <Scale className="w-5 h-5 text-yellow-600" />
+        <span className="icon-[tabler--scale] w-5 h-5 text-yellow-600"></span>
         <h3 className="font-medium text-yellow-800">Manual Weight Entry</h3>
-        <AlertCircle className="w-4 h-4 text-yellow-600" />
+        <span className="icon-[tabler--alert-circle] w-4 h-4 text-yellow-600"></span>
       </div>
       
       <form onSubmit={handleSubmit} className="space-y-3">
@@ -99,7 +98,7 @@ export function ManualWeightEntry({
           className="w-full bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-3 rounded-md font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           style={{ minHeight: '48px' }}
         >
-          <Calculator className="w-4 h-4" />
+          <span className="icon-[tabler--calculator] w-4 h-4"></span>
           Submit Weight
         </button>
       </form>
@@ -148,9 +147,9 @@ export function ManualBarcodeEntry({
   return (
     <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
       <div className="flex items-center gap-2 mb-3">
-        <Camera className="w-5 h-5 text-blue-600" />
+        <span className="icon-[tabler--camera] w-5 h-5 text-blue-600"></span>
         <h3 className="font-medium text-blue-800">Manual Barcode Entry</h3>
-        <AlertCircle className="w-4 h-4 text-blue-600" />
+        <span className="icon-[tabler--alert-circle] w-4 h-4 text-blue-600"></span>
       </div>
       
       <form onSubmit={handleSubmit} className="space-y-3">
@@ -231,7 +230,7 @@ export function HardwareStatus({
         {/* Bluetooth Scale Status */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Scale className="w-5 h-5 text-gray-600" />
+            <span className="icon-[tabler--scale] w-5 h-5 text-gray-600"></span>
             <div>
               <div className="font-medium text-sm">Bluetooth Scale</div>
               <div className="text-xs text-gray-500">
@@ -266,7 +265,7 @@ export function HardwareStatus({
         {/* Camera Status */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Camera className="w-5 h-5 text-gray-600" />
+            <span className="icon-[tabler--camera] w-5 h-5 text-gray-600"></span>
             <div>
               <div className="font-medium text-sm">Camera Scanner</div>
               <div className="text-xs text-gray-500">

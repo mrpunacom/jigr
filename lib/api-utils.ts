@@ -32,7 +32,7 @@ const supabase = createClient(
 export async function getAuthenticatedClientId() {
   try {
     // Get authorization header
-    const cookieStore = cookies()
+    const cookieStore = await cookies()
     const authToken = cookieStore.get('supabase-auth-token')?.value
 
     if (!authToken) {

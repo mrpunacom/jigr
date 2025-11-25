@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import { getVersionDisplay } from '@/lib/version'
 import { DesignTokens, getCardStyle, getTextStyle, getFormFieldStyle } from '@/lib/design-system'
-import { CheckCircle, AlertTriangle, Users, Building2 } from 'lucide-react'
+// Removed Lucide React imports - using Tabler icons via CSS classes
 import { PublicPageBackgroundWithGradient } from '@/app/components/backgrounds/PublicPageBackground'
 
 // =====================================================
@@ -397,7 +397,7 @@ function AcceptInvitationContent() {
         />
       )
     }
-    return <Building2 className="w-16 h-16 text-blue-400 mx-auto mb-4" />
+    return <span className="icon-[tabler--building] w-16 h-16 text-blue-400 mx-auto mb-4"></span>
   }
 
   // =====================================================
@@ -446,7 +446,7 @@ function AcceptInvitationContent() {
           {/* Invalid/Error State */}
           {['invalid', 'expired'].includes(step) && (
             <div className="text-center">
-              <AlertTriangle className="w-16 h-16 text-red-400 mx-auto mb-4" />
+              <span className="icon-[tabler--alert-triangle] w-16 h-16 text-red-400 mx-auto mb-4"></span>
               <h1 className="text-2xl font-bold mb-2" style={{color: '#000000'}}>
                 {step === 'expired' ? 'Invitation Expired' : 'Invalid Invitation'}
               </h1>
@@ -467,7 +467,7 @@ function AcceptInvitationContent() {
             <>
               <div className="text-center mb-6">
                 {renderClientLogo()}
-                <Building2 className="w-16 h-16 text-blue-400 mx-auto mb-4 hidden" />
+                <span className="icon-[tabler--building] w-16 h-16 text-blue-400 mx-auto mb-4 hidden"></span>
                 <h1 className="text-2xl font-bold mb-2" style={{color: '#000000'}}>Welcome to {invitation.organizationName}</h1>
                 <p className="text-base" style={{color: '#000000'}}>
                   You&apos;ve been invited by {invitation.inviterName}
@@ -477,7 +477,7 @@ function AcceptInvitationContent() {
               {/* Invitation Details */}
               <div className={`${getCardStyle('secondary')} mb-6`} style={{ borderRadius: '24px' }}>
                 <div className="flex items-center space-x-3 mb-4">
-                  <Users className="w-8 h-8 text-blue-400" />
+                  <span className="icon-[tabler--users] w-8 h-8 text-blue-400"></span>
                   <div>
                     <h3 className="text-base font-semibold" style={{color: '#000000'}}>
                       {getRoleDisplayName(invitation.role)}
@@ -580,7 +580,7 @@ function AcceptInvitationContent() {
           {/* Success State */}
           {step === 'success' && invitation && (
             <div className="text-center">
-              <CheckCircle className="w-16 h-16 text-green-400 mx-auto mb-4" />
+              <span className="icon-[tabler--circle-check] w-16 h-16 text-green-400 mx-auto mb-4"></span>
               <h1 className="text-2xl font-bold mb-2" style={{color: '#000000'}}>Welcome to the Team!</h1>
               <p className="text-base mb-6" style={{color: '#000000'}}>
                 You&apos;ve successfully joined {invitation.organizationName} as a {getRoleDisplayName(invitation.role)}.

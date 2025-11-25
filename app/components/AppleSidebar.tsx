@@ -339,13 +339,14 @@ export default function AppleSidebar({
                     )}
                     </div>
                     
-                    {/* Hero Badge - only show for real userClient data */}
-                    {userClient?.champion_enrolled && (
+                    {/* Hero Badge - show for champion users or development */}
+                    {(userClient?.champion_enrolled || userClient?.role === 'OWNER') && (
                       <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center border-2 border-white/30 shadow-lg">
                         <img 
                           src="https://rggdywqnvpuwssluzfud.supabase.co/storage/v1/object/public/branding/trophy.svg"
-                          alt="Hero"
+                          alt="JiGR Hero Member"
                           className="w-4 h-4 object-contain"
+                          title="JiGR Hero Member"
                         />
                       </div>
                     )}

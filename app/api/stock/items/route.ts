@@ -32,22 +32,22 @@ export async function GET(request: NextRequest) {
     logApiRequest('/api/stock/items', 'GET', client_id, user_id)
     
     // Parse query parameters for filtering
-    const workflow = getQueryParam(searchParams, 'workflow') as CountingWorkflow | null
-    const supportsWeight = getBooleanQueryParam(searchParams, 'supports_weight')
-    const isBottled = getBooleanQueryParam(searchParams, 'is_bottled')
-    const isKeg = getBooleanQueryParam(searchParams, 'is_keg')
-    const isBatch = getBooleanQueryParam(searchParams, 'is_batch')
-    const search = getQueryParam(searchParams, 'search')
-    const categoryId = getQueryParam(searchParams, 'category_id')
-    const location = getQueryParam(searchParams, 'location')
-    const status = getQueryParam(searchParams, 'status') || 'active'
+    const workflow = searchParams.get('workflow') as CountingWorkflow | null
+    const supportsWeight = searchParams.get('supports_weight') === 'true'
+    const isBottled = searchParams.get('is_bottled') === 'true'
+    const isKeg = searchParams.get('is_keg') === 'true'
+    const isBatch = searchParams.get('is_batch') === 'true'
+    const search = searchParams.get('search')
+    const categoryId = searchParams.get('category_id')
+    const location = searchParams.get('location')
+    const status = searchParams.get('status') || 'active'
     
     // Legacy support for existing query parameters
-    const category = getQueryParam(searchParams, 'category') // Support legacy 'category' param
-    const sortBy = getQueryParam(searchParams, 'sortBy') || 'name'
-    const sortOrder = getQueryParam(searchParams, 'sortOrder') || 'asc'
-    const page = parseInt(getQueryParam(searchParams, 'page') || '1')
-    const pageSize = parseInt(getQueryParam(searchParams, 'pageSize') || '20')
+    const category = searchParams.get('category') // Support legacy 'category' param
+    const sortBy = searchParams.get('sortBy') || 'name'
+    const sortOrder = searchParams.get('sortOrder') || 'asc'
+    const page = parseInt(searchParams.get('page') || '1')
+    const pageSize = parseInt(searchParams.get('pageSize') || '20')
     
     // Build the base query with enhanced joins for hybrid counting
     let query = supabase
@@ -315,7 +315,6 @@ export async function POST(request: NextRequest) {
       
       // Verification (NEW)
       verification_frequency_months: body.verification_frequency_months || 6,
-      last_verification_date: null,
       
       // Status
       is_active: true,

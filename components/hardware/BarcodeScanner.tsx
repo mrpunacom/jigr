@@ -2,7 +2,6 @@
 
 import { useBarcodeScanner } from '@/hooks/useBarcodeScanner';
 import { useEffect, useRef, useState } from 'react';
-import { X, Camera, Check } from 'lucide-react';
 
 interface BarcodeScannerProps {
   onScan: (barcode: string, format?: string) => void;
@@ -116,7 +115,7 @@ export default function BarcodeScanner({
                 className="p-2 hover:bg-gray-100 rounded-full"
                 style={{ minHeight: '48px', minWidth: '48px' }} // iPad touch target
               >
-                <X className="w-5 h-5" />
+                <span className="icon-[tabler--x] w-5 h-5"></span>
               </button>
             )}
           </div>
@@ -147,7 +146,7 @@ export default function BarcodeScanner({
             </div>
           ) : (
             <div className="w-full h-full flex flex-col items-center justify-center text-white">
-              <Camera className="w-16 h-16 mb-4 opacity-50" />
+              <span className="icon-[tabler--camera] w-16 h-16 mb-4 opacity-50"></span>
               {error ? (
                 <div className="text-center">
                   <p className="text-red-400 mb-4">{error}</p>
@@ -213,7 +212,7 @@ export default function BarcodeScanner({
                   className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium flex items-center gap-2"
                   style={{ minHeight: '48px' }} // iPad touch target
                 >
-                  <Check className="w-4 h-4" />
+                  <span className="icon-[tabler--check] w-4 h-4"></span>
                   Submit
                 </button>
               </div>

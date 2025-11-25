@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { X, Users, Mail, User, Building2, Phone, MessageSquare } from 'lucide-react'
+// Removed Lucide React imports - using Tabler icons via CSS classes
 import { getCardStyle, getTextStyle, getFormFieldStyle } from '@/lib/design-system'
 
 // =====================================================
@@ -189,7 +189,7 @@ export default function UserInvitationModal({
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
-              <Users className="w-5 h-5 text-white" />
+              <span className="icon-[tabler--users] w-5 h-5 text-white"></span>
             </div>
             <div>
               <h2 className={`${getTextStyle('sectionTitle')} mb-1`}>Invite Team Member</h2>
@@ -203,7 +203,7 @@ export default function UserInvitationModal({
             disabled={isSubmitting}
             className="text-white/60 hover:text-white transition-colors duration-200 disabled:opacity-50"
           >
-            <X className="w-6 h-6" />
+            <span className="icon-[tabler--x] w-6 h-6"></span>
           </button>
         </div>
 
@@ -233,7 +233,7 @@ export default function UserInvitationModal({
             {/* Email */}
             <div>
               <label className={`block ${getTextStyle('label')} mb-2`}>
-                <Mail className="w-4 h-4 inline mr-2" />
+                <span className="icon-[tabler--mail] w-4 h-4 inline mr-2"></span>
                 Email Address *
               </label>
               <input
@@ -250,7 +250,7 @@ export default function UserInvitationModal({
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className={`block ${getTextStyle('label')} mb-2`}>
-                  <User className="w-4 h-4 inline mr-2" />
+                  <span className="icon-[tabler--user] w-4 h-4 inline mr-2"></span>
                   First Name *
                 </label>
                 <input
@@ -324,7 +324,7 @@ export default function UserInvitationModal({
             {/* Phone */}
             <div>
               <label className={`block ${getTextStyle('label')} mb-2`}>
-                <Phone className="w-4 h-4 inline mr-2" />
+                <span className="icon-[tabler--phone] w-4 h-4 inline mr-2"></span>
                 Phone Number
               </label>
               <input
@@ -340,7 +340,7 @@ export default function UserInvitationModal({
             {/* Department */}
             <div>
               <label className={`block ${getTextStyle('label')} mb-2`}>
-                <Building2 className="w-4 h-4 inline mr-2" />
+                <span className="icon-[tabler--building] w-4 h-4 inline mr-2"></span>
                 Department
               </label>
               <input
@@ -371,7 +371,7 @@ export default function UserInvitationModal({
             {/* Personal Message */}
             <div>
               <label className={`block ${getTextStyle('label')} mb-2`}>
-                <MessageSquare className="w-4 h-4 inline mr-2" />
+                <span className="icon-[tabler--message-square] w-4 h-4 inline mr-2"></span>
                 Personal Message
               </label>
               <textarea

@@ -1,9 +1,26 @@
 'use client'
 
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { supabase } from '@/lib/supabase'
 import { PublicPageBackgroundWithGradient } from '@/app/components/backgrounds/PublicPageBackground'
 
 export default function LandingPage() {
+  const router = useRouter()
+
+  useEffect(() => {
+    // Check if user is already authenticated
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (session?.user) {
+        // Redirect authenticated users to dashboard
+        router.push('/dashboard')
+      }
+    }
+    
+    checkAuth()
+  }, [router])
   return (
     <PublicPageBackgroundWithGradient
       backgroundImage="restaurant.jpg"

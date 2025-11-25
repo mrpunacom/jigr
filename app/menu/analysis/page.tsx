@@ -8,11 +8,6 @@ import { ModuleCard, StatCard } from '../../components/ModuleCard'
 import { useAuth } from '../../hooks/useAuth'
 import { StandardPageWrapper } from '@/app/components/UniversalPageWrapper'
 import { 
-  TrendingUp, TrendingDown, DollarSign, Target, 
-  BarChart3, PieChart, AlertTriangle, Star,
-  Calendar, Filter, Download, Zap
-} from 'lucide-react'
-import { 
   MenuPricingResponse, 
   MenuPricingItem,
   PricingSummary
@@ -220,11 +215,11 @@ export default function MenuAnalysisPage() {
 
   const getRecommendationIcon = (type: string) => {
     switch (type) {
-      case 'pricing': return <DollarSign className="h-5 w-5" />
-      case 'cost_reduction': return <TrendingDown className="h-5 w-5" />
-      case 'promotion': return <Zap className="h-5 w-5" />
-      case 'removal': return <AlertTriangle className="h-5 w-5" />
-      default: return <Target className="h-5 w-5" />
+      case 'pricing': return <span className="icon-[tabler--currency-dollar] h-5 w-5"></span>
+      case 'cost_reduction': return <span className="icon-[tabler--trending-down] h-5 w-5"></span>
+      case 'promotion': return <span className="icon-[tabler--bolt] h-5 w-5"></span>
+      case 'removal': return <span className="icon-[tabler--alert-triangle] h-5 w-5"></span>
+      default: return <span className="icon-[tabler--target] h-5 w-5"></span>
     }
   }
 
@@ -310,7 +305,7 @@ export default function MenuAnalysisPage() {
 
               <div className="flex items-end">
                 <button className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                  <Download className="h-4 w-4 mr-2" />
+                  <span className="icon-[tabler--download] h-4 w-4 mr-2"></span>
                   Export Report
                 </button>
               </div>
@@ -323,7 +318,7 @@ export default function MenuAnalysisPage() {
           <StatCard accentColor="green" className="p-6">
             <div className="flex items-center">
               <div className="p-3 bg-green-100 rounded-lg">
-                <DollarSign className="h-6 w-6 text-green-600" />
+                <span className="icon-[tabler--currency-dollar] h-6 w-6 text-green-600"></span>
               </div>
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-900">Revenue Potential</p>
@@ -338,7 +333,7 @@ export default function MenuAnalysisPage() {
           <StatCard accentColor="blue" className="p-6">
             <div className="flex items-center">
               <div className="p-3 bg-blue-100 rounded-lg">
-                <Target className="h-6 w-6 text-blue-600" />
+                <span className="icon-[tabler--target] h-6 w-6 text-blue-600"></span>
               </div>
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-900">Weighted Food Cost</p>
@@ -355,7 +350,7 @@ export default function MenuAnalysisPage() {
           <StatCard accentColor="orange" className="p-6">
             <div className="flex items-center">
               <div className="p-3 bg-orange-100 rounded-lg">
-                <BarChart3 className="h-6 w-6 text-orange-600" />
+                <span className="icon-[tabler--chart-bar] h-6 w-6 text-orange-600"></span>
               </div>
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-900">Menu Items</p>
@@ -371,7 +366,7 @@ export default function MenuAnalysisPage() {
           {/* Top Performers */}
           <ModuleCard theme="light" className="p-6">
             <div className="flex items-center mb-4">
-              <Star className="h-6 w-6 text-yellow-500 mr-3" />
+              <span className="icon-[tabler--star] h-6 w-6 text-yellow-500 mr-3"></span>
               <h2 className="text-xl font-semibold text-white">Top Performers</h2>
             </div>
             
@@ -400,7 +395,7 @@ export default function MenuAnalysisPage() {
           {/* Underperformers */}
           <ModuleCard theme="light" className="p-6">
             <div className="flex items-center mb-4">
-              <AlertTriangle className="h-6 w-6 text-red-400 mr-3" />
+              <span className="icon-[tabler--alert-triangle] h-6 w-6 text-red-400 mr-3"></span>
               <h2 className="text-xl font-semibold text-white">Needs Attention</h2>
             </div>
             

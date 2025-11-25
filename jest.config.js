@@ -12,10 +12,10 @@ const createJestConfig = nextJest({
 const customJestConfig = {
   // Test environment setup
   setupFilesAfterEnv: ['<rootDir>/test/setup.ts'],
-  testEnvironment: 'jest-environment-jsdom',
+  testEnvironment: 'node',
   
   // Module mapping for absolute imports
-  moduleNameMapping: {
+  moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/$1',
     '^@/lib/(.*)$': '<rootDir>/lib/$1',
     '^@/app/(.*)$': '<rootDir>/app/$1',
@@ -57,10 +57,7 @@ const customJestConfig = {
     },
   },
   
-  // Transform configuration
-  transform: {
-    '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', { presets: ['next/babel'] }],
-  },
+  // Transform configuration handled by Next.js
   
   // Module file extensions
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
@@ -87,17 +84,7 @@ const customJestConfig = {
   verbose: true,
   
   // Reporter configuration
-  reporters: [
-    'default',
-    [
-      'jest-html-reporters',
-      {
-        publicPath: './test-results',
-        filename: 'test-report.html',
-        expand: true,
-      },
-    ],
-  ],
+  reporters: ['default'],
 }
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async

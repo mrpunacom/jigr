@@ -2,13 +2,13 @@
 
 import { useContext, useCallback, useMemo, useEffect, useState } from 'react';
 import { 
-  ExplanationContext,
   ExplanationProviderState,
   ExplanationContent,
   PageContext,
   ExplanationAction,
   ResolvedLink
 } from '@/lib/explanationTypes';
+import { ExplanationContext } from './ExplanationProvider';
 import { getExplanationContent, searchExplanationContent } from '@/lib/explanationData';
 
 /**

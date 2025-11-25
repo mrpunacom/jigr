@@ -145,7 +145,7 @@ export const FeedbackWidget = () => {
       // Try to use the newer Screen Capture API if available
       if ('getDisplayMedia' in navigator.mediaDevices) {
         const stream = await navigator.mediaDevices.getDisplayMedia({
-          video: { mediaSource: 'screen' }
+          video: true
         })
         
         const video = document.createElement('video')
@@ -225,7 +225,7 @@ export const FeedbackWidget = () => {
       severity,
       category,
       deviceInfo,
-      screenshot: includeScreenshot ? screenshot : undefined,
+      screenshot: includeScreenshot && screenshot ? screenshot : undefined,
       browserInfo: JSON.stringify({
         browser: deviceData.browser,
         viewport: deviceData.viewport,

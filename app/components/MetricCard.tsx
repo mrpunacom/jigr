@@ -1,11 +1,10 @@
-import { LucideIcon } from 'lucide-react'
 import { ModuleCard } from './ModuleCard'
 
 interface MetricCardProps {
   title: string
   value: string | number
   subtitle?: string
-  icon?: LucideIcon
+  icon?: string
   trend?: {
     value: string
     isPositive: boolean
@@ -19,7 +18,7 @@ export function MetricCard({
   title,
   value,
   subtitle,
-  icon: Icon,
+  icon,
   trend,
   theme = 'light',
   className = '',
@@ -38,8 +37,8 @@ export function MetricCard({
         <div className="flex-1">
           <div className="flex items-center justify-between">
             <p className="text-sm font-medium text-white/70">{title}</p>
-            {Icon && (
-              <Icon className="h-5 w-5 text-white/50" />
+            {icon && (
+              <span className={`${icon} h-5 w-5 text-white/50`}></span>
             )}
           </div>
           
@@ -75,7 +74,7 @@ export function AlertMetricCard({
   title,
   value,
   subtitle,
-  icon: Icon,
+  icon,
   alertLevel,
   count,
   className = '',
@@ -125,8 +124,8 @@ export function AlertMetricCard({
         <div className="flex-1">
           <div className="flex items-center justify-between">
             <p className={`text-sm font-medium ${textColor}/70`}>{title}</p>
-            {Icon && (
-              <Icon className={`h-5 w-5 ${iconColor}`} />
+            {icon && (
+              <span className={`${icon} h-5 w-5 ${iconColor}`}></span>
             )}
           </div>
           

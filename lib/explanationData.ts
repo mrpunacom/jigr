@@ -418,10 +418,10 @@ export const EXPLANATION_CONTENT: ExplanationContentMap = {
         icon: '👥',
         action: {
           href: '/admin/team',
-          type: 'navigation'
+          type: 'navigation',
+          requiresPermission: ['admin']
         },
-        importance: 'high',
-        requiresPermission: ['admin']
+        importance: 'high'
       },
       {
         title: 'System Configuration',
@@ -429,10 +429,10 @@ export const EXPLANATION_CONTENT: ExplanationContentMap = {
         icon: '⚙️',
         action: {
           href: '/admin/configure',
-          type: 'navigation'
+          type: 'navigation',
+          requiresPermission: ['admin']
         },
-        importance: 'high',
-        requiresPermission: ['admin']
+        importance: 'high'
       },
       {
         title: 'Analytics & Reporting',

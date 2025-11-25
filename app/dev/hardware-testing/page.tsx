@@ -2,14 +2,14 @@
 
 import { useState } from 'react';
 import { 
-  Scale, 
-  Camera, 
-  Printer, 
-  CheckCircle, 
-  AlertTriangle,
-  Settings,
-  Smartphone 
-} from 'lucide-react';
+  IconScale, 
+  IconCamera, 
+  IconPrinter, 
+  IconCircleCheck, 
+  IconAlertTriangle,
+  IconSettings,
+  IconDeviceMobile
+} from '@tabler/icons-react';
 
 // Import our hardware components
 import BluetoothScaleConnector from '@/components/hardware/BluetoothScaleConnector';
@@ -37,10 +37,10 @@ export default function HardwareTestingPage() {
     }
   };
 
-  const handleBarcodeSubmit = (barcode: string, source: string) => {
+  const handleBarcodeSubmit = (barcode: string, format?: string) => {
     setScannedBarcode(barcode);
     setShowBarcodeScanner(false);
-    console.log(`Barcode scanned from ${source}:`, barcode);
+    console.log(`Barcode scanned ${format ? `with format ${format}` : ''}:`, barcode);
   };
 
   const handleManualWeight = (weight: number, isNet?: boolean) => {
@@ -73,7 +73,7 @@ export default function HardwareTestingPage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-blue-100 rounded-lg">
-                <Settings className="w-6 h-6 text-blue-600" />
+                <IconSettings className="w-6 h-6 text-blue-600" />
               </div>
               <div>
                 <h1 className="text-3xl font-bold text-gray-900">
@@ -86,7 +86,7 @@ export default function HardwareTestingPage() {
             </div>
             
             <div className="flex items-center gap-2">
-              <Smartphone className="w-5 h-5 text-gray-400" />
+              <IconDeviceMobile className="w-5 h-5 text-gray-400" />
               <span className="text-sm text-gray-600">iPad Air 2013 Compatible</span>
             </div>
           </div>
@@ -95,7 +95,7 @@ export default function HardwareTestingPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
             <div className="bg-gray-50 rounded-lg p-4">
               <div className="flex items-center gap-2 mb-2">
-                <Scale className="w-5 h-5 text-gray-600" />
+                <IconScale className="w-5 h-5 text-gray-600" />
                 <span className="font-medium">Current Weight</span>
               </div>
               <div className="text-2xl font-bold text-gray-900">
@@ -108,7 +108,7 @@ export default function HardwareTestingPage() {
 
             <div className="bg-gray-50 rounded-lg p-4">
               <div className="flex items-center gap-2 mb-2">
-                <Camera className="w-5 h-5 text-gray-600" />
+                <IconCamera className="w-5 h-5 text-gray-600" />
                 <span className="font-medium">Scanned Barcode</span>
               </div>
               <div className="text-lg font-mono text-gray-900 break-all">
@@ -138,7 +138,7 @@ export default function HardwareTestingPage() {
           {/* Bluetooth Scale Testing */}
           <div className="space-y-4">
             <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-              <Scale className="w-6 h-6" />
+              <IconScale className="w-6 h-6" />
               Bluetooth Scale Testing
             </h2>
 
@@ -182,7 +182,7 @@ export default function HardwareTestingPage() {
           {/* Barcode Scanner Testing */}
           <div className="space-y-4">
             <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-              <Camera className="w-6 h-6" />
+              <IconCamera className="w-6 h-6" />
               Barcode Scanner Testing
             </h2>
 
@@ -194,7 +194,7 @@ export default function HardwareTestingPage() {
                 className="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-lg font-medium flex items-center justify-center gap-2"
                 style={{ minHeight: '48px' }}
               >
-                <Camera className="w-5 h-5" />
+                <IconCamera className="w-5 h-5" />
                 Open Camera Scanner
               </button>
               
@@ -256,7 +256,7 @@ export default function HardwareTestingPage() {
         {/* Label Printer Testing */}
         <div className="mt-6">
           <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2 mb-4">
-            <Printer className="w-6 h-6" />
+            <IconPrinter className="w-6 h-6" />
             Label Printer Testing
           </h2>
 
@@ -288,7 +288,7 @@ export default function HardwareTestingPage() {
         {/* Manual Entry Fallbacks */}
         <div className="mt-6">
           <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2 mb-4">
-            <AlertTriangle className="w-6 h-6" />
+            <IconAlertTriangle className="w-6 h-6" />
             Manual Entry Fallbacks
           </h2>
 
@@ -309,7 +309,7 @@ export default function HardwareTestingPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="border rounded-lg p-4">
               <div className="flex items-center gap-2 mb-2">
-                <CheckCircle className="w-5 h-5 text-green-500" />
+                <IconCircleCheck className="w-5 h-5 text-green-500" />
                 <span className="font-medium">Weight Measurement</span>
               </div>
               <div className="text-sm text-gray-600">
@@ -327,7 +327,7 @@ export default function HardwareTestingPage() {
 
             <div className="border rounded-lg p-4">
               <div className="flex items-center gap-2 mb-2">
-                <CheckCircle className="w-5 h-5 text-green-500" />
+                <IconCircleCheck className="w-5 h-5 text-green-500" />
                 <span className="font-medium">Barcode Scanning</span>
               </div>
               <div className="text-sm text-gray-600">
@@ -340,7 +340,7 @@ export default function HardwareTestingPage() {
 
             <div className="border rounded-lg p-4">
               <div className="flex items-center gap-2 mb-2">
-                <CheckCircle className="w-5 h-5 text-green-500" />
+                <IconCircleCheck className="w-5 h-5 text-green-500" />
                 <span className="font-medium">Label Generation</span>
               </div>
               <div className="text-sm text-gray-600">

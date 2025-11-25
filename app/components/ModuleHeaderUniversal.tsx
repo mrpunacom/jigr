@@ -17,6 +17,7 @@ import Image from 'next/image'
 import { useState, useContext, useEffect } from 'react'
 import { getTextStyle } from '@/lib/design-system'
 import { ModuleConfig } from '@/lib/module-config'
+import { getCompanyName } from '@/lib/moduleDefinitions'
 import { HamburgerDropdown } from './HamburgerDropdown'
 import { UserAvatarDropdown } from './UserAvatarDropdown'
 import ExplanationTrigger from './explanation/ExplanationTrigger'
@@ -61,6 +62,8 @@ const BACKGROUND_IMAGES = {
   'STOCK': 'https://rggdywqnvpuwssluzfud.supabase.co/storage/v1/object/public/module-assets/backgrounds/stockBG.webp',
   'RECIPES': 'https://rggdywqnvpuwssluzfud.supabase.co/storage/v1/object/public/module-assets/backgrounds/recipesBG.webp',
   'MENU': 'https://rggdywqnvpuwssluzfud.supabase.co/storage/v1/object/public/module-assets/backgrounds/menusBG.webp',
+  'REPAIRS': 'https://rggdywqnvpuwssluzfud.supabase.co/storage/v1/object/public/module-assets/backgrounds/repairBG.webp',
+  'DIARY': 'https://rggdywqnvpuwssluzfud.supabase.co/storage/v1/object/public/module-assets/backgrounds/diaryBG.webp',
   
   // Sub-page backgrounds
   'SUBRECIPE': 'https://rggdywqnvpuwssluzfud.supabase.co/storage/v1/object/public/module-assets/backgrounds/subrecipeBG.webp',
@@ -107,6 +110,12 @@ function getBackgroundImage(title: string, subtitle?: string): string {
   if (title.includes('Admin') || title === 'ADMIN' || title === 'Admin') {
     return BACKGROUND_IMAGES.ADMIN
   }
+  if (title.includes('Repairs') || title === 'REPAIRS' || title === 'Repairs') {
+    return BACKGROUND_IMAGES.REPAIRS
+  }
+  if (title.includes('Diary') || title === 'DIARY' || title === 'Diary') {
+    return BACKGROUND_IMAGES.DIARY
+  }
   
   // Default fallback
   return BACKGROUND_IMAGES.LANDING
@@ -126,6 +135,22 @@ function SimpleModuleHeader({ title, subtitle, backgroundImage, className = '' }
   const textColorClass = 'text-gray-800'
   const subtitleColorClass = 'text-gray-600'
   
+  // For simple headers, we can still personalize if it's a known module
+  // Extract module key from title if possible
+  const moduleKey = title.toLowerCase().replace(/[^a-z]/g, '')
+  const companyName = getCompanyName()
+  
+  // Try to get personalized title, fallback to provided title
+  let displayTitle = title
+  try {
+    const moduleDefinition = require('@/lib/moduleDefinitions').getModuleDefinition(moduleKey)
+    if (moduleDefinition) {
+      displayTitle = moduleDefinition.tagline(companyName)
+    }
+  } catch (e) {
+    // Fallback to original title if module not found
+  }
+  
   return (
     <div className={`relative min-h-[200px] flex items-center justify-center ${className}`}>
       {/* Universal Watermark Background */}
@@ -141,7 +166,7 @@ function SimpleModuleHeader({ title, subtitle, backgroundImage, className = '' }
       {/* Content */}
       <div className="relative z-10 text-center px-4">
         <h1 className={`text-4xl font-bold mb-2 ${textColorClass}`}>
-          {title}
+          {displayTitle}
         </h1>
         <p className={`text-lg ${subtitleColorClass}`}>
           {subtitle}
@@ -157,15 +182,23 @@ function ComplexModuleHeader({
   currentPage, 
   className = '',
   onboardingData,
-  user,
-  userClient,
+  user: propUser,
+  userClient: propUserClient,
   onSignOut,
   backgroundImage
 }: ComplexModuleHeaderProps) {
   const [showHamburgerDropdown, setShowHamburgerDropdown] = useState(false)
   const [showUserDropdown, setShowUserDropdown] = useState(false)
   const [userAvatar, setUserAvatar] = useState<string | null>(null)
+  const [internalUser, setInternalUser] = useState<any>(null)
+  const [internalUserClient, setInternalUserClient] = useState<any>(null)
   const { openModal } = useExplanation()
+  
+  // Use props if provided, otherwise use internal state
+  const user = propUser || internalUser
+  const userClient = propUserClient || internalUserClient
+  
+  
   
   const bgImage = backgroundImage || getBackgroundImage(module.title)
   const hasBackground = bgImage && bgImage.length > 0
@@ -206,9 +239,68 @@ function ComplexModuleHeader({
     return () => window.removeEventListener('userAvatarUpdated', handleAvatarUpdate)
   }, [user?.id])
 
+  // Internal user data fetching (when props not provided)
+  useEffect(() => {
+    if (propUser && propUserClient) return // Skip if props provided
+    
+    let mounted = true
+    
+    const fetchUserData = async () => {
+      try {
+        if (typeof window === 'undefined') return
+        
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession()
+        
+        if (sessionError) {
+          logger.debug('ModuleHeader: Session error:', sessionError)
+          return
+        }
+        
+        if (mounted && session?.user) {
+          setInternalUser(session.user)
+          
+          // Fetch client data  
+          try {
+            const { data: clientData, error: clientError } = await supabase
+              .from('clients')
+              .select('*')
+              .eq('id', session.user.id)
+              .single()
+            
+            if (mounted && !clientError) {
+              setInternalUserClient(clientData)
+            }
+          } catch (clientError) {
+            logger.debug('ModuleHeader: Could not fetch client data:', clientError)
+          }
+        }
+      } catch (error) {
+        logger.debug('ModuleHeader: Error fetching internal user data:', error)
+      }
+    }
+
+    fetchUserData()
+    
+    return () => {
+      mounted = false
+    }
+  }, [propUser, propUserClient])
+
   // Find current page details
   const currentPageData = module.pages.find(page => page.key === currentPage)
   const pageTitle = currentPageData?.label || currentPage
+
+  // Get company name from user context
+  const companyName = getCompanyName(user)
+  
+  // Get personalized tagline and purpose
+  const personalizedTagline = module.getPersonalizedTitle ? 
+    module.getPersonalizedTitle(companyName) : 
+    module.description
+    
+  const modulePurpose = module.getPurpose ? 
+    module.getPurpose(true) : // Use short purpose statement
+    null // Don't show duplicate description
 
   // Universal dark text for all modules
   const textColorClass = 'text-gray-800'
@@ -244,7 +336,7 @@ function ComplexModuleHeader({
       )}
       
       {/* Header */}
-      <header className={`relative z-20 ${className}`}>
+      <header className={`relative z-20 py-6 ${className}`}>
         {/* Dropdowns positioned absolutely */}
         <div className="relative">
           {showHamburgerDropdown && (
@@ -287,23 +379,40 @@ function ComplexModuleHeader({
                   fontSize: FONT_SIZES.TITLE_LARGE,
                   fontWeight: FONT_WEIGHTS.BOLD,
                   margin: 0,
-                  marginBottom: '8pt',
+                  marginBottom: '4pt',
                 }}
               >
                 {module.title}
               </h1>
-              <p 
+              <h2 
+                className={textColorClass}
                 style={{
                   fontFamily: FONT_FAMILY,
-                  fontSize: FONT_SIZES.BUTTON_LABEL,
-                  fontWeight: FONT_WEIGHTS.REGULAR,
-                  fontStyle: 'italic',
-                  color: IOS_COLORS.LABEL_SECONDARY,
+                  fontSize: FONT_SIZES.TITLE_3,
+                  fontWeight: FONT_WEIGHTS.MEDIUM,
                   margin: 0,
+                  marginBottom: '8pt',
+                  opacity: 0.8
                 }}
               >
-                {module.description}
-              </p>
+                {personalizedTagline}
+              </h2>
+              {modulePurpose && (
+                <p 
+                  style={{
+                    fontFamily: FONT_FAMILY,
+                    fontSize: FONT_SIZES.BUTTON_LABEL,
+                    fontWeight: FONT_WEIGHTS.REGULAR,
+                    fontStyle: 'normal',
+                    color: IOS_COLORS.LABEL_SECONDARY,
+                    margin: 0,
+                    lineHeight: 1.4,
+                    maxWidth: '600px'
+                  }}
+                >
+                  {modulePurpose}
+                </p>
+              )}
             </div>
           </div>
 
@@ -364,18 +473,19 @@ function ComplexModuleHeader({
                   />
                 ) : (
                   <span className="font-bold text-lg text-gray-700">
-                    {user?.user_metadata?.full_name?.charAt(0) || user?.email?.charAt(0) || 'U'}
+                    {user?.user_metadata?.full_name?.charAt(0) || user?.email?.charAt(0) || user?.user_metadata?.name?.charAt(0) || user?.identities?.[0]?.identity_data?.name?.charAt(0) || 'U'}
                   </span>
                 )}
               </div>
               
-              {/* Hero Badge */}
-              {userClient?.champion_enrolled && (
+              {/* Hero Badge - show for champion users or development */}
+              {(userClient?.champion_enrolled || userClient?.role === 'OWNER') && (
                 <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center border-2 border-white/30 shadow-lg">
                   <img 
                     src="https://rggdywqnvpuwssluzfud.supabase.co/storage/v1/object/public/branding/trophy.svg"
-                    alt="Hero"
+                    alt="JiGR Hero Member"
                     className="w-4 h-4 object-contain"
+                    title="JiGR Hero Member"
                   />
                 </div>
               )}

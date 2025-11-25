@@ -1,36 +1,50 @@
 import { NextResponse } from 'next/server';
 import { getAuthenticatedClientId } from '@/lib/api-utils';
-
-const GOOGLE_AUTH_URL = 'https://accounts.google.com/o/oauth2/v2/auth';
-const SCOPES = [
-  'https://www.googleapis.com/auth/spreadsheets.readonly',
-  'https://www.googleapis.com/auth/drive.readonly'
-];
+import { getAuthUrl } from '@/lib/google-sheets';
 
 export async function GET(request: Request) {
   try {
     const { user_id } = await getAuthenticatedClientId();
+    const { searchParams } = new URL(request.url);
     
-    // Build OAuth authorization URL
-    const params = new URLSearchParams({
-      client_id: process.env.GOOGLE_CLIENT_ID!,
-      redirect_uri: `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/google/callback`,
-      response_type: 'code',
-      scope: SCOPES.join(' '),
-      access_type: 'offline', // Request refresh token
-      prompt: 'consent', // Force consent screen to ensure refresh token
-      state: user_id // Pass user_id to callback
+    // Get module and redirect parameters
+    const module = searchParams.get('module') || 'stock';
+    const redirectTo = searchParams.get('redirect_to') || `/${module}/import`;
+    
+    // Generate OAuth URL
+    const authUrl = getAuthUrl(user_id);
+    
+    // Create response with redirect
+    const response = NextResponse.redirect(authUrl);
+    
+    // Set secure cookies to track OAuth state for callback
+    response.cookies.set('oauth_redirect_to', redirectTo, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 60 * 10 // 10 minutes
     });
     
-    const authUrl = `${GOOGLE_AUTH_URL}?${params.toString()}`;
+    response.cookies.set('oauth_module', module, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 60 * 10 // 10 minutes
+    });
     
-    // Redirect to Google OAuth
-    return NextResponse.redirect(authUrl);
+    console.log(`🚀 Initiating Google OAuth for user ${user_id}, module: ${module}`);
+    
+    return response;
     
   } catch (error: any) {
     console.error('Google OAuth initiation error:', error);
+    
+    // Get module for error redirect
+    const { searchParams } = new URL(request.url);
+    const module = searchParams.get('module') || 'stock';
+    
     return NextResponse.redirect(
-      `${process.env.NEXT_PUBLIC_APP_URL}/stock/import?error=oauth_failed`
+      `${process.env.NEXT_PUBLIC_APP_URL}/${module}/import?error=oauth_failed`
     );
   }
 }

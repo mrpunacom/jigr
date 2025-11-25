@@ -55,6 +55,37 @@ const nextConfig = {
     // your project has ESLint errors.
     ignoreDuringBuilds: true,
   },
+  
+  // Build performance optimizations
+  experimental: {
+    // Enable build worker threads for faster builds
+    workerThreads: false,
+    // Optimize CSS imports
+    optimizeCss: true,
+    // Enable build cache
+    forceSwcTransforms: true,
+  },
+  
+  // Compiler optimizations
+  compiler: {
+    // Remove console.logs in production builds
+    removeConsole: process.env.NODE_ENV === 'production' ? {
+      exclude: ['error', 'warn'],
+    } : false,
+  },
+  
+  // Bundle analyzer setup for monitoring build sizes
+  webpack: (config, { dev }) => {
+    // Only in development for better DX
+    if (dev) {
+      config.watchOptions = {
+        poll: 1000,
+        aggregateTimeout: 300,
+      }
+    }
+    
+    return config
+  },
 }
 
 module.exports = nextConfig

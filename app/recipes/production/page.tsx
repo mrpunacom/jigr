@@ -7,11 +7,6 @@ import { ModuleCard, StatCard } from '../../components/ModuleCard'
 import { useAuth } from '../../hooks/useAuth'
 import { StandardPageWrapper } from '@/app/components/UniversalPageWrapper'
 import { 
-  ArrowLeft, Factory, Clock, AlertTriangle, 
-  CheckCircle, Package, Calendar, Beaker,
-  Calculator, TrendingDown, TrendingUp, Info
-} from 'lucide-react'
-import { 
   SubRecipeWithDetails, 
   SubRecipesResponse, 
   ProductionRequest,
@@ -190,7 +185,7 @@ function ProductionPageContent() {
 
   if (authLoading || loading) {
     return (
-      <StandardPageWrapper moduleName="recipes" currentPage="production">
+      <StandardPageWrapper moduleName="RECIPES" currentPage="production">
         <div className="container mx-auto px-4 py-6">
           <LoadingSpinner />
         </div>
@@ -199,7 +194,7 @@ function ProductionPageContent() {
   }
 
   return (
-    <StandardPageWrapper moduleName="recipes" currentPage="production">
+    <StandardPageWrapper moduleName="RECIPES" currentPage="production">
       
       <div className="container mx-auto px-4 py-6 space-y-6">
         {/* Header Actions */}
@@ -208,7 +203,7 @@ function ProductionPageContent() {
             onClick={() => router.push('/recipes/sub-recipes')}
             className="inline-flex items-center text-gray-600 hover:text-gray-900"
           >
-            <ArrowLeft className="h-4 w-4 mr-2" />
+            <span className="icon-[tabler--arrow-left] h-4 w-4 mr-2"></span>
             Back to Sub-Recipes
           </button>
         </div>
@@ -216,7 +211,7 @@ function ProductionPageContent() {
         {/* Success Message */}
         {success && (
           <div className="bg-green-100 border border-green-200 text-green-800 px-4 py-3 rounded-lg flex items-center">
-            <CheckCircle className="h-5 w-5 mr-3 flex-shrink-0" />
+            <span className="icon-[tabler--check] h-5 w-5 mr-3 flex-shrink-0"></span>
             <div>
               <p className="font-medium">Production Recorded Successfully!</p>
               <p className="text-sm">{success}</p>
@@ -227,7 +222,7 @@ function ProductionPageContent() {
         {/* Error Message */}
         {error && (
           <div className="bg-red-100 border border-red-200 text-red-800 px-4 py-3 rounded-lg flex items-center">
-            <AlertTriangle className="h-5 w-5 mr-3 flex-shrink-0" />
+            <span className="icon-[tabler--alert-triangle] h-5 w-5 mr-3 flex-shrink-0"></span>
             <div>
               <p className="font-medium">Error</p>
               <p className="text-sm">{error}</p>
@@ -239,7 +234,7 @@ function ProductionPageContent() {
           {/* Sub-Recipe Selection */}
           <ModuleCard className="p-6">
             <div className="flex items-center mb-4">
-              <Beaker className="h-5 w-5 text-gray-400 mr-2" />
+              <span className="icon-[tabler--flask] h-5 w-5 text-gray-400 mr-2"></span>
               <h2 className="text-lg font-semibold text-gray-900">Select Sub-Recipe</h2>
             </div>
 
@@ -300,7 +295,7 @@ function ProductionPageContent() {
           {selectedSubRecipe && (
             <ModuleCard className="p-6">
               <div className="flex items-center mb-4">
-                <Factory className="h-5 w-5 text-gray-400 mr-2" />
+                <span className="icon-[tabler--building-factory-2] h-5 w-5 text-gray-400 mr-2"></span>
                 <h2 className="text-lg font-semibold text-gray-900">Production Details</h2>
               </div>
 
@@ -330,9 +325,9 @@ function ProductionPageContent() {
                     <div className="mt-2">
                       <div className="flex items-center text-sm">
                         {yieldPercentage >= 95 ? (
-                          <TrendingUp className="h-4 w-4 text-green-600 mr-1" />
+                          <span className="icon-[tabler--trending-up] h-4 w-4 text-green-600 mr-1"></span>
                         ) : (
-                          <TrendingDown className="h-4 w-4 text-orange-600 mr-1" />
+                          <span className="icon-[tabler--trending-down] h-4 w-4 text-orange-600 mr-1"></span>
                         )}
                         <span className={`font-medium ${yieldPercentage >= 95 ? 'text-green-600' : 'text-orange-600'}`}>
                           Yield: {yieldPercentage.toFixed(1)}%
@@ -400,7 +395,7 @@ function ProductionPageContent() {
           {selectedSubRecipe && quantityProduced && (
             <ModuleCard theme="light" className="p-6">
               <div className="flex items-center mb-4">
-                <Calculator className="h-5 w-5 text-white mr-2" />
+                <span className="icon-[tabler--calculator] h-5 w-5 text-white mr-2"></span>
                 <h2 className="text-lg font-semibold text-white">Cost Analysis</h2>
               </div>
 
@@ -441,13 +436,13 @@ function ProductionPageContent() {
           {selectedSubRecipe && (
             <ModuleCard className="p-6">
               <div className="flex items-center mb-4">
-                <Package className="h-5 w-5 text-gray-400 mr-2" />
+                <span className="icon-[tabler--package] h-5 w-5 text-gray-400 mr-2"></span>
                 <h2 className="text-lg font-semibold text-gray-900">This Will Create</h2>
               </div>
 
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 space-y-3">
                 <div className="flex items-start">
-                  <Info className="h-5 w-5 text-blue-600 mr-3 mt-0.5 flex-shrink-0" />
+                  <span className="icon-[tabler--info-circle] h-5 w-5 text-blue-600 mr-3 mt-0.5 flex-shrink-0"></span>
                   <div className="text-sm text-blue-800">
                     <p className="font-medium mb-1">When you record this production:</p>
                     <ul className="space-y-1 list-disc list-inside ml-4">
@@ -485,7 +480,7 @@ function ProductionPageContent() {
                 </>
               ) : (
                 <>
-                  <Factory className="h-4 w-4 mr-2" />
+                  <span className="icon-[tabler--building-factory-2] h-4 w-4 mr-2"></span>
                   Record Production
                 </>
               )}

@@ -10,6 +10,7 @@ import { DesignTokens, getCardStyle, getTextStyle, getFormFieldStyle } from '@/l
 import { ConsolePageWrapper } from '@/app/components/UniversalPageWrapper'
 import { StatCard } from '@/app/components/ModuleCard'
 import ImageUploader from '@/app/components/ImageUploader'
+import { UniversalFooter } from '@/app/components/UniversalFooter'
 import { getThemedCardStyles, getModuleTheme } from '@/lib/theme-utils'
 import { FONT_FAMILY, FONT_SIZES, FONT_WEIGHTS, IOS_COLORS, SPACING, TOUCH_TARGETS } from '@/lib/apple-design-system'
 
@@ -398,6 +399,7 @@ export default function AdminConsolePage() {
 
       </div>
       
+      <UniversalFooter />
     </ConsolePageWrapper>
   )
 }

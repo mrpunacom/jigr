@@ -16,9 +16,11 @@
 
 'use client'
 
-import { ReactNode } from 'react'
+import { ReactNode, useState, useEffect } from 'react'
 import { getModuleConfig } from '@/lib/module-config'
-import { ModuleHeader } from './ModuleHeader'
+import { ModuleHeaderUniversal } from './ModuleHeaderUniversal'
+import { getUserClient } from '@/lib/auth-utils'
+import { supabase } from '@/lib/supabase'
 import { SPACING } from '@/lib/apple-design-system'
 
 interface OnboardingData {
@@ -114,6 +116,40 @@ export function UniversalPageWrapper({
   topSpacing = 'normal'
 }: UniversalPageWrapperProps) {
   
+  // Load user client data for header (same pattern as UPLOAD module)
+  const [user, setUser] = useState<any>(null)
+  const [userClient, setUserClient] = useState<any>(null)
+  
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession()
+        if (error) {
+          console.error('UniversalPageWrapper auth error:', error)
+          return
+        }
+        
+        if (session?.user) {
+          setUser(session.user)
+          
+          try {
+            const clientInfo = await getUserClient(session.user.id)
+            if (clientInfo) {
+              setUserClient(clientInfo)
+              console.log('✅ UniversalPageWrapper: User authenticated with company:', clientInfo.name)
+            }
+          } catch (error) {
+            console.error('Error loading client info in UniversalPageWrapper:', error)
+          }
+        }
+      } catch (error) {
+        console.error('UniversalPageWrapper: Authentication check failed:', error)
+      }
+    }
+    
+    checkAuth()
+  }, [])
+
   // Get module configuration
   const moduleConfig = getModuleConfig(moduleName)
   
@@ -151,10 +187,11 @@ export function UniversalPageWrapper({
         <div className={containerClass}>
           {!hideHeader && !customHeader && (
             <div style={{ marginBottom: SPACING.LG }}>
-              <ModuleHeader 
+              <ModuleHeaderUniversal 
                 module={moduleConfig}
                 currentPage={currentPage}
                 onboardingData={onboardingData}
+                userClient={userClient}
               />
             </div>
           )}
@@ -178,11 +215,14 @@ export function UniversalPageWrapper({
     return (
       <div className={`${variantClass} ${className}`} style={getContainerStyle()}>
         {!hideHeader && !customHeader && (
-          <ModuleHeader 
-            module={moduleConfig}
-            currentPage={currentPage}
-            onboardingData={onboardingData}
-          />
+          <div className={containerClass}>
+            <ModuleHeaderUniversal 
+              module={moduleConfig}
+              currentPage={currentPage}
+              onboardingData={onboardingData}
+              userClient={userClient}
+            />
+          </div>
         )}
         
         {customHeader && customHeader}
@@ -198,11 +238,13 @@ export function UniversalPageWrapper({
   return (
     <div className={`${variantClass} ${className}`} style={getContainerStyle()}>
       {!hideHeader && !customHeader && (
-        <ModuleHeader 
-          module={moduleConfig}
-          currentPage={currentPage}
-          onboardingData={onboardingData}
-        />
+        <div className={containerClass}>
+          <ModuleHeaderUniversal 
+            module={moduleConfig}
+            currentPage={currentPage}
+            onboardingData={onboardingData}
+          />
+        </div>
       )}
       
       {customHeader && customHeader}

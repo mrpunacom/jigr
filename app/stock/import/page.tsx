@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Upload, FileSpreadsheet, AlertCircle } from 'lucide-react';
+import { StandardPageWrapper } from '@/app/components/UniversalPageWrapper';
 
 export default function ImportPage() {
   const [file, setFile] = useState<File | null>(null);
@@ -71,10 +71,10 @@ export default function ImportPage() {
 
   // Show upload interface
   return (
-    <div className="max-w-4xl mx-auto p-6">
+    <StandardPageWrapper moduleName="STOCK" currentPage="import">
       <div className="bg-white rounded-lg shadow-lg p-8">
         <div className="text-center mb-8">
-          <FileSpreadsheet className="w-16 h-16 mx-auto mb-4 text-blue-600" />
+          <span className="icon-[tabler--file-spreadsheet] w-16 h-16 mx-auto mb-4 text-blue-600"></span>
           <h1 className="text-3xl font-bold mb-2">Import Your Inventory</h1>
           <p className="text-gray-600">
             Connect Google Sheets or upload a file
@@ -134,7 +134,7 @@ export default function ImportPage() {
             htmlFor="file-upload"
             className="cursor-pointer flex flex-col items-center"
           >
-            <Upload className="w-12 h-12 text-gray-400 mb-4" />
+            <span className="icon-[tabler--upload] w-12 h-12 text-gray-400 mb-4"></span>
             <span className="text-lg font-medium text-gray-700 mb-2">
               {file ? file.name : 'Click to upload or drag and drop'}
             </span>
@@ -146,7 +146,7 @@ export default function ImportPage() {
 
         {error && (
           <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6 flex items-start gap-3">
-            <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+            <span className="icon-[tabler--alert-circle] w-5 h-5 text-red-600 flex-shrink-0 mt-0.5"></span>
             <div className="flex-1">
               <div className="font-medium text-red-900">Error</div>
               <div className="text-sm text-red-700">{error}</div>
@@ -199,6 +199,6 @@ export default function ImportPage() {
           </button>
         )}
       </div>
-    </div>
+    </StandardPageWrapper>
   );
 }

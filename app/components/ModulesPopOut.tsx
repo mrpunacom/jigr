@@ -68,14 +68,21 @@ export function ModulesPopOut({ isVisible, onClose, triggerElement }: ModulesPop
             <span className="text-white text-xs">Stock</span>
           </div>
           
-          <div className="flex flex-col items-center p-3 opacity-30">
+          <button
+            onClick={() => {
+              window.location.href = '/vendors/console'
+              onClose()
+            }}
+            className="flex flex-col items-center p-3 hover:bg-white/10 rounded-lg transition-all duration-200 TouchTarget"
+            title="Vendors Module - Supplier and vendor management"
+          >
             <img 
               src={getMappedIcon('JiGRtemp', 40)} 
-              alt="Temperature" 
+              alt="Vendors" 
               className="w-10 h-10 object-contain mb-1"
             />
-            <span className="text-white text-xs">Temp</span>
-          </div>
+            <span className="text-white text-xs font-medium">Vendors</span>
+          </button>
           
           {/* Row 2 */}
           <div className="flex flex-col items-center p-3 opacity-30">

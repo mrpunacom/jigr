@@ -3,7 +3,7 @@
 import { ConsolePageWrapper } from '@/app/components/UniversalPageWrapper'
 import { ModuleCard } from '@/app/components/ModuleCard'
 import { PrimaryButton, SecondaryButton } from '@/app/components/AppleButton'
-import { Package, TrendingDown, AlertTriangle, BarChart3, Plus, FileText, Eye } from 'lucide-react'
+import { UniversalFooter } from '@/app/components/UniversalFooter'
 import { FONT_FAMILY, FONT_SIZES, FONT_WEIGHTS, IOS_COLORS, SPACING } from '@/lib/apple-design-system'
 
 export default function StockConsolePage() {
@@ -16,7 +16,7 @@ export default function StockConsolePage() {
         <ModuleCard>
           <div className="text-center">
             <div className="flex items-center justify-center mb-4">
-              <Package className="h-8 w-8 text-blue-600" />
+              <span className="icon-[tabler--package] h-8 w-8 text-blue-600"></span>
             </div>
             <h3 style={{
               fontFamily: FONT_FAMILY,
@@ -54,7 +54,7 @@ export default function StockConsolePage() {
         <ModuleCard>
           <div className="text-center">
             <div className="flex items-center justify-center mb-4">
-              <TrendingDown className="h-8 w-8 text-orange-600" />
+              <span className="icon-[tabler--trending-down] h-8 w-8 text-orange-600"></span>
             </div>
             <h3 style={{
               fontFamily: FONT_FAMILY,
@@ -92,7 +92,7 @@ export default function StockConsolePage() {
         <ModuleCard>
           <div className="text-center">
             <div className="flex items-center justify-center mb-4">
-              <AlertTriangle className="h-8 w-8 text-red-600" />
+              <span className="icon-[tabler--alert-triangle] h-8 w-8 text-red-600"></span>
             </div>
             <h3 style={{
               fontFamily: FONT_FAMILY,
@@ -180,7 +180,7 @@ export default function StockConsolePage() {
             }}>
               <PrimaryButton 
                 fullWidth 
-                leftIcon={<Plus size={16} />}
+                leftIcon={<span className="icon-[tabler--plus] w-4 h-4"></span>}
                 aria-label="Add a new inventory item"
               >
                 Add New Item
@@ -188,7 +188,7 @@ export default function StockConsolePage() {
               
               <SecondaryButton 
                 fullWidth 
-                leftIcon={<BarChart3 size={16} />}
+                leftIcon={<span className="icon-[tabler--chart-bar] w-4 h-4"></span>}
                 aria-label="View all inventory items"
               >
                 View All Items
@@ -196,7 +196,7 @@ export default function StockConsolePage() {
               
               <SecondaryButton 
                 fullWidth 
-                leftIcon={<FileText size={16} />}
+                leftIcon={<span className="icon-[tabler--file-text] w-4 h-4"></span>}
                 aria-label="Generate and view stock reports"
               >
                 Stock Reports
@@ -205,6 +205,8 @@ export default function StockConsolePage() {
           </div>
         </ModuleCard>
       </div>
+      
+      <UniversalFooter />
     </ConsolePageWrapper>
   )
 }

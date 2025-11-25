@@ -2,20 +2,17 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import { supabase } from '@/lib/supabase'
+import { useAuth } from '../../hooks/useAuth'
 import { SearchInput } from '../../components/SearchInput'
 import { EmptyState } from '../../components/EmptyState'
 import { LoadingSpinner } from '../../components/LoadingSpinner'
 import { ModuleCard, StatCard } from '../../components/ModuleCard'
 import { StandardPageWrapper } from '@/app/components/UniversalPageWrapper'
-import { 
-  Beaker, DollarSign, Package, Users, 
-  Plus, Factory, Clock, ChefHat, TrendingUp 
-} from 'lucide-react'
 import { SubRecipeWithDetails, SubRecipesResponse } from '../../../types/RecipeTypes'
 
 export default function SubRecipesPage() {
   const router = useRouter()
+  const { session, loading: authLoading } = useAuth()
   const [subRecipes, setSubRecipes] = useState<SubRecipeWithDetails[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
@@ -34,14 +31,10 @@ export default function SubRecipesPage() {
   ]
 
   const fetchSubRecipes = useCallback(async () => {
+    if (!session?.access_token) return
+
     try {
       setLoading(true)
-      
-      const { data: { session } } = await supabase.auth.getSession()
-      if (!session?.user) {
-        router.push('/login')
-        return
-      }
 
       const params = new URLSearchParams({
         page: currentPage.toString(),
@@ -74,11 +67,13 @@ export default function SubRecipesPage() {
     } finally {
       setLoading(false)
     }
-  }, [router, currentPage, searchTerm, selectedType, sortBy])
+  }, [session?.access_token, currentPage, searchTerm, selectedType, sortBy])
 
   useEffect(() => {
-    fetchSubRecipes()
-  }, [fetchSubRecipes])
+    if (!authLoading && session) {
+      fetchSubRecipes()
+    }
+  }, [authLoading, session, fetchSubRecipes])
 
   // Reset to page 1 when filters change
   useEffect(() => {
@@ -127,9 +122,9 @@ export default function SubRecipesPage() {
     }
   }
 
-  if (loading) {
+  if (authLoading || loading) {
     return (
-      <StandardPageWrapper moduleName="recipes" currentPage="sub-recipes">
+      <StandardPageWrapper moduleName="RECIPES" currentPage="sub-recipes">
         <div className="container mx-auto px-4 py-6">
           <LoadingSpinner />
         </div>
@@ -138,7 +133,7 @@ export default function SubRecipesPage() {
   }
 
   return (
-    <StandardPageWrapper moduleName="recipes" currentPage="sub-recipes">
+    <StandardPageWrapper moduleName="RECIPES" currentPage="sub-recipes">
       
       <div className="container mx-auto px-4 py-6 space-y-6">
         {/* Summary Cards */}
@@ -146,7 +141,7 @@ export default function SubRecipesPage() {
           <StatCard accentColor="blue">
             <div className="flex items-center">
               <div className="p-2 bg-blue-100 rounded-lg">
-                <Beaker className="h-5 w-5 text-blue-600" />
+                <span className="icon-[tabler--flask] h-5 w-5 text-blue-600"></span>
               </div>
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-900">Total Sub-Recipes</p>
@@ -158,7 +153,7 @@ export default function SubRecipesPage() {
           <StatCard accentColor="green">
             <div className="flex items-center">
               <div className="p-2 bg-green-100 rounded-lg">
-                <DollarSign className="h-5 w-5 text-green-600" />
+                <span className="icon-[tabler--currency-dollar] h-5 w-5 text-green-600"></span>
               </div>
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-900">Avg Cost/Unit</p>
@@ -175,7 +170,7 @@ export default function SubRecipesPage() {
           <StatCard accentColor="orange">
             <div className="flex items-center">
               <div className="p-2 bg-orange-100 rounded-lg">
-                <Package className="h-5 w-5 text-orange-600" />
+                <span className="icon-[tabler--package] h-5 w-5 text-orange-600"></span>
               </div>
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-900">In Use</p>
@@ -189,7 +184,7 @@ export default function SubRecipesPage() {
           <StatCard accentColor="purple">
             <div className="flex items-center">
               <div className="p-2 bg-purple-100 rounded-lg">
-                <TrendingUp className="h-5 w-5 text-purple-600" />
+                <span className="icon-[tabler--trending-up] h-5 w-5 text-purple-600"></span>
               </div>
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-900">Types</p>
@@ -256,7 +251,7 @@ export default function SubRecipesPage() {
               }}
               className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
-              <Plus className="h-4 w-4 mr-2" />
+              <span className="icon-[tabler--plus] h-4 w-4 mr-2"></span>
               New Sub-Recipe
             </button>
           </div>
@@ -279,7 +274,7 @@ export default function SubRecipesPage() {
                 }}
                 className="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
               >
-                <Plus className="h-4 w-4 mr-2" />
+                <span className="icon-[tabler--plus] h-4 w-4 mr-2"></span>
                 Add Sub-Recipe
               </button>
             }
@@ -348,7 +343,7 @@ export default function SubRecipesPage() {
 
                       {subRecipe.prep_time_minutes && (
                         <div className="flex items-center text-sm text-white/70">
-                          <Clock className="h-4 w-4 mr-1" />
+                          <span className="icon-[tabler--clock] h-4 w-4 mr-1"></span>
                           <span>Prep: {Math.floor(subRecipe.prep_time_minutes / 60)}h {subRecipe.prep_time_minutes % 60}m</span>
                         </div>
                       )}
@@ -369,7 +364,7 @@ export default function SubRecipesPage() {
                         }}
                         className="flex-1 px-3 py-2 text-sm bg-white/10 text-white rounded-md hover:bg-white/20 transition-colors"
                       >
-                        <ChefHat className="h-4 w-4 mr-1 inline" />
+                        <span className="icon-[tabler--chef-hat] h-4 w-4 mr-1 inline"></span>
                         View
                       </button>
                       <button
@@ -379,7 +374,7 @@ export default function SubRecipesPage() {
                         }}
                         className="flex-1 px-3 py-2 text-sm bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
                       >
-                        <Factory className="h-4 w-4 mr-1 inline" />
+                        <span className="icon-[tabler--building-factory-2] h-4 w-4 mr-1 inline"></span>
                         Produce
                       </button>
                     </div>

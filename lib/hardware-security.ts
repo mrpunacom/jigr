@@ -126,12 +126,16 @@ export class HardwareSecurity {
 
       // Fallback: try to access camera briefly to test
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({ 
+        const nav = navigator as any;
+        if (!nav.mediaDevices?.getUserMedia) {
+          throw new Error('getUserMedia not supported');
+        }
+        const stream = await nav.mediaDevices.getUserMedia({ 
           video: { width: 320, height: 240 } 
         });
         
         // Stop stream immediately
-        stream.getTracks().forEach(track => track.stop());
+        stream.getTracks().forEach((track: any) => track.stop());
         
         return {
           name: 'Camera Permissions',

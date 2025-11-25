@@ -3,14 +3,11 @@
 import { useState, useEffect } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
-import { getModuleConfig } from '@/lib/module-config'
-import { ModuleHeader } from '@/app/components/ModuleHeader'
-import { ResponsiveLayout } from '@/app/components/ResponsiveLayout'
+import { StandardPageWrapper } from '@/app/components/UniversalPageWrapper'
 import { ModuleCard, StatCard, ActionCard } from '@/app/components/ModuleCard'
 import { DataTable } from '@/app/components/DataTable'
 import { StockLevelIndicator } from '@/app/components/StockLevelIndicator'
 import { InventoryItem, InventoryBatch, InventoryCount, VendorItem } from '@/types/InventoryTypes'
-import { ArrowLeft, Clipboard, Edit, MoreHorizontal, Clock, Package, Users, History } from 'lucide-react'
 
 export default function StockItemDetailPage() {
   const router = useRouter()
@@ -24,7 +21,6 @@ export default function StockItemDetailPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  const stockModule = getModuleConfig('stock')
 
   useEffect(() => {
     if (itemId) {
@@ -250,35 +246,26 @@ export default function StockItemDetailPage() {
 
   if (loading) {
     return (
-      <ResponsiveLayout>
-        <ModuleHeader module={stockModule!} currentPage="items" />
-        <main className="max-w-7xl mx-auto px-4 py-6">
-          <div className="flex items-center justify-center py-12">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
-          </div>
-        </main>
-      </ResponsiveLayout>
+      <StandardPageWrapper moduleName="STOCK" currentPage="item-detail">
+        <div className="flex items-center justify-center py-12">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+        </div>
+      </StandardPageWrapper>
     )
   }
 
   if (error || !item) {
     return (
-      <ResponsiveLayout>
-        <ModuleHeader module={stockModule!} currentPage="items" />
-        <main className="max-w-7xl mx-auto px-4 py-6">
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg">
-            {error || 'Item not found'}
-          </div>
-        </main>
-      </ResponsiveLayout>
+      <StandardPageWrapper moduleName="STOCK" currentPage="item-detail">
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg">
+          {error || 'Item not found'}
+        </div>
+      </StandardPageWrapper>
     )
   }
 
   return (
-    <ResponsiveLayout>
-      <ModuleHeader module={stockModule!} currentPage="items" />
-      
-      <main className="max-w-7xl mx-auto px-4 py-6">
+    <StandardPageWrapper moduleName="STOCK" currentPage="item-detail">
         <div className="space-y-6">
           {/* Header with back button */}
           <div className="flex items-center space-x-4">
@@ -287,7 +274,7 @@ export default function StockItemDetailPage() {
               className="p-2 text-white hover:bg-white/10 rounded-lg transition-colors"
               style={{ minHeight: '44px', minWidth: '44px' }}
             >
-              <ArrowLeft className="h-5 w-5" />
+              <span className="icon-[tabler--arrow-left] h-5 w-5"></span>
             </button>
             <div>
               <h1 className="text-2xl font-bold text-white">{item.item_name}</h1>
@@ -357,7 +344,7 @@ export default function StockItemDetailPage() {
                     {item.count_date && (
                       <div className="text-sm text-white/70">
                         <div className="flex items-center justify-center space-x-2">
-                          <Clock className="h-4 w-4" />
+                          <span className="icon-[tabler--clock] h-4 w-4"></span>
                           <span>Last counted: {new Date(item.count_date).toLocaleDateString()}</span>
                         </div>
                       </div>
@@ -372,7 +359,7 @@ export default function StockItemDetailPage() {
                 className="text-center"
               >
                 <div className="flex items-center justify-center space-x-2 text-white">
-                  <Clipboard className="h-5 w-5" />
+                  <span className="icon-[tabler--clipboard] h-5 w-5"></span>
                   <span className="font-medium">Count This Item</span>
                 </div>
               </ActionCard>
@@ -382,7 +369,7 @@ export default function StockItemDetailPage() {
           {/* Active Batches */}
           <ModuleCard theme="light" className="p-6">
             <div className="flex items-center space-x-2 mb-4">
-              <Package className="h-5 w-5 text-white" />
+              <span className="icon-[tabler--package] h-5 w-5 text-white"></span>
               <h3 className="text-lg font-semibold text-white">Active Batches</h3>
             </div>
             <DataTable
@@ -395,7 +382,7 @@ export default function StockItemDetailPage() {
           {/* Vendor Information */}
           <ModuleCard theme="light" className="p-6">
             <div className="flex items-center space-x-2 mb-4">
-              <Users className="h-5 w-5 text-white" />
+              <span className="icon-[tabler--users] h-5 w-5 text-white"></span>
               <h3 className="text-lg font-semibold text-white">Vendors</h3>
             </div>
             <DataTable
@@ -408,7 +395,7 @@ export default function StockItemDetailPage() {
           {/* Count History */}
           <ModuleCard theme="light" className="p-6">
             <div className="flex items-center space-x-2 mb-4">
-              <History className="h-5 w-5 text-white" />
+              <span className="icon-[tabler--history] h-5 w-5 text-white"></span>
               <h3 className="text-lg font-semibold text-white">Count History</h3>
               <span className="text-sm text-white/70">(Last 10 counts)</span>
             </div>
@@ -427,7 +414,7 @@ export default function StockItemDetailPage() {
               className="sm:flex-1"
             >
               <div className="flex items-center justify-center space-x-2 text-white">
-                <Edit className="h-5 w-5" />
+                <span className="icon-[tabler--edit] h-5 w-5"></span>
                 <span className="font-medium">Edit Item</span>
               </div>
             </ActionCard>
@@ -438,13 +425,12 @@ export default function StockItemDetailPage() {
               className="sm:flex-1"
             >
               <div className="flex items-center justify-center space-x-2 text-white">
-                <MoreHorizontal className="h-5 w-5" />
+                <span className="icon-[tabler--dots] h-5 w-5"></span>
                 <span className="font-medium">More Options</span>
               </div>
             </ActionCard>
           </div>
         </div>
-      </main>
-    </ResponsiveLayout>
+    </StandardPageWrapper>
   )
 }

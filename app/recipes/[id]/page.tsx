@@ -8,11 +8,6 @@ import { ModuleCard, StatCard } from '../../components/ModuleCard'
 import { useAuth } from '../../hooks/useAuth'
 import { StandardPageWrapper } from '@/app/components/UniversalPageWrapper'
 import { 
-  ArrowLeft, ChefHat, Clock, Users, DollarSign, 
-  Calculator, Package, FileText, Printer, Edit,
-  ExternalLink, Utensils
-} from 'lucide-react'
-import { 
   RecipeWithDetails, 
   RecipeIngredientWithDetails, 
   RecipeDetailResponse,
@@ -239,7 +234,7 @@ export default function RecipeDetailPage() {
               onClick={() => router.push('/recipes')}
               className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
-              <ArrowLeft className="h-4 w-4 mr-2" />
+              <span className="icon-[tabler--arrow-left] h-4 w-4 mr-2"></span>
               Back to Recipes
             </button>
           </ModuleCard>
@@ -260,7 +255,7 @@ export default function RecipeDetailPage() {
             onClick={() => router.push('/recipes')}
             className="inline-flex items-center text-gray-600 hover:text-gray-900"
           >
-            <ArrowLeft className="h-4 w-4 mr-2" />
+            <span className="icon-[tabler--arrow-left] h-4 w-4 mr-2"></span>
             Back to Recipes
           </button>
           
@@ -269,7 +264,7 @@ export default function RecipeDetailPage() {
               onClick={handlePrint}
               className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
-              <Printer className="h-4 w-4 mr-2" />
+              <span className="icon-[tabler--printer] h-4 w-4 mr-2"></span>
               Print
             </button>
             
@@ -280,7 +275,7 @@ export default function RecipeDetailPage() {
               }}
               className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
-              <Edit className="h-4 w-4 mr-2" />
+              <span className="icon-[tabler--edit] h-4 w-4 mr-2"></span>
               Edit Recipe
             </button>
           </div>
@@ -300,7 +295,7 @@ export default function RecipeDetailPage() {
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <ChefHat className="h-20 w-20 text-gray-400" />
+                  <span className="icon-[tabler--chef-hat] h-20 w-20 text-gray-400"></span>
                 )}
               </div>
               
@@ -316,7 +311,7 @@ export default function RecipeDetailPage() {
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
                     <div className="flex items-center text-gray-600 mb-1">
-                      <Users className="h-4 w-4 mr-1" />
+                      <span className="icon-[tabler--users] h-4 w-4 mr-1"></span>
                       Portions
                     </div>
                     <p className="font-medium">{recipe.number_of_portions}</p>
@@ -329,7 +324,7 @@ export default function RecipeDetailPage() {
                   
                   <div>
                     <div className="flex items-center text-gray-600 mb-1">
-                      <Clock className="h-4 w-4 mr-1" />
+                      <span className="icon-[tabler--clock] h-4 w-4 mr-1"></span>
                       Prep Time
                     </div>
                     <p className="font-medium">{formatTime(recipe.prep_time_minutes)}</p>
@@ -348,7 +343,7 @@ export default function RecipeDetailPage() {
           <div className="lg:col-span-2">
             <ModuleCard theme="light" className="p-6">
               <div className="flex items-center mb-6">
-                <Calculator className="h-5 w-5 text-white mr-2" />
+                <span className="icon-[tabler--calculator] h-5 w-5 text-white mr-2"></span>
                 <h2 className="text-lg font-semibold text-white">Cost Analysis</h2>
               </div>
 
@@ -401,7 +396,7 @@ export default function RecipeDetailPage() {
           <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
             <div className="flex items-center justify-between">
               <div className="flex items-center">
-                <Package className="h-5 w-5 text-gray-400 mr-2" />
+                <span className="icon-[tabler--package] h-5 w-5 text-gray-400 mr-2"></span>
                 <h2 className="text-lg font-semibold text-gray-900">
                   Ingredients ({ingredients.length})
                 </h2>
@@ -459,11 +454,11 @@ export default function RecipeDetailPage() {
                           <div className="flex-shrink-0 h-8 w-8 mr-3">
                             {ingredient.ingredient_type === 'sub_recipe' ? (
                               <div className="h-8 w-8 bg-green-100 rounded-full flex items-center justify-center">
-                                <Utensils className="h-4 w-4 text-green-600" />
+                                <span className="icon-[tabler--tools-kitchen-2] h-4 w-4 text-green-600"></span>
                               </div>
                             ) : (
                               <div className="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center">
-                                <Package className="h-4 w-4 text-blue-600" />
+                                <span className="icon-[tabler--package] h-4 w-4 text-blue-600"></span>
                               </div>
                             )}
                           </div>
@@ -504,7 +499,7 @@ export default function RecipeDetailPage() {
                           }}
                           className="text-blue-600 hover:text-blue-900"
                         >
-                          <ExternalLink className="h-4 w-4" />
+                          <span className="icon-[tabler--external-link] h-4 w-4"></span>
                         </button>
                       </td>
                     </tr>
@@ -520,7 +515,7 @@ export default function RecipeDetailPage() {
           <ModuleCard>
             <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
               <div className="flex items-center">
-                <FileText className="h-5 w-5 text-gray-400 mr-2" />
+                <span className="icon-[tabler--file-text] h-5 w-5 text-gray-400 mr-2"></span>
                 <h2 className="text-lg font-semibold text-gray-900">Instructions</h2>
               </div>
             </div>

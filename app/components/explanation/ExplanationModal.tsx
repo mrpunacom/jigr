@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
-import { X, ExternalLink, ArrowRight, Lightbulb, Zap, AlertTriangle, Info, CheckCircle, Star } from 'lucide-react';
+// Removed Lucide React imports - using Tabler icons via CSS classes
 import { ExplanationContent, ExplanationFeature, ExplanationQuickAction, ExplanationTip, PageContext } from '@/lib/explanationTypes';
 
 interface ExplanationModalProps {
@@ -98,11 +98,11 @@ export default function ExplanationModal({
   // Get icon for tip type
   const getTipIcon = (tip: ExplanationTip) => {
     switch (tip.type) {
-      case 'warning': return <AlertTriangle className="w-4 h-4 text-yellow-500" />;
-      case 'success': return <CheckCircle className="w-4 h-4 text-green-500" />;
-      case 'info': return <Info className="w-4 h-4 text-blue-500" />;
+      case 'warning': return <span className="icon-[tabler--alert-triangle] w-4 h-4 text-yellow-500"></span>;
+      case 'success': return <span className="icon-[tabler--circle-check] w-4 h-4 text-green-500"></span>;
+      case 'info': return <span className="icon-[tabler--info-circle] w-4 h-4 text-blue-500"></span>;
       case 'tip':
-      default: return <Lightbulb className="w-4 h-4 text-purple-500" />;
+      default: return <span className="icon-[tabler--bulb] w-4 h-4 text-purple-500"></span>;
     }
   };
 
@@ -164,7 +164,7 @@ export default function ExplanationModal({
             }}
             aria-label="Close explanation"
           >
-            <X className="w-6 h-6 text-gray-500" />
+            <span className="icon-[tabler--x] w-6 h-6 text-gray-500"></span>
           </button>
         </div>
 
@@ -202,7 +202,7 @@ export default function ExplanationModal({
                         <h4 className="font-semibold text-gray-900 mb-1 flex items-center gap-2">
                           {feature.title}
                           {feature.importance === 'high' && (
-                            <Star className="w-4 h-4 text-yellow-500" />
+                            <span className="icon-[tabler--star] w-4 h-4 text-yellow-500"></span>
                           )}
                           {feature.isNew && (
                             <span className="px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">
@@ -220,7 +220,7 @@ export default function ExplanationModal({
                             style={{ minHeight: '32px' }} // Touch target
                           >
                             {feature.action.label || 'Learn More'}
-                            <ArrowRight className="w-3 h-3" />
+                            <span className="icon-[tabler--arrow-right] w-3 h-3"></span>
                           </button>
                         )}
                       </div>
@@ -235,7 +235,7 @@ export default function ExplanationModal({
           {content.quickActions && content.quickActions.length > 0 && (
             <div className="p-6 border-b border-gray-100">
               <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                <Zap className="w-5 h-5 text-purple-500" />
+                <span className="icon-[tabler--bolt] w-5 h-5 text-purple-500"></span>
                 Quick Actions
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -274,7 +274,7 @@ export default function ExplanationModal({
           {content.tips && content.tips.length > 0 && (
             <div className="p-6 border-b border-gray-100">
               <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                <Lightbulb className="w-5 h-5 text-yellow-500" />
+                <span className="icon-[tabler--bulb] w-5 h-5 text-yellow-500"></span>
                 Tips & Tricks
               </h3>
               <div className="space-y-3">
@@ -296,7 +296,7 @@ export default function ExplanationModal({
                             style={{ minHeight: '32px' }} // Touch target
                           >
                             {tip.action.label || 'Learn More'}
-                            <ExternalLink className="w-3 h-3" />
+                            <span className="icon-[tabler--external-link] w-3 h-3"></span>
                           </button>
                         )}
                       </div>
@@ -341,7 +341,7 @@ export default function ExplanationModal({
                           {page.description}
                         </p>
                       </div>
-                      <ArrowRight className="w-4 h-4 text-gray-400 group-hover:text-orange-500 flex-shrink-0 ml-2" />
+                      <span className="icon-[tabler--arrow-right] w-4 h-4 text-gray-400 group-hover:text-orange-500 flex-shrink-0 ml-2"></span>
                     </div>
                   </button>
                 ))}

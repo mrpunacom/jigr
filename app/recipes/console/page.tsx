@@ -2,7 +2,7 @@
 
 import { ConsolePageWrapper } from '@/app/components/UniversalPageWrapper'
 import { ModuleCard } from '@/app/components/ModuleCard'
-import { ChefHat, DollarSign, Clock, Users, Plus } from 'lucide-react'
+import { UniversalFooter } from '@/app/components/UniversalFooter'
 
 export default function RecipesConsolePage() {
   return (
@@ -14,7 +14,7 @@ export default function RecipesConsolePage() {
         <ModuleCard>
           <div className="text-center">
             <div className="flex items-center justify-center mb-4">
-              <ChefHat className="h-8 w-8 text-blue-600" />
+              <span className="icon-[tabler--chef-hat] h-8 w-8 text-blue-600"></span>
             </div>
             <h3 className="text-lg font-semibold text-gray-800 mb-2">Total Recipes</h3>
             <div className="text-3xl font-bold text-blue-600 mb-2">24</div>
@@ -26,7 +26,7 @@ export default function RecipesConsolePage() {
         <ModuleCard>
           <div className="text-center">
             <div className="flex items-center justify-center mb-4">
-              <DollarSign className="h-8 w-8 text-green-600" />
+              <span className="icon-[tabler--currency-dollar] h-8 w-8 text-green-600"></span>
             </div>
             <h3 className="text-lg font-semibold text-gray-800 mb-2">Avg Food Cost</h3>
             <div className="text-3xl font-bold text-green-600 mb-2">28.5%</div>
@@ -38,7 +38,7 @@ export default function RecipesConsolePage() {
         <ModuleCard>
           <div className="text-center">
             <div className="flex items-center justify-center mb-4">
-              <Clock className="h-8 w-8 text-orange-600" />
+              <span className="icon-[tabler--clock] h-8 w-8 text-orange-600"></span>
             </div>
             <h3 className="text-lg font-semibold text-gray-800 mb-2">Avg Prep Time</h3>
             <div className="text-3xl font-bold text-orange-600 mb-2">45m</div>
@@ -77,21 +77,23 @@ export default function RecipesConsolePage() {
             <h3 className="text-lg font-semibold text-gray-800 mb-4">Quick Actions</h3>
             <div className="space-y-3">
               <button className="w-full flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                <Plus className="h-4 w-4 mr-2" />
+                <span className="icon-[tabler--plus] h-4 w-4 mr-2"></span>
                 Add New Recipe
               </button>
               <button className="w-full flex items-center justify-center px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
-                <Users className="h-4 w-4 mr-2" />
+                <span className="icon-[tabler--users] h-4 w-4 mr-2"></span>
                 View All Recipes
               </button>
               <button className="w-full flex items-center justify-center px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
-                <DollarSign className="h-4 w-4 mr-2" />
+                <span className="icon-[tabler--currency-dollar] h-4 w-4 mr-2"></span>
                 Cost Analysis
               </button>
             </div>
           </div>
         </ModuleCard>
       </div>
+      
+      <UniversalFooter />
     </ConsolePageWrapper>
   )
 }

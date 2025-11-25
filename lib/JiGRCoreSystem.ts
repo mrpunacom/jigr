@@ -11,7 +11,7 @@ import { moduleRegistry } from '@/lib/ModuleRegistry'
 
 // Core module imports
 import { getAuthenticationCore } from './Authentication'
-import { getDatabaseModule } from './Database'
+// import { getDatabaseModule } from './Database'
 import { getDesignSystemModule } from './DesignSystem'
 
 // =============================================================================
@@ -70,7 +70,7 @@ export interface ModuleStatus {
 export class JiGRCoreSystem extends BaseJiGRModule {
   private config: JiGRCoreSystemConfig
   private authModule: any
-  private dbModule: any
+  // private dbModule: any
   private designModule: any
   private systemStatus: CoreSystemStatus
   private healthCheckTimer?: NodeJS.Timeout
@@ -242,7 +242,7 @@ export class JiGRCoreSystem extends BaseJiGRModule {
     try {
       // Get module instances
       this.authModule = getAuthenticationCore()
-      this.dbModule = getDatabaseModule()
+      // this.dbModule = getDatabaseModule()
       this.designModule = getDesignSystemModule()
       
       // Register modules with registry
@@ -306,7 +306,7 @@ export class JiGRCoreSystem extends BaseJiGRModule {
     
     // Clean up all core modules
     if (this.authModule?.isLoaded) await this.authModule.cleanup()
-    if (this.dbModule?.isLoaded) await this.dbModule.cleanup()
+    // if (this.dbModule?.isLoaded) await this.dbModule.cleanup()
     if (this.designModule?.isLoaded) await this.designModule.cleanup()
     
     this.logActivity('JiGR Core System cleanup completed')
@@ -320,9 +320,9 @@ export class JiGRCoreSystem extends BaseJiGRModule {
       await this.authModule.configure(config.authentication)
     }
     
-    if (config.database && this.dbModule) {
-      await this.dbModule.configure(config.database)
-    }
+    // if (config.database && this.dbModule) {
+    //   await this.dbModule.configure(config.database)
+    // }
     
     if (config.designSystem && this.designModule) {
       await this.designModule.configure(config.designSystem)
@@ -358,7 +358,7 @@ export class JiGRCoreSystem extends BaseJiGRModule {
     try {
       await Promise.all([
         registry.registerModule(this.authModule),
-        registry.registerModule(this.dbModule),
+        // registry.registerModule(this.dbModule),
         registry.registerModule(this.designModule)
       ])
       
@@ -388,9 +388,9 @@ export class JiGRCoreSystem extends BaseJiGRModule {
     }
     
     // Database module (no dependencies)
-    if (!this.dbModule.isLoaded) {
-      initPromises.push(this.initializeModule(this.dbModule, 'database'))
-    }
+    // if (!this.dbModule.isLoaded) {
+    //   initPromises.push(this.initializeModule(this.dbModule, 'database'))
+    // }
     
     // Design System module (no dependencies)
     if (!this.designModule.isLoaded) {
@@ -408,9 +408,9 @@ export class JiGRCoreSystem extends BaseJiGRModule {
       await this.initializeModule(this.authModule, 'authentication')
     }
     
-    if (!this.dbModule.isLoaded) {
-      await this.initializeModule(this.dbModule, 'database')
-    }
+    // if (!this.dbModule.isLoaded) {
+    //   await this.initializeModule(this.dbModule, 'database')
+    // }
     
     if (!this.designModule.isLoaded) {
       await this.initializeModule(this.designModule, 'designSystem')
@@ -453,7 +453,7 @@ export class JiGRCoreSystem extends BaseJiGRModule {
   private async activateAllCoreModules(): Promise<void> {
     const modules = [
       { moduleInstance: this.authModule, name: 'authentication' },
-      { moduleInstance: this.dbModule, name: 'database' },
+      // { moduleInstance: this.dbModule, name: 'database' },
       { moduleInstance: this.designModule, name: 'designSystem' }
     ]
     
@@ -473,7 +473,7 @@ export class JiGRCoreSystem extends BaseJiGRModule {
   private async deactivateAllCoreModules(): Promise<void> {
     const modules = [
       { moduleInstance: this.designModule, name: 'designSystem' },
-      { moduleInstance: this.dbModule, name: 'database' },
+      // { moduleInstance: this.dbModule, name: 'database' },
       { moduleInstance: this.authModule, name: 'authentication' }
     ]
     
@@ -502,9 +502,9 @@ export class JiGRCoreSystem extends BaseJiGRModule {
     })
     
     // Database events -> Authentication
-    this.dbModule.on('connection:lost', (data: any) => {
-      this.emit('system:database-unavailable', data)
-    })
+    // this.dbModule.on('connection:lost', (data: any) => {
+    //   this.emit('system:database-unavailable', data)
+    // })
     
     // Design System events -> All modules
     this.designModule.on('theme:changed', (data: any) => {
@@ -582,7 +582,7 @@ export class JiGRCoreSystem extends BaseJiGRModule {
   private getModuleByName(name: keyof CoreSystemStatus['moduleStatuses']): any {
     switch (name) {
       case 'authentication': return this.authModule
-      case 'database': return this.dbModule
+      // case 'database': return this.dbModule
       case 'designSystem': return this.designModule
       default: return null
     }
@@ -659,7 +659,7 @@ export class JiGRCoreSystem extends BaseJiGRModule {
       
       broadcastToAllModules: (eventType: string, data: any) => {
         this.authModule?.emit?.(eventType, data)
-        this.dbModule?.emit?.(eventType, data)
+        // this.dbModule?.emit?.(eventType, data)
         this.designModule?.emit?.(eventType, data)
       },
       

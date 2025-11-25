@@ -1,10 +1,9 @@
-import { LucideIcon } from 'lucide-react'
 import { ActionCard } from './ModuleCard'
 
 interface QuickActionButtonProps {
   title: string
   description?: string
-  icon: LucideIcon
+  icon: string
   onClick: () => void
   theme?: 'upload' | 'admin' | 'default' | 'light'
   disabled?: boolean
@@ -15,7 +14,7 @@ interface QuickActionButtonProps {
 export function QuickActionButton({
   title,
   description,
-  icon: Icon,
+  icon,
   onClick,
   theme = 'light',
   disabled = false,
@@ -62,7 +61,7 @@ export function QuickActionButton({
     >
       <div className="flex flex-col items-center justify-center space-y-3" style={{ minHeight }}>
         <div className="flex items-center justify-center">
-          <Icon className={`${iconSize} text-white`} />
+          <span className={`${icon} ${iconSize} text-white`}></span>
         </div>
         
         <div className="space-y-1">

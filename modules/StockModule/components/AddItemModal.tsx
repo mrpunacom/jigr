@@ -13,23 +13,6 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { 
-  X,
-  Package,
-  Calculator,
-  Scale,
-  Wine,
-  Beer,
-  ChefHat,
-  Camera,
-  Check,
-  AlertTriangle,
-  Info,
-  Plus,
-  Search,
-  ArrowRight,
-  ArrowLeft
-} from 'lucide-react'
 import { StockDesignTokens, getWorkflowStyles, StockResponsiveUtils, WorkflowConfig } from '../StockModuleCore'
 import type { InventoryItem, CountingWorkflow } from '@/types/stock'
 
@@ -358,7 +341,7 @@ export const AddItemModal: React.FC<AddItemModalProps> = ({
             onClick={onClose}
             className="p-2 hover:bg-gray-200 rounded-lg transition-colors"
           >
-            <X size={20} />
+            <span className="icon-[tabler--x] w-5 h-5"></span>
           </button>
         </div>
 
@@ -416,7 +399,7 @@ export const AddItemModal: React.FC<AddItemModalProps> = ({
                 onClick={handleBack}
                 className="flex items-center gap-2 text-gray-600 hover:text-gray-900 font-medium"
               >
-                <ArrowLeft size={16} />
+                <span className="icon-[tabler--arrow-left] w-4 h-4"></span>
                 Back
               </button>
             )}
@@ -448,7 +431,7 @@ export const AddItemModal: React.FC<AddItemModalProps> = ({
                 style={{ backgroundColor: workflowStyles.primary }}
               >
                 Next
-                <ArrowRight size={16} />
+                <span className="icon-[tabler--arrow-right] w-4 h-4"></span>
               </button>
             )}
           </div>
@@ -497,7 +480,7 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({ currentStep, workflow }) 
               backgroundColor: workflowStyles.primary,
               borderColor: workflowStyles.primary 
             } : {}}>
-              {index < currentIndex ? <Check size={16} /> : index + 1}
+              {index < currentIndex ? <span className="icon-[tabler--check] w-4 h-4"></span> : index + 1}
             </div>
             <span className="text-sm font-medium">{step.label}</span>
           </div>
@@ -566,7 +549,7 @@ const WorkflowSelection: React.FC<WorkflowSelectionProps> = ({ selected, onSelec
                 </div>
                 
                 {isSelected && (
-                  <Check size={24} style={{ color: styles.primary }} />
+                  <span className="icon-[tabler--check] w-6 h-6" style={{ color: styles.primary }}></span>
                 )}
               </div>
             </button>
@@ -681,7 +664,7 @@ const BasicInformation: React.FC<BasicInformationProps> = ({ formData, onUpdate,
               placeholder="Scan or enter barcode"
             />
             <button className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
-              <Camera size={20} />
+              <span className="icon-[tabler--camera] w-5 h-5"></span>
             </button>
           </div>
         </div>
@@ -964,7 +947,7 @@ const WorkflowConfiguration: React.FC<WorkflowConfigurationProps> = ({ formData,
       default:
         return (
           <div className="text-center py-8 text-gray-500">
-            <Info size={48} className="mx-auto mb-2 opacity-50" />
+            <span className="icon-[tabler--info-circle] w-12 h-12 mx-auto mb-2 opacity-50"></span>
             <p>No additional configuration needed for manual counting</p>
           </div>
         )
@@ -993,14 +976,14 @@ const WorkflowConfiguration: React.FC<WorkflowConfigurationProps> = ({ formData,
 
 const AdvancedSettings: React.FC<any> = () => (
   <div className="text-center py-8 text-gray-500">
-    <Settings size={48} className="mx-auto mb-2 opacity-50" />
+    <span className="icon-[tabler--settings] w-12 h-12 mx-auto mb-2 opacity-50"></span>
     <p>Advanced settings will be implemented next...</p>
   </div>
 )
 
 const ReviewAndSubmit: React.FC<any> = () => (
   <div className="text-center py-8 text-gray-500">
-    <Check size={48} className="mx-auto mb-2 opacity-50" />
+    <span className="icon-[tabler--check] w-12 h-12 mx-auto mb-2 opacity-50"></span>
     <p>Review and submit will be implemented next...</p>
   </div>
 )
@@ -1012,14 +995,14 @@ const ReviewAndSubmit: React.FC<any> = () => (
 const getWorkflowIcon = (iconName: string, size: number = 20) => {
   const iconProps = { size }
   const icons: Record<string, React.ReactElement> = {
-    Calculator: <Calculator {...iconProps} />,
-    Scale: <Scale {...iconProps} />,
-    Wine: <Wine {...iconProps} />,
-    Beer: <Beer {...iconProps} />,
-    ChefHat: <ChefHat {...iconProps} />
+    Calculator: <span className="icon-[tabler--calculator] w-6 h-6"></span>,
+    Scale: <span className="icon-[tabler--scale] w-6 h-6"></span>,
+    Wine: <span className="icon-[tabler--glass-full] w-6 h-6"></span>,
+    Beer: <span className="icon-[tabler--beer] w-6 h-6"></span>,
+    ChefHat: <span className="icon-[tabler--chef-hat] w-6 h-6"></span>
   }
   
-  return icons[iconName] || <Calculator {...iconProps} />
+  return icons[iconName] || <span className="icon-[tabler--calculator] w-6 h-6"></span>
 }
 
 export default AddItemModal

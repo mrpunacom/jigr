@@ -6,8 +6,8 @@ import ExplanationTrigger from '@/app/components/explanation/ExplanationTrigger'
 export default function ExplanationTestPage() {
   const { openModal, isLoading, error } = useExplanation()
 
-  const handleTestTrigger = (pageId: string, context: any) => {
-    openModal('stock-console', {
+  const handleTestTrigger = (pageId: string) => {
+    openModal(pageId, {
       moduleKey: 'stock',
       pageKey: 'console',
       fullPath: '/explanation-test',

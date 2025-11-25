@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { ChevronLeft, ChevronRight, ChevronUp, ChevronDown } from 'lucide-react'
 
 interface Column<T> {
   key: keyof T
@@ -114,20 +113,20 @@ export function DataTable<T extends Record<string, any>>({
                     <span>{column.label}</span>
                     {column.sortable && sortable && (
                       <div className="flex flex-col">
-                        <ChevronUp 
-                          className={`h-3 w-3 ${
+                        <span 
+                          className={`icon-[tabler--chevron-up] h-3 w-3 ${
                             sortKey === column.key && sortDirection === 'asc' 
                               ? 'text-blue-500' 
                               : 'text-gray-400'
-                          }`} 
-                        />
-                        <ChevronDown 
-                          className={`h-3 w-3 -mt-1 ${
+                          }`}
+                        ></span>
+                        <span 
+                          className={`icon-[tabler--chevron-down] h-3 w-3 -mt-1 ${
                             sortKey === column.key && sortDirection === 'desc' 
                               ? 'text-blue-500' 
                               : 'text-gray-400'
-                          }`} 
-                        />
+                          }`}
+                        ></span>
                       </div>
                     )}
                   </div>
@@ -193,7 +192,7 @@ export function DataTable<T extends Record<string, any>>({
                   className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                   style={{ minHeight: '44px', minWidth: '44px' }}
                 >
-                  <ChevronLeft className="h-5 w-5" />
+                  <span className="icon-[tabler--chevron-left] h-5 w-5"></span>
                 </button>
                 
                 {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
@@ -230,7 +229,7 @@ export function DataTable<T extends Record<string, any>>({
                   className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                   style={{ minHeight: '44px', minWidth: '44px' }}
                 >
-                  <ChevronRight className="h-5 w-5" />
+                  <span className="icon-[tabler--chevron-right] h-5 w-5"></span>
                 </button>
               </nav>
             </div>

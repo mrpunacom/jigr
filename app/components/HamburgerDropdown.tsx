@@ -9,6 +9,16 @@ interface HamburgerDropdownProps {
   currentModule: string
 }
 
+interface Module {
+  key: string
+  name: string
+  href: string
+  icon: string
+  active: boolean
+  description: string
+  status?: 'development' | 'production'
+}
+
 export function HamburgerDropdown({ isOpen, onClose, currentModule }: HamburgerDropdownProps) {
   const dropdownRef = useRef<HTMLDivElement>(null)
 
@@ -42,7 +52,7 @@ export function HamburgerDropdown({ isOpen, onClose, currentModule }: HamburgerD
 
   if (!isOpen) return null
 
-  const modules = [
+  const modules: Module[] = [
     { 
       key: 'upload', 
       name: 'Upload', 
@@ -68,20 +78,21 @@ export function HamburgerDropdown({ isOpen, onClose, currentModule }: HamburgerD
       description: 'Inventory management and tracking'
     },
     { 
-      key: 'temperature', 
-      name: 'Temperature', 
-      href: '#',
+      key: 'vendors', 
+      name: 'Vendors', 
+      href: '/vendors/console',
       icon: 'JiGRtemp',
-      active: false,
-      description: 'Fridge and freezer monitoring'
+      active: true,
+      description: 'Supplier and vendor management'
     },
     { 
       key: 'repairs', 
       name: 'Repairs', 
-      href: '#',
+      href: '/repairs/console',
       icon: 'JiGRrepairs',
-      active: false,
-      description: 'Equipment maintenance and repair tracking'
+      active: true,
+      description: 'Equipment maintenance and repair tracking',
+      status: 'development'
     },
     { 
       key: 'menu', 
@@ -94,10 +105,11 @@ export function HamburgerDropdown({ isOpen, onClose, currentModule }: HamburgerD
     { 
       key: 'diary', 
       name: 'Diary', 
-      href: '#',
+      href: '/diary/console',
       icon: 'JiGRdiaryWhite',
-      active: false,
-      description: 'Daily logs and incident reporting'
+      active: true,
+      description: 'Daily logs and incident reporting',
+      status: 'development'
     },
     { 
       key: 'recipes', 
@@ -147,11 +159,18 @@ export function HamburgerDropdown({ isOpen, onClose, currentModule }: HamburgerD
                     key={module.key}
                     onClick={() => handleModuleClick(module)}
                     disabled={!module.active}
-                    className={`flex flex-col items-center p-3 rounded-lg transition-all duration-200 TouchTarget ${
+                    className={`relative flex flex-col items-center p-3 rounded-lg transition-all duration-200 TouchTarget ${
                       module.active ? 'hover:bg-white/15' : 'opacity-30'
                     }`}
                     title={module.active ? module.description : 'Coming soon'}
                   >
+                    {/* Development Status Badge */}
+                    {module.status === 'development' && (
+                      <div className="absolute -top-1 -right-1 bg-orange-500 text-white text-[8px] px-1 py-0.5 rounded font-bold z-10">
+                        DEV
+                      </div>
+                    )}
+                    
                     {/* Module Icon */}
                     <img 
                       src={getMappedIcon(module.icon as keyof typeof import('@/lib/image-storage').ICON_MAPPING, 40)} 

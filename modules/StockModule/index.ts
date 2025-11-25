@@ -102,28 +102,28 @@ export { StockDashboard } from './components/StockDashboard'
 export { StockItemsList } from './components/StockItemsList'
 export { CountSubmission } from './components/CountSubmission'
 export { ContainerManagement } from './components/ContainerManagement'
-export { CountHistory } from './components/CountHistory'
+export { CountHistoryAnalytics } from './components/CountHistoryAnalytics'
 
 // Specialized components
 export { ItemDetailModal } from './components/ItemDetailModal'
 export { AddItemModal } from './components/AddItemModal'
 export { ContainerAssignment } from './components/ContainerAssignment'
-export { AnomalyDisplay } from './components/AnomalyDisplay'
+// export { AnomalyDisplay } from './components/AnomalyDisplay' // Component not found
 export { BottleHybridInterface } from './components/BottleHybridInterface'
 export { KegWeightInterface } from './components/KegWeightInterface'
 
 // Utility components
-export { WorkflowSelector } from './components/WorkflowSelector'
+// export { WorkflowSelector } from './components/WorkflowSelector' // Component not found
 export { BarcodeScanner } from './components/BarcodeScanner'
 
 // ============================================================================
 // HOOK EXPORTS  
 // ============================================================================
 
-export { useStockItems } from './hooks/useStockItems'
-export { useContainers } from './hooks/useContainers'
-export { useCountSubmission } from './hooks/useCountSubmission'
-export { useAnomalyDetection } from './hooks/useAnomalyDetection'
+// export { useStockItems } from './hooks/useStockItems' // Hooks directory not found
+// export { useContainers } from './hooks/useContainers'
+// export { useCountSubmission } from './hooks/useCountSubmission'
+// export { useAnomalyDetection } from './hooks/useAnomalyDetection'
 
 // ============================================================================
 // TYPE EXPORTS
@@ -143,9 +143,9 @@ export type {
 // UTILITY EXPORTS
 // ============================================================================
 
-export { StockApiClient } from './utils/StockApiClient'
-export { WorkflowValidator } from './utils/WorkflowValidator'
-export { AnomalyAnalyzer } from './utils/AnomalyAnalyzer'
+// export { StockApiClient } from './utils/StockApiClient' // Utils directory not found
+// export { WorkflowValidator } from './utils/WorkflowValidator'
+// export { AnomalyAnalyzer } from './utils/AnomalyAnalyzer'
 
 // Default export for module registration
 export default StockModule
