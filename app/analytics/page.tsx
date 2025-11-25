@@ -43,9 +43,6 @@ export default function AnalyticsPage() {
       <ResponsiveLayout>
         <UniversalModuleLayout 
           moduleName="analytics"
-          moduleTitle="Analytics & Reports"
-          currentPage="dashboard"
-          backgroundImage="analytics-charts.jpg"
           className="min-h-screen"
         >
           <main className="max-w-7xl mx-auto px-4 py-6">

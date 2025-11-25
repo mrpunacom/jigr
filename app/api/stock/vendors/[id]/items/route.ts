@@ -15,12 +15,12 @@ import { getAuthenticatedClientId } from '@/lib/api-utils'
 // GET /api/stock/vendors/[id]/items - Get all items for a vendor
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { user_id, client_id } = await getAuthenticatedClientId()
     const supabase = createClient()
-    const vendorId = params.id
+    const { id: vendorId } = await params
     const { searchParams } = new URL(request.url)
 
     // Query parameters
@@ -126,12 +126,12 @@ export async function GET(
 // POST /api/stock/vendors/[id]/items - Add item to vendor catalog
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { user_id, client_id } = await getAuthenticatedClientId()
     const supabase = createClient()
-    const vendorId = params.id
+    const { id: vendorId } = await params
     const body = await request.json()
 
     // Validate required fields
@@ -238,12 +238,12 @@ export async function POST(
 // PUT /api/stock/vendors/[id]/items - Update vendor item details
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { user_id, client_id } = await getAuthenticatedClientId()
     const supabase = createClient()
-    const vendorId = params.id
+    const { id: vendorId } = await params
     const body = await request.json()
 
     if (!body.id) {
@@ -344,12 +344,12 @@ export async function PUT(
 // DELETE /api/stock/vendors/[id]/items - Remove items from vendor
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { user_id, client_id } = await getAuthenticatedClientId()
     const supabase = createClient()
-    const vendorId = params.id
+    const { id: vendorId } = await params
     const { searchParams } = new URL(request.url)
     const itemIds = searchParams.get('item_ids')?.split(',') || []
 

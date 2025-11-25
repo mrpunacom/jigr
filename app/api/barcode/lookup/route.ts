@@ -10,28 +10,31 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase'
+import { supabase } from '@/lib/supabase'
 import { getAuthenticatedClientId } from '@/lib/api-utils'
 
 // GET /api/barcode/lookup - Look up product by barcode
 export async function GET(request: NextRequest) {
   try {
     const { user_id, client_id } = await getAuthenticatedClientId()
-    const supabase = createClient()
+    // Using imported supabase client
     const { searchParams } = new URL(request.url)
 
     // Query parameters
-    const barcode = searchParams.get('barcode')
+    const barcodeParam = searchParams.get('barcode')
     const enrichProduct = searchParams.get('enrich_product') !== 'false'
     const checkInventory = searchParams.get('check_inventory') !== 'false'
     const includeAlternatives = searchParams.get('include_alternatives') !== 'false'
 
-    if (!barcode) {
+    if (!barcodeParam) {
       return NextResponse.json(
         { error: 'Barcode parameter is required' },
         { status: 400 }
       )
     }
+    
+    // TypeScript-safe barcode value (guaranteed to be string after null check)
+    const barcode: string = barcodeParam
 
     // Validate barcode format
     const validationResult = validateBarcode(barcode)
@@ -121,7 +124,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const { user_id, client_id } = await getAuthenticatedClientId()
-    const supabase = createClient()
+    // Using imported supabase client
     const body = await request.json()
 
     const { barcodes, enrich_products = false, check_inventory = true } = body

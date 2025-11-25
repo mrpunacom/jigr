@@ -41,9 +41,6 @@ export default function AlertsPage() {
       <ResponsiveLayout>
         <UniversalModuleLayout 
           moduleName="alerts"
-          moduleTitle="Alerts & Notifications"
-          currentPage="overview"
-          backgroundImage="alert-center.jpg"
           className="min-h-screen"
         >
           <main className="max-w-7xl mx-auto px-4 py-6">

@@ -15,12 +15,12 @@ import { getAuthenticatedClientId } from '@/lib/api-utils'
 // GET /api/stock/vendors/[id] - Get detailed vendor information
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { user_id, client_id } = await getAuthenticatedClientId()
     const supabase = createClient()
-    const vendorId = params.id
+    const { id: vendorId } = await params
 
     // Get vendor details with related data
     const { data: vendor, error } = await supabase
@@ -89,12 +89,12 @@ export async function GET(
 // PUT /api/stock/vendors/[id] - Update specific vendor
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { user_id, client_id } = await getAuthenticatedClientId()
     const supabase = createClient()
-    const vendorId = params.id
+    const { id: vendorId } = await params
     const body = await request.json()
 
     // Prepare update data (same logic as main vendors PUT)
@@ -163,12 +163,12 @@ export async function PUT(
 // DELETE /api/stock/vendors/[id] - Delete specific vendor
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { user_id, client_id } = await getAuthenticatedClientId()
     const supabase = createClient()
-    const vendorId = params.id
+    const { id: vendorId } = await params
 
     // Check for active orders
     const { data: activeOrders } = await supabase

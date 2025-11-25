@@ -469,11 +469,11 @@ const WorkflowBadge: React.FC<{ workflow: string }> = ({ workflow }) => {
 
 const getWorkflowIcon = (iconName: string) => {
   const icons: Record<string, React.ComponentType<any>> = {
-    () => <span className="icon-[tabler--calculator] w-6 h-6"></span>,
-    () => <span className="icon-[tabler--scale] w-6 h-6"></span>,
-    () => <span className="icon-[tabler--glass-full] w-6 h-6"></span>,
-    () => <span className="icon-[tabler--beer] w-6 h-6"></span>,
-    () => <span className="icon-[tabler--chef-hat] w-6 h-6"></span>
+    'calculator': () => <span className="icon-[tabler--calculator] w-6 h-6"></span>,
+    'scale': () => <span className="icon-[tabler--scale] w-6 h-6"></span>,
+    'glass': () => <span className="icon-[tabler--glass-full] w-6 h-6"></span>,
+    'beer': () => <span className="icon-[tabler--beer] w-6 h-6"></span>,
+    'chef': () => <span className="icon-[tabler--chef-hat] w-6 h-6"></span>
   }
   
   return icons[iconName] || (() => <span className="icon-[tabler--calculator] w-6 h-6"></span>)

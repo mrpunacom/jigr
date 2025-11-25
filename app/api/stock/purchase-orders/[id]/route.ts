@@ -15,12 +15,12 @@ import { getAuthenticatedClientId } from '@/lib/api-utils'
 // GET /api/stock/purchase-orders/[id] - Get detailed purchase order
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { user_id, client_id } = await getAuthenticatedClientId()
     const supabase = createClient()
-    const orderId = params.id
+    const { id: orderId } = await params
 
     // Get complete order details
     const { data: order, error } = await supabase
@@ -106,12 +106,12 @@ export async function GET(
 // PUT /api/stock/purchase-orders/[id] - Update purchase order
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { user_id, client_id } = await getAuthenticatedClientId()
     const supabase = createClient()
-    const orderId = params.id
+    const { id: orderId } = await params
     const body = await request.json()
 
     // Get current order
@@ -223,12 +223,12 @@ export async function PUT(
 // DELETE /api/stock/purchase-orders/[id] - Cancel purchase order
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { user_id, client_id } = await getAuthenticatedClientId()
     const supabase = createClient()
-    const orderId = params.id
+    const { id: orderId } = await params
     const { searchParams } = new URL(request.url)
     const reason = searchParams.get('reason') || 'Cancelled by user'
 
